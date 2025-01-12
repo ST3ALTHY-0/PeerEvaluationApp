@@ -30,7 +30,7 @@ public class Grade {
 
     @ManyToOne
     @JoinColumn(name = "group_id", nullable = false)
-    private ProjectGroup group;
+    private ProjectGroup project_group;
 
     public int getGrade_id() {
         return grade_id;
@@ -65,11 +65,11 @@ public class Grade {
     }
 
     public ProjectGroup getGroup() {
-        return group;
+        return project_group;
     }
 
     public void setGroup(ProjectGroup group) {
-        this.group = group;
+        this.project_group = group;
     }
     
 }
