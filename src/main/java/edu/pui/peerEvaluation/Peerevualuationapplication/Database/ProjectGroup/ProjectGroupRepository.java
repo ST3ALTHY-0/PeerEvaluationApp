@@ -1,4 +1,4 @@
-package edu.pui.peerEvaluation.Peerevualuationapplication.Database.ProjectGroup;
+package edu.pui.peerEvaluation.Peerevualuationapplication.Database.projectGroup;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

@@ -1,23 +1,10 @@
 package edu.pui.peerEvaluation.Peerevualuationapplication.oauth2springsecurity.models;
 
+import lombok.Data;
+
+@Data //generates nice stuff for you, like getters, setters, constructors, equalsTo, etc
 public class User {
     private String name;
     private String email;
 
-    // Getters and Setters
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
 }

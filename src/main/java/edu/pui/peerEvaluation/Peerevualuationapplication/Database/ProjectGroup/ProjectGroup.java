@@ -1,12 +1,12 @@
-package edu.pui.peerEvaluation.Peerevualuationapplication.Database.ProjectGroup;
+package edu.pui.peerEvaluation.Peerevualuationapplication.Database.projectGroup;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import edu.pui.peerEvaluation.Peerevualuationapplication.Database.Class.Class;
-import edu.pui.peerEvaluation.Peerevualuationapplication.Database.Grade.Grade;
-import edu.pui.peerEvaluation.Peerevualuationapplication.Database.Student.Student;
+import edu.pui.peerEvaluation.Peerevualuationapplication.Database.project.Project;
+import edu.pui.peerEvaluation.Peerevualuationapplication.Database.student.Student;
+import edu.pui.peerEvaluation.Peerevualuationapplication.Database.feedback.Feedback;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -17,7 +17,9 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.Data;
 
+@Data
 @Entity
 @Table(name = "project_group")
 public class ProjectGroup {
@@ -27,56 +29,18 @@ public class ProjectGroup {
     
     private String group_name;
 
-     @ManyToOne
-    @JoinColumn(name = "class_id", nullable = false)
-    private Class aClass;
+    @ManyToOne
+    @JoinColumn(name = "project_id", nullable = false)
+    private Project project;
 
-    @OneToMany(mappedBy = "project_group", cascade = CascadeType.ALL)
-    private List<Grade> grades;
+
+
+    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
+    private List<Feedback> grades;
 
     @ManyToMany(mappedBy = "groups")
     private Set<Student> students = new HashSet<>();
 
     //maybe there should be Project Table that this Table references
     //Project Table could contain Project_id, Project_name, points_worth, class(foreign key)
-
-    public int getGroup_id() {
-        return group_id;
-    }
-
-    public void setGroup_id(int group_id) {
-        this.group_id = group_id;
-    }
-
-    public String getGroup_name() {
-        return group_name;
-    }
-
-    public void setGroup_name(String group_name) {
-        this.group_name = group_name;
-    }
-
-    public Class getaClass() {
-        return aClass;
-    }
-
-    public void setaClass(Class aClass) {
-        this.aClass = aClass;
-    }
-
-    public List<Grade> getGrades() {
-        return grades;
-    }
-
-    public void setGrades(List<Grade> grades) {
-        this.grades = grades;
-    }
-
-    public Set<Student> getStudents(){
-        return students;
-    }
-
-    public void setStudents(Set<Student> students){
-        this.students = students;
-    }
 }
