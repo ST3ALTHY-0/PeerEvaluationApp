@@ -1,10 +1,13 @@
 package edu.pui.peerEvaluation.Peerevualuationapplication.controllers;
 
 
+import java.security.Principal;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,25 +23,25 @@ import edu.pui.peerEvaluation.Peerevualuationapplication.oauth2springsecurity.mo
 public class MainController {
 
     private final UserService userService;
+    private final OAuth2AuthorizedClientService authorizedClientService;
+    //declare any/all endpoint urls we will use
+
 
     @Autowired
-    public MainController(UserService userService){
+    public MainController(UserService userService, OAuth2AuthorizedClientService authorizedClientService){
         this.userService = userService;
+        this.authorizedClientService = authorizedClientService;
     }
 
     @GetMapping("/home")
     public String home(@AuthenticationPrincipal OAuth2User principal, Model model) {
 
-        //the following should probably be done in a @Service class
-        //should first check that User is Instructor or Student
+        String clientRegistrationId = "google"; // Replace with your brightSpace RegID later
+        OAuth2AuthorizedClient authorizedClient = authorizedClientService.loadAuthorizedClient(clientRegistrationId, principal.getName()); //way to manually get the access token so we can make api calls with it
+        String accessToken = authorizedClient.getAccessToken().getTokenValue(); 
 
-        //if Instructor, add all relevant attributes to model (add only needed attributes to DB after instructor actually makes a evaluation form)
-
-        //if Student, add relevant attributes to model and DB (name, email)
-        //check DB if the student has any eval forms they need to complete (when eval forms are first created, a list of students should be provided by instructor[and stored in DB], hopefully there is an email associated with the students at the time they are entered via instructor but if not then we should have a name for each student, and once the student signs in we might be able to check with BS api if they have any class/instructors that have made a eval form, and be able to match them that way)
-
+        System.out.println(accessToken);
         // Add user name to the model
-
         model.addAttribute("name", principal.getAttribute("name")); //vars you add to the model will be available in the templates to use ${} with
         userService.createUser(principal);
         String name = principal.getAttribute("name");
