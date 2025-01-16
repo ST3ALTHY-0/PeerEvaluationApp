@@ -20,14 +20,14 @@ import lombok.Data;
 @Entity
 @Table(name = "feedback")
 public class Feedback {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int feedback_id;
-    
+
     private int grade_percent;
 
-    private LocalDateTime date_completed;    
+    private LocalDateTime date_completed;
 
     @ManyToOne
     @JoinColumn(name = "rated_by_student_id", referencedColumnName = "student_id")
@@ -41,8 +41,7 @@ public class Feedback {
     @JoinColumn(name = "group_id", referencedColumnName = "group_id")
     private ProjectGroup group;
 
-
-    //evaluation response
+    // evaluation response
     @OneToMany(mappedBy = "feedback")
     private List<EvaluationResponse> responses;
 }

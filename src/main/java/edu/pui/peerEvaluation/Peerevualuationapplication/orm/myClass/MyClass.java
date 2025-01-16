@@ -26,14 +26,14 @@ public class MyClass {
 
     private String class_name;
 
-    //manyToOne means that many classes can have the same instructor
+    // manyToOne means that many classes can have the same instructor
     @ManyToOne
-    //JoinColumn means that the instructor will be related to classes via instructor_id (primary key)
+    // JoinColumn means that the instructor will be related to classes via
+    // instructor_id (primary key)
     @JoinColumn(name = "instructor_id")
     private Instructor instructor;
 
-
-    @OneToMany(mappedBy = "aClass", cascade = CascadeType.ALL) 
+    @OneToMany(mappedBy = "aClass", cascade = CascadeType.ALL)
     private List<Project> projects;
 
 }

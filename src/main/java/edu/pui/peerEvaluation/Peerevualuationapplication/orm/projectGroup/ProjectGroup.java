@@ -26,14 +26,12 @@ public class ProjectGroup {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int group_id;
-    
+
     private String group_name;
 
     @ManyToOne
     @JoinColumn(name = "project_id", nullable = false)
     private Project project;
-
-
 
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
     private List<Feedback> grades;
@@ -41,6 +39,7 @@ public class ProjectGroup {
     @ManyToMany(mappedBy = "groups")
     private Set<Student> students = new HashSet<>();
 
-    //maybe there should be Project Table that this Table references
-    //Project Table could contain Project_id, Project_name, points_worth, class(foreign key)
+    // maybe there should be Project Table that this Table references
+    // Project Table could contain Project_id, Project_name, points_worth,
+    // class(foreign key)
 }
