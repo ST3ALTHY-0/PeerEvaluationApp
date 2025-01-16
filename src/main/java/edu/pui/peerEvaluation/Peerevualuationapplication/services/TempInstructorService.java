@@ -21,10 +21,7 @@ public class TempInstructorService {
 
     // @Autowired
     // public TempInstructorService(Instructor instructor){
-    //     this.instructor = instructor;
+    // this.instructor = instructor;
     // }
-
-
-
 
 }

@@ -34,15 +34,12 @@ public class Project {
     @JoinColumn(name = "class_id")
     private MyClass aClass;
 
-
-    //this class is referenced by
-    //project_group
+    // this class is referenced by
+    // project_group
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private List<ProjectGroup> project_groups;
 
-    //evaluation 
-     @OneToOne(mappedBy = "project", cascade = CascadeType.ALL)
+    // evaluation
+    @OneToOne(mappedBy = "project", cascade = CascadeType.ALL)
     private Evaluation evaluation;
 }
-
-

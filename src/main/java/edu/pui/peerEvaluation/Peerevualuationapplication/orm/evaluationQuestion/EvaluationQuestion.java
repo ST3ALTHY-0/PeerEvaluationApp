@@ -22,12 +22,12 @@ public class EvaluationQuestion {
 
     private String question_text;
 
-    private boolean enforce_answer; //not null
+    private boolean enforce_answer; // not null
 
     @ManyToOne
     @JoinColumn(name = "evaluation_id", referencedColumnName = "evaluation_id")
     private Evaluation evaluation;
-    
+
     @OneToOne(mappedBy = "question")
     private EvaluationResponse response;
 }

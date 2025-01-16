@@ -27,10 +27,10 @@ public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int student_id;
-    
+
     private String student_name;
     private String student_email;
-    
+
     @OneToMany(mappedBy = "rated_by_student", cascade = CascadeType.ALL)
     private List<Feedback> given_grades;
 
@@ -38,19 +38,13 @@ public class Student {
     private List<Feedback> received_grades;
 
     @ManyToMany
-    @JoinTable(
-        name = "group_membership",
-        joinColumns = @JoinColumn(name = "student_id"),
-        inverseJoinColumns = @JoinColumn(name = "group_id")
-    )
+    @JoinTable(name = "group_membership", joinColumns = @JoinColumn(name = "student_id"), inverseJoinColumns = @JoinColumn(name = "group_id"))
     private Set<ProjectGroup> groups = new HashSet<>();
 
     @ManyToMany
-    @JoinTable(
-        name = "evaluation_student",
-        joinColumns = @JoinColumn(name = "student_id"),
-        inverseJoinColumns = @JoinColumn(name = "evaluation_id")
-    )
+    @JoinTable(name = "evaluation_student", joinColumns = @JoinColumn(name = "student_id"), inverseJoinColumns = @JoinColumn(name = "evaluation_id"))
     private Set<Evaluation> evaluations = new HashSet<>();
+
+    // another join table for class_student
 
 }

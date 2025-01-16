@@ -30,7 +30,7 @@ public class Evaluation {
     private int evaluation_id;
 
     private LocalDateTime date_completed;
-    
+
     @ManyToOne
     @JoinColumn(name = "instructor_id", referencedColumnName = "instructor_id")
     private Instructor instructor;
