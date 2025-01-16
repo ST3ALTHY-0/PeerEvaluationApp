@@ -1,7 +1,7 @@
-package edu.pui.peerEvaluation.Peerevualuationapplication.Database.evaluationQuestion;
+package edu.pui.peerEvaluation.Peerevualuationapplication.orm.evaluationQuestion;
 
-import edu.pui.peerEvaluation.Peerevualuationapplication.Database.evaluation.Evaluation;
-import edu.pui.peerEvaluation.Peerevualuationapplication.Database.evaluationResponse.EvaluationResponse;
+import edu.pui.peerEvaluation.Peerevualuationapplication.orm.evaluation.Evaluation;
+import edu.pui.peerEvaluation.Peerevualuationapplication.orm.evaluationResponse.EvaluationResponse;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

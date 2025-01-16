@@ -36,10 +36,8 @@ public class MainController {
     @GetMapping("/home")
     public String home(@AuthenticationPrincipal OAuth2User principal, Model model) {
 
-        String clientRegistrationId = "google"; // Replace with your brightSpace RegID later
-        OAuth2AuthorizedClient authorizedClient = authorizedClientService.loadAuthorizedClient(clientRegistrationId, principal.getName()); //way to manually get the access token so we can make api calls with it
-        String accessToken = authorizedClient.getAccessToken().getTokenValue(); 
-
+        
+        String accessToken = getAccessToken(principal, "google");
         System.out.println(accessToken);
         // Add user name to the model
         model.addAttribute("name", principal.getAttribute("name")); //vars you add to the model will be available in the templates to use ${} with
@@ -72,5 +70,11 @@ public class MainController {
     @GetMapping("/student")
     public String student(){
         return "student";
+    }
+
+    private String getAccessToken(OAuth2User principal, String clientRegistrationId){
+        OAuth2AuthorizedClient authorizedClient = authorizedClientService.loadAuthorizedClient(clientRegistrationId, principal.getName()); //way to manually get the access token so we can make api calls with it
+        String accessToken = authorizedClient.getAccessToken().getTokenValue(); 
+        return accessToken;
     }
 }

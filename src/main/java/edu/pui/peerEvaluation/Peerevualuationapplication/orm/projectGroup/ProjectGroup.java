@@ -1,12 +1,12 @@
-package edu.pui.peerEvaluation.Peerevualuationapplication.Database.projectGroup;
+package edu.pui.peerEvaluation.Peerevualuationapplication.orm.projectGroup;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import edu.pui.peerEvaluation.Peerevualuationapplication.Database.project.Project;
-import edu.pui.peerEvaluation.Peerevualuationapplication.Database.student.Student;
-import edu.pui.peerEvaluation.Peerevualuationapplication.Database.feedback.Feedback;
+import edu.pui.peerEvaluation.Peerevualuationapplication.orm.feedback.Feedback;
+import edu.pui.peerEvaluation.Peerevualuationapplication.orm.project.Project;
+import edu.pui.peerEvaluation.Peerevualuationapplication.orm.student.Student;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

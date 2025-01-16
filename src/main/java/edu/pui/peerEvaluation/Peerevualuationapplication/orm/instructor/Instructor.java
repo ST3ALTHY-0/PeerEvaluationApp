@@ -1,9 +1,9 @@
-package edu.pui.peerEvaluation.Peerevualuationapplication.Database.instructor;
+package edu.pui.peerEvaluation.Peerevualuationapplication.orm.instructor;
 
 import java.util.List;
 
-import edu.pui.peerEvaluation.Peerevualuationapplication.Database.myClass.MyClass;
-import edu.pui.peerEvaluation.Peerevualuationapplication.Database.evaluation.Evaluation;
+import edu.pui.peerEvaluation.Peerevualuationapplication.orm.evaluation.Evaluation;
+import edu.pui.peerEvaluation.Peerevualuationapplication.orm.myClass.MyClass;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

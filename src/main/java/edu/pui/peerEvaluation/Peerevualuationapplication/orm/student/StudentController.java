@@ -1,4 +1,4 @@
-package edu.pui.peerEvaluation.Peerevualuationapplication.Database.student;
+package edu.pui.peerEvaluation.Peerevualuationapplication.orm.student;
 
 import org.springframework.web.bind.annotation.RestController;
 
