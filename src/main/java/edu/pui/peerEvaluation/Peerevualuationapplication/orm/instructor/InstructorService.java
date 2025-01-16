@@ -1,4 +1,4 @@
-package edu.pui.peerEvaluation.Peerevualuationapplication.Database.instructor;
+package edu.pui.peerEvaluation.Peerevualuationapplication.orm.instructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
