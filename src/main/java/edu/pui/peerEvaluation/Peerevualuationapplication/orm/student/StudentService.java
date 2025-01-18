@@ -1,6 +1,8 @@
 package edu.pui.peerEvaluation.Peerevualuationapplication.orm.student;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,8 +21,17 @@ public class StudentService {
         return studentRepository.saveAndFlush(student);
     }
 
+    public List<Student> addStudents(List<Student> students){
+        return studentRepository.saveAllAndFlush(students);
+    }
+
     public Optional<Student> findStudentById(int id) {
         return studentRepository.findById(id);
     }
+
+    public Optional<Student> findStudentByEmail(String email) {
+        return studentRepository.findByEmail(email);
+        }
+
 
 }

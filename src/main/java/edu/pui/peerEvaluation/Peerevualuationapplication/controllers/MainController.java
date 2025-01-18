@@ -18,59 +18,59 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import edu.pui.peerEvaluation.Peerevualuationapplication.oauth2springsecurity.models.User;
 import edu.pui.peerEvaluation.Peerevualuationapplication.oauth2springsecurity.models.UserService;
+import edu.pui.peerEvaluation.Peerevualuationapplication.services.OAuth2Service;
 
 @Controller
 public class MainController {
 
     private final UserService userService;
-    private final OAuth2AuthorizedClientService authorizedClientService;
+    private final OAuth2Service oAuth2Service;
+    private static final String CLIENT_REGISTRATION_ID = "google"; //change to brightSpace later (i think we can define regId in SecurityConfig Class in commented out code)
     //declare any/all endpoint urls we will use
 
 
     @Autowired
-    public MainController(UserService userService, OAuth2AuthorizedClientService authorizedClientService){
+    public MainController(UserService userService, OAuth2Service oAuth2Service){
         this.userService = userService;
-        this.authorizedClientService = authorizedClientService;
+        this.oAuth2Service = oAuth2Service;
     }
 
-    @GetMapping("/home")
-    public String home(@AuthenticationPrincipal OAuth2User principal, Model model) {
+    // @GetMapping("/home")
+    // public String home(@AuthenticationPrincipal OAuth2User principal, Model model) {
 
-        String clientRegistrationId = "google"; // Replace with your brightSpace RegID later
-        OAuth2AuthorizedClient authorizedClient = authorizedClientService.loadAuthorizedClient(clientRegistrationId, principal.getName()); //way to manually get the access token so we can make api calls with it
-        String accessToken = authorizedClient.getAccessToken().getTokenValue(); 
+    //     String accessToken = oAuth2Service.getAccessToken(principal, CLIENT_REGISTRATION_ID);
+    //     System.out.println(accessToken);
 
-        System.out.println(accessToken);
-        // Add user name to the model
-        model.addAttribute("name", principal.getAttribute("name")); //vars you add to the model will be available in the templates to use ${} with
-        userService.createUser(principal);
-        String name = principal.getAttribute("name");
-        System.out.println(name);
+    //     // Add user name to the model
+    //     model.addAttribute("name", principal.getAttribute("name")); //vars you add to the model will be available in the templates to use ${} with
+    //     userService.createUser(principal);
+    //     String name = principal.getAttribute("name");
+    //     System.out.println(name);
         
 
-        if(name.equals("Jacob (S3ALTHY)")){
-            return "instructorDashboard";
-        }else{
-            return "student";
-        }
-    }
+    //     if(name.equals("Jacob (S3ALTHY)")){
+    //         return "instructorDashboard";
+    //     }else{
+    //         return "student";
+    //     }
+    // }
 
     @GetMapping("/login")
     public String login() {
-        System.out.println("hello login: ");
-
         return "login";
     }
 
   
 
-    @GetMapping("/instructor") //maps /instructor to instructor page
+    @GetMapping("/instructorDashboard") 
     public String instructor(){
-        return "instructor";
+        return "instructorDashboard";
     }
 
     @GetMapping("/student")
     public String student(){
         return "student";
     }
+
+
 }
