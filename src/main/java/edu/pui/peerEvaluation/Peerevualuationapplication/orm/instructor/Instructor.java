@@ -12,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.Data;
 
 @Data
@@ -23,11 +24,15 @@ public class Instructor {
     private int instructor_id;
 
     private String instructor_name;
+
     private String instructor_email;
 
-    @OneToMany(mappedBy = "instructor", cascade = CascadeType.ALL)
+    // @Version
+    // private int version;
+
+    @OneToMany(mappedBy = "instructor")
     private List<MyClass> classes;
 
-    @OneToMany(mappedBy = "instructor", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "instructor")
     private List<Evaluation> evaluations;
 }

@@ -15,6 +15,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.Data;
 
 @Data
@@ -30,9 +31,12 @@ public class Project {
 
     private int points_worth;
 
+    // @Version
+    // private int version;
+
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "class_id")
-    private MyClass aClass;
+    @JoinColumn(name = "class_id", referencedColumnName = "class_id")
+    private MyClass myClass;
 
     // this class is referenced by
     // project_group

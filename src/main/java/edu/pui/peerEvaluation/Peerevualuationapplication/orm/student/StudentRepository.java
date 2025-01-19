@@ -50,7 +50,7 @@ public interface StudentRepository extends JpaRepository<Student, Integer> {
 
 
 
-    //useless
+    //useless maybe
 
        // @Query("SELECT p, c " +
     // "FROM Project p " +

@@ -6,9 +6,11 @@ import java.util.List;
 import java.util.Set;
 
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.evaluationQuestion.EvaluationQuestion;
+import edu.pui.peerEvaluation.Peerevualuationapplication.orm.feedback.Feedback;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.instructor.Instructor;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.project.Project;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.student.Student;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -29,7 +31,9 @@ public class Evaluation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int evaluation_id;
 
-    private LocalDateTime date_completed;
+    private LocalDateTime created_at;
+
+    private boolean is_complete;
 
     @ManyToOne
     @JoinColumn(name = "instructor_id", referencedColumnName = "instructor_id")
@@ -41,6 +45,9 @@ public class Evaluation {
 
     @OneToMany(mappedBy = "evaluation")
     private List<EvaluationQuestion> evaluation_questions;
+
+    @OneToMany(mappedBy = "evaluation", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Feedback> feedbacks;
 
     @ManyToMany(mappedBy = "evaluations")
     private Set<Student> students = new HashSet<>();

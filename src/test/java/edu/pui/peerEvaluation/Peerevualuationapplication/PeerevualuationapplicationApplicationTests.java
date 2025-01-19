@@ -1,9 +1,32 @@
 package edu.pui.peerEvaluation.Peerevualuationapplication;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import edu.pui.peerEvaluation.Peerevualuationapplication.orm.evaluation.Evaluation;
+import edu.pui.peerEvaluation.Peerevualuationapplication.orm.evaluation.EvaluationRepository;
+import edu.pui.peerEvaluation.Peerevualuationapplication.orm.feedback.Feedback;
+import edu.pui.peerEvaluation.Peerevualuationapplication.orm.instructor.Instructor;
+import edu.pui.peerEvaluation.Peerevualuationapplication.orm.project.Project;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.test.context.ActiveProfiles;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
 @SpringBootTest
+
 class PeerevualuationapplicationApplicationTests {
 
 	@Test

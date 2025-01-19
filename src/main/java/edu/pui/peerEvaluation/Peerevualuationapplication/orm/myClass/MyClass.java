@@ -22,9 +22,12 @@ import lombok.Data;
 public class MyClass {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String class_id;
+    private int class_id;
 
     private String class_name;
+
+    private String class_code;
+
 
     // manyToOne means that many classes can have the same instructor
     @ManyToOne
@@ -33,7 +36,7 @@ public class MyClass {
     @JoinColumn(name = "instructor_id")
     private Instructor instructor;
 
-    @OneToMany(mappedBy = "aClass", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "myClass", cascade = CascadeType.ALL)
     private List<Project> projects;
 
 }

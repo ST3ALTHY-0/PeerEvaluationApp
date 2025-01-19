@@ -3,6 +3,7 @@ package edu.pui.peerEvaluation.Peerevualuationapplication.orm.feedback;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import edu.pui.peerEvaluation.Peerevualuationapplication.orm.evaluation.Evaluation;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.evaluationResponse.EvaluationResponse;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.projectGroup.ProjectGroup;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.student.Student;
@@ -28,6 +29,10 @@ public class Feedback {
     private int grade_percent;
 
     private LocalDateTime date_completed;
+
+    @ManyToOne
+    @JoinColumn(name = "evaluation_id", nullable = false)
+    private Evaluation evaluation;
 
     @ManyToOne
     @JoinColumn(name = "rated_by_student_id", referencedColumnName = "student_id")
