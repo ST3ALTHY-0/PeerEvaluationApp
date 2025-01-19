@@ -60,8 +60,6 @@ public class MainController {
         return "login";
     }
 
-  
-
     @GetMapping("/instructorDashboard") 
     public String instructor(){
         return "instructorDashboard";
@@ -70,6 +68,16 @@ public class MainController {
     @GetMapping("/student")
     public String student(){
         return "student";
+    }
+
+    @GetMapping("/createEvaluation")
+    public String createEvaluation(){
+        return "createEvaluation";
+    }
+
+    @GetMapping("/viewEvaluations")
+    public String viewEvaluations(){
+        return "viewEvaluations";
     }
 
 

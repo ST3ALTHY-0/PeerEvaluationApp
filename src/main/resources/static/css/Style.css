@@ -1,0 +1,27 @@
+.navbar {
+    background-color: #C69214; 
+}
+.navbar-brand {
+    color: white !important;
+}
+.footer {
+    background-color: black;
+    padding: 20px 0;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+.container2 {
+    flex: 1;
+}

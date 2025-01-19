@@ -1,25 +1,92 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <title>Instructor Dashboard</title>
     <!-- Bootstrap CDN link -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
+<style>
+     html,
+        body {
+            height: 100%;
+            background-color: #f8f9fa;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+    .navbar {
+        background-color: #C69214;
+        margin-bottom: 50px;
+    }
+
+    .navbar-brand {
+        color: white !important;
+    }
+
+    .footer {
+            background-color: black;
+            padding: 20px 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+        }
+        .container2 {
+            flex: 1;
+        }
+        .btn-custom {
+            margin-bottom: 20px; /* Space out the buttons */
+            padding: 20px 0; /* Increase vertical size */
+            background-color: #C69214;
+        }
+        .btn-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 50vh; /* Adjust as needed */
+        }
+</style>
+
 <body>
-    <div class="container">
-        <h1>Welcome to the Instructor Page</h1>
-        <p th:text="'Hello, ' + ${name}"></p>
+    <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand" href="#">Peer Evaluation</a>
+    </nav>
+    <div class="container text-center">
+        <h1>Instructor Dashboard</h1>
+        <!-- <p th:text="'Hello, ' + ${name}"></p> -->
 
-        <div class="d-flex justify-content-around mt-5">
-            <button class="btn btn-primary btn-lg">Button 1</button>
-            <button class="btn btn-secondary btn-lg">Button 2</button>
+        <!-- <div class="d-flex justify-content-around mt-5">
+            <button type="button" class="btn btn-primary btn-lg btn-block">Block level button</button>
+            <button type="button" class="btn btn-primary btn-lg btn-block">Block level button</button>
+        </div> -->
+        <div class="container btn-container">
+            <button type="button" class="btn btn-primary btn-lg btn-block btn-custom" onclick="navigateToCreateEvaluation()">Create A New Peer Evaluation</button>
+            <button type="button" class="btn btn-primary btn-lg btn-block btn-custom" onclick="navigateToViewEvaluations()">View Past and in-progress Evaluations</button>
         </div>
-
     </div>
+    <footer class="footer">
+        <div class="container2">
+            <span class="text-muted">© 2025 Peer Evaluation. All rights reserved.</span>
+        </div>
+    </footer>
+
+    <script>
+        function navigateToCreateEvaluation() {
+    location.href = '/createEvaluation';
+}
+
+function navigateToViewEvaluations() {
+    location.href = '/viewEvaluations';
+}
+    </script>
 
     <!-- Bootstrap JS and Popper.js (optional for Bootstrap features like dropdowns) -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </body>
+
 </html>

@@ -24,7 +24,7 @@ public class BrightSpaceUserService {
                                                                       // we are legit
                     .retrieve() // get a response
                     .bodyToMono(BrightSpaceUser.class) // specify that we just want the body of the response and throw
-                                                       // it into a BrightSpaceUser obj (which is just a 1to1 model of
+                                                       // it into a BrightSpaceUser class (which is just a 1to1 model of
                                                        // the data we're getting)
                     .block(); // this will throw an error if something goes wrong
         } catch (Exception e) {
