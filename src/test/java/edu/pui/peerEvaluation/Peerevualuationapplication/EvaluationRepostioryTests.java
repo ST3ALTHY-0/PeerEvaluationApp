@@ -57,7 +57,7 @@ class EvaluationRepositoryTests {
     @Autowired
     private EvaluationResponseRepository evaluationResponseRepository;
 
-    // Set up data before tests run
+    // Set up data before tests run (test data is already in db)
     // @BeforeAll
     // void setUp() {
     //     // Insert your test data into the DB
@@ -157,6 +157,14 @@ class EvaluationRepositoryTests {
         assertThat(response).isNotNull();
         assertThat(response.getResponse_text()).isEqualTo("Sarah was very helpful and contributed significantly to the project.");
     }
+
+
+
+    //TODO: Test putting in data 
+
+    //TODO: Test putting in Bad Data
+
+    //Test API?
 
 
 }

@@ -1,8 +1,11 @@
 package edu.pui.peerEvaluation.Peerevualuationapplication.orm.projectGroup;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
+
+import edu.pui.peerEvaluation.Peerevualuationapplication.orm.student.Student;
 
 @Service
 public class ProjectGroupService {
@@ -19,6 +22,10 @@ public class ProjectGroupService {
     
     public List<ProjectGroup> addProjectGroups(List<ProjectGroup> projectGroups){
         return projectGroupRepository.saveAllAndFlush(projectGroups);
+    }
+
+    public ProjectGroup findByProjectId(int projectId) {
+        return projectGroupRepository.findByProjectId(projectId);    
     }
 
 }

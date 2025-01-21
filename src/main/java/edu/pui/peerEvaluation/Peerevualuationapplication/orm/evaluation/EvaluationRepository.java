@@ -32,5 +32,11 @@ public interface EvaluationRepository extends JpaRepository<Evaluation, Integer>
 
     // Optional: Find evaluations by a student
     @Query("SELECT e FROM Evaluation e JOIN e.students s WHERE s.student_id = :studentId")
-    List<Evaluation> findByStudentId(@Param("studentId") int studentId);
+    List<Evaluation> findByStudentId(Integer studentId);
+
+    @Query("SELECT evaluation_questions FROM Evaluation e WHERE e.evaluation_id = :evaluationId")
+    List<Evaluation> findEvaluationQuestionsById(Integer evaluationId);
+
+
+
 }

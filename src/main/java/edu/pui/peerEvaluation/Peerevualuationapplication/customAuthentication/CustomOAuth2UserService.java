@@ -10,6 +10,8 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+//all this class really does is call AssignRolesService to assign our custom roles 
+//and making a custom OAuth2User to hold the custom roles
 @Service
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 

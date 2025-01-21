@@ -25,12 +25,12 @@ public class StudentService {
         return studentRepository.saveAllAndFlush(students);
     }
 
-    public Optional<Student> findStudentById(int id) {
-        return studentRepository.findById(id);
+    public Student findStudentById(int id) {
+        return studentRepository.findById(id).orElse(null);
     }
 
-    public Optional<Student> findStudentByEmail(String email) {
-        return studentRepository.findByEmail(email);
+    public Student findStudentByEmail(String email) {
+        return studentRepository.findByEmail(email).orElse(null);
         }
 
 

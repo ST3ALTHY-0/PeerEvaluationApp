@@ -37,7 +37,7 @@ public class ProjectGroup {
     private List<Feedback> grades;
 
     @ManyToMany(mappedBy = "groups")
-    private Set<Student> students = new HashSet<>();
+    private List<Student> students;
 
     // maybe there should be Project Table that this Table references
     // Project Table could contain Project_id, Project_name, points_worth,
