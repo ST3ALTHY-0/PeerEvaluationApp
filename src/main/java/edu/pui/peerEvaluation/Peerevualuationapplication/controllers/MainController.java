@@ -114,7 +114,13 @@ public class MainController {
     }
 
     @GetMapping("/createEvaluation")
-    public String createEvaluation() {
+    public String createEvaluation(@AuthenticationPrincipal OAuth2User principal, Model model) {
+
+        // add Brightspace Classes
+        // add BrightSpace Students for those classes
+        // add projects for those classes if possible
+        // add groups for those classes if possible
+
         return "createEvaluation";
     }
 

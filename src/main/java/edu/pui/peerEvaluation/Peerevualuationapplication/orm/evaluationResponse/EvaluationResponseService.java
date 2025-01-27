@@ -1,5 +1,7 @@
 package edu.pui.peerEvaluation.Peerevualuationapplication.orm.evaluationResponse;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,13 +11,17 @@ public class EvaluationResponseService {
     private final EvaluationResponseRepository evaluationResponseRepository;
 
     @Autowired
-    public EvaluationResponseService(EvaluationResponseRepository evaluationResponseRepository){
+    public EvaluationResponseService(EvaluationResponseRepository evaluationResponseRepository) {
         this.evaluationResponseRepository = evaluationResponseRepository;
     }
 
-    public EvaluationResponse addEvaluationResponse(EvaluationResponse evaluationResponse){
+    public EvaluationResponse addEvaluationResponse(EvaluationResponse evaluationResponse) {
         return evaluationResponseRepository.saveAndFlush(evaluationResponse);
 
     }
-    
+
+    public List<EvaluationResponse> saveAllAndFlush(List<EvaluationResponse> responses) {
+        return evaluationResponseRepository.saveAllAndFlush(responses);
+    }
+
 }
