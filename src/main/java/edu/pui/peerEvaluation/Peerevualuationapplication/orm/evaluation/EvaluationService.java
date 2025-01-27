@@ -32,5 +32,9 @@ public class EvaluationService {
     public Evaluation findById(int evaluationId) {
         return evaluationRepository.findById(evaluationId).orElse(null);
     }
+
+    public void deleteById(int evaluationId) {
+        evaluationRepository.deleteById(evaluationId);
+    }
     
 }
