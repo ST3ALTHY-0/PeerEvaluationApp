@@ -13,16 +13,16 @@ public class EvaluationQuestionService {
     private final EvaluationQuestionRepository evaluationQuestionRepository;
 
     @Autowired
-    public EvaluationQuestionService(EvaluationQuestionRepository evaluationQuestionRepository){
+    public EvaluationQuestionService(EvaluationQuestionRepository evaluationQuestionRepository) {
         this.evaluationQuestionRepository = evaluationQuestionRepository;
     }
 
-    public EvaluationQuestion addEvaluationQuestion(EvaluationQuestion evaluationQuestion){
+    public EvaluationQuestion addEvaluationQuestion(EvaluationQuestion evaluationQuestion) {
         return evaluationQuestionRepository.saveAndFlush(evaluationQuestion);
     }
 
-    public Optional<EvaluationQuestion> selectResponseByEvaluationQuestionId(Integer evaluationQuestionId){
-        return evaluationQuestionRepository.findById(evaluationQuestionId);
+    public EvaluationQuestion findById(Integer evaluationQuestionId) {
+        return evaluationQuestionRepository.findById(evaluationQuestionId).orElse(null);
     }
-    
+
 }

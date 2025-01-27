@@ -1,23 +1,20 @@
-package edu.pui.peerEvaluation.Peerevualuationapplication.brightSpaceApi.brightSpaceClass;
+package edu.pui.peerEvaluation.Peerevualuationapplication.brightSpaceApi.brightSpaceUser;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-////d2l/api/lp/(version)/enrollments/users/(userId)/orgUnits/
-@Service
-public class BrightSpaceClassService {
+
+public class APIBrightSpaceUserService {
 
     // will get webClient that we configured in config/WebClientConfig.java
     private final WebClient webClient;
-    //private static final String API_VERSION = "version?";
+    // private static final String API_VERSION = "version?";
 
     @Autowired
-    public BrightSpaceClassService(WebClient webClient) {
+    public APIBrightSpaceUserService(WebClient webClient) {
         this.webClient = webClient;
     }
 
-
-    public BrightSpaceClass makeApiCallToGetUser(String accessToken, String apiUrl) {
+    public BrightSpaceUser makeApiCallToGetUser(String accessToken, String apiUrl) {
         try {
 
             return webClient.get() // start http GET request
@@ -25,7 +22,7 @@ public class BrightSpaceClassService {
                     .header("Authorization", "Bearer " + accessToken) // add accessToken to request so brightSpace knows
                                                                       // we are legit
                     .retrieve() // get a response
-                    .bodyToMono(BrightSpaceClass.class) // specify that we just want the body of the response and throw
+                    .bodyToMono(BrightSpaceUser.class) // specify that we just want the body of the response and throw
                                                        // it into a BrightSpaceUser class (which is just a 1to1 model of
                                                        // the data we're getting)
                     .block(); // this will throw an error if something goes wrong
