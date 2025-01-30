@@ -13,11 +13,14 @@ import edu.pui.peerEvaluation.Peerevualuationapplication.orm.instructor.Instruct
 
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -35,7 +38,9 @@ import edu.pui.peerEvaluation.Peerevualuationapplication.orm.evaluationQuestion.
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.evaluationResponse.EvaluationResponse;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@SpringBootTest
+@DataJpaTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@SpringJUnitConfig
 class EvaluationRepositoryTests {
 
     @Autowired
@@ -47,7 +52,7 @@ class EvaluationRepositoryTests {
     @Autowired
     private ProjectRepository projectRepository;
     @Autowired
-    private ProjectGroupRepository projectGroupRepository;
+    private ProjectGroupRepository  projectGroupRepository;
     @Autowired
     private EvaluationRepository evaluationRepository;
     @Autowired
@@ -57,10 +62,9 @@ class EvaluationRepositoryTests {
     @Autowired
     private EvaluationResponseRepository evaluationResponseRepository;
 
-    // Set up data before tests run (test data is already in db)
-    // @BeforeAll
+    // @BeforeEach
     // void setUp() {
-    //     // Insert your test data into the DB
+    //     // Insert your test data into the DB if needed
     // }
 
     @Test
@@ -70,19 +74,19 @@ class EvaluationRepositoryTests {
 
         Instructor instructor = instructorRepository.findById(1).orElse(null);
         assertThat(instructor).isNotNull();
-        assertThat(instructor.getInstructor_name()).isEqualTo("Dr. John Smith");
-        assertThat(instructor.getInstructor_email()).isEqualTo("john.smith@university.edu");
+        assertThat(instructor.getInstructor_name()).isEqualTo("Luke Monroe");
+        assertThat(instructor.getInstructor_email()).isEqualTo("monroe.luke36@gmail.com");
     }
 
     @Test
     void testStudentData() {
         List<Student> students = studentRepository.findAll();
-        assertThat(students).hasSize(5);
+        assertThat(students).hasSize(6);
 
         Student student = studentRepository.findById(1).orElse(null);
         assertThat(student).isNotNull();
-        assertThat(student.getStudent_name()).isEqualTo("Emily Davis");
-        assertThat(student.getStudent_email()).isEqualTo("emily.davis@student.edu");
+        assertThat(student.getStudent_name()).isEqualTo("Luke Monroe");
+        assertThat(student.getStudent_email()).isEqualTo("monroe.luke36@gmail.com");
     }
 
     @Test

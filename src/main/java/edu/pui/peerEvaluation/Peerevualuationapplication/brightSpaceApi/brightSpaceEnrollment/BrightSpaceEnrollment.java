@@ -10,8 +10,9 @@ public class BrightSpaceEnrollment {
     private Access Access;
     private String PinDate;
 
-    @Data
+    @Data 
     public static class OrgUnitInfo {
+        //this might be wrong data, unsure
         private String Identifier;
         private String Name;
         private String Code;

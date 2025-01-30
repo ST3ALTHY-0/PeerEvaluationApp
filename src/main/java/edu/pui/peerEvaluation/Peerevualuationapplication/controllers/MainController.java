@@ -2,7 +2,7 @@ package edu.pui.peerEvaluation.Peerevualuationapplication.controllers;
 
 import java.security.Principal;
 import java.util.Map;
-
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,21 +17,26 @@ import org.springframework.web.bind.annotation.GetMapping;
  */
 import org.springframework.web.bind.annotation.RequestParam;
 
-import edu.pui.peerEvaluation.Peerevualuationapplication.oauth2springsecurity.models.User;
-import edu.pui.peerEvaluation.Peerevualuationapplication.oauth2springsecurity.models.UserService;
+
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.evaluation.Evaluation;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.evaluation.EvaluationService;
+import edu.pui.peerEvaluation.Peerevualuationapplication.orm.instructor.Instructor;
+import edu.pui.peerEvaluation.Peerevualuationapplication.orm.instructor.InstructorService;
+import edu.pui.peerEvaluation.Peerevualuationapplication.orm.myClass.MyClass;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.projectGroup.ProjectGroup;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.projectGroup.ProjectGroupService;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.student.StudentService;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.student.Student;
+import edu.pui.peerEvaluation.Peerevualuationapplication.orm.project.Project;
 
 import edu.pui.peerEvaluation.Peerevualuationapplication.services.OAuth2Service;
+import edu.pui.peerEvaluation.Peerevualuationapplication.brightSpaceApi.BrightSpaceAPIService;
+import edu.pui.peerEvaluation.Peerevualuationapplication.brightSpaceApi.brightSpaceUser.*;
+
 
 @Controller
 public class MainController {
 
-    private final UserService userService;
     private final OAuth2Service oAuth2Service;
     private static final String CLIENT_REGISTRATION_ID = "google"; // change to brightSpace later (i think we can define
                                                                    // regId in SecurityConfig Class in commented out
@@ -39,17 +44,22 @@ public class MainController {
     private final EvaluationService evaluationService;
     private final ProjectGroupService projectGroupService;
     private final StudentService studentService;
+    private final InstructorService instructorService;
+
+    private final BrightSpaceAPIService brightSpaceAPIService;
+
 
     // declare any/all endpoint urls we will use
 
     @Autowired
-    public MainController(UserService userService, OAuth2Service oAuth2Service, EvaluationService evaluationService,
-            ProjectGroupService projectGroupService, StudentService studentService) {
-        this.userService = userService;
+    public MainController(OAuth2Service oAuth2Service, EvaluationService evaluationService,
+            ProjectGroupService projectGroupService, StudentService studentService, InstructorService instructorService, BrightSpaceAPIService brightSpaceAPIService) {
         this.oAuth2Service = oAuth2Service;
         this.evaluationService = evaluationService;
         this.projectGroupService = projectGroupService;
         this.studentService = studentService;
+        this.brightSpaceAPIService = brightSpaceAPIService;
+        this.instructorService = instructorService;
     }
 
     // @GetMapping("/home")
@@ -80,7 +90,10 @@ public class MainController {
     }
 
     @GetMapping("/instructorDashboard")
-    public String instructor() {
+    public String instructor(@AuthenticationPrincipal OAuth2User principal) {
+        principal.getAttribute("email");//may need to get different attribute based on what brightSpace provides (userId)
+        
+        
         return "instructorDashboard";
     }
 
@@ -115,6 +128,26 @@ public class MainController {
 
     @GetMapping("/createEvaluation")
     public String createEvaluation(@AuthenticationPrincipal OAuth2User principal, Model model) {
+        //for google OAuth
+        String userEmail = principal.getAttribute("email");
+
+        //for brightspace user, get and transform userData into instructor obj
+        //check if exist in db, if so return the instructor
+        Instructor instructor = instructorService.findInstructorByEmail(userEmail);
+        System.out.println(instructor.getInstructor_name());
+        List<MyClass> classList = instructor.getClasses();
+        List<Project> projects = new ArrayList<Project>();
+        for(MyClass c : classList){
+            projects.addAll(c.getProjects());
+        }
+        model.addAttribute("instructorClassList", classList);
+        model.addAttribute("projectList", projects);
+
+
+
+        //else create new user for db
+
+
 
         // add Brightspace Classes
         // add BrightSpace Students for those classes
@@ -123,5 +156,11 @@ public class MainController {
 
         return "createEvaluation";
     }
+    
+    @GetMapping("/evaluationFormExtraSettings")
+    public String evaluationFormExtraSettings() {
+        return "evaluationFormExtraSettings";
+    }
+
 
 }

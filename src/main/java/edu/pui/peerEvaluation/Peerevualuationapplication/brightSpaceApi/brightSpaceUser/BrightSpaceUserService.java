@@ -2,9 +2,28 @@ package edu.pui.peerEvaluation.Peerevualuationapplication.brightSpaceApi.brightS
 
 import org.springframework.stereotype.Service;
 
+import edu.pui.peerEvaluation.Peerevualuationapplication.orm.instructor.Instructor;
+import edu.pui.peerEvaluation.Peerevualuationapplication.orm.student.Student;
+
 //after we get a brightspace users details from APIBrightSpaceUserService and store the retrieved data in the BrightSpaceUser class
 //we then use this class to retrieve t
 @Service
 public class BrightSpaceUserService {
+
+    //maybe brightSpaceUserExtended should extend BrightSpaceUser, but im not sure because the order of which we have to call data goes, user then userExtended
+
+    public Student switchStudentUserDataType(BrightSpaceUser brightSpaceUser, BrightSpaceUserExtended brightSpaceUserExtended) {
+        Student student = new Student();
+        student.setStudent_email(brightSpaceUserExtended.getEmail());
+        student.setStudent_name(brightSpaceUser.getFirstName() + " " + brightSpaceUser.getLastName());
+        return student;
+    }
+
+    public Instructor switchInstructorUserDataType(BrightSpaceUser brightSpaceUser, BrightSpaceUserExtended brightSpaceUserExtended) {
+        Instructor instructor = new Instructor();
+        instructor.setInstructor_email(brightSpaceUserExtended.getEmail());
+        instructor.setInstructor_name(brightSpaceUser.getFirstName() + " " + brightSpaceUser.getLastName());
+        return instructor;
+    }
 
 }

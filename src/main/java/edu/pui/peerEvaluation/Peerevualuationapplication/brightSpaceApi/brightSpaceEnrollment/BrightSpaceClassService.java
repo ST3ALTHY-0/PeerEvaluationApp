@@ -1,43 +1,39 @@
 package edu.pui.peerEvaluation.Peerevualuationapplication.brightSpaceApi.brightSpaceEnrollment;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
+import java.util.List;
 
-////d2l/api/lp/(version)/enrollments/users/(userId)/orgUnits/
+import org.springframework.stereotype.Service;
+
+import edu.pui.peerEvaluation.Peerevualuationapplication.orm.instructor.Instructor;
+import edu.pui.peerEvaluation.Peerevualuationapplication.orm.myClass.MyClass;
+import edu.pui.peerEvaluation.Peerevualuationapplication.orm.project.Project;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+
 @Service
 public class BrightSpaceClassService {
 
-    // will get webClient that we configured in config/WebClientConfig.java
-    private final WebClient webClient;
-    // private static final String API_VERSION = "version?";
-
-    @Autowired
-    public BrightSpaceClassService(WebClient webClient) {
-        this.webClient = webClient;
+    public MyClass switchClassDataTypeInstructor(BrightSpaceEnrollment brightSpaceEnrollment, Instructor instructor) {
+        MyClass myClass = new MyClass();
+        myClass.setClass_name(brightSpaceEnrollment.getOrgUnit().getName());
+        myClass.setClass_code(brightSpaceEnrollment.getOrgUnit().getCode());
+        myClass.setInstructor(instructor);
+        return myClass;
     }
 
-    /*
-     * @param userId is the userId of the user in brightSpace it is also called
-     * 'Identifier' in the brightSpaceUser class
-     */
-    // TODO: need to add userId to either the header or the apiURL
-    public BrightSpaceEnrollment makeApiCallToGetUser(String accessToken, String apiUrl, String userId) {
-        try {
+      //I dont think a student version is necessary because we only need to save classes from instructor side
+    // public MyClass switchClassDataTypeStudent(BrightSpaceEnrollment brightSpaceEnrollment, Instructor instructor) {
+    //     MyClass myClass = new MyClass();
+    //     myClass.setClass_name(brightSpaceEnrollment.getOrgUnit().getName());
+    //     myClass.setClass_code(brightSpaceEnrollment.getOrgUnit().getCode());
+    //     myClass.setInstructor(instructor);
+    //     return myClass;
+    // }
 
-            return webClient.get() // start http GET request
-                    .uri(apiUrl) // add the specific endpoint we want to get
-                    .header("Authorization", "Bearer " + accessToken) // add accessToken to request so brightSpace knows
-                                                                      // we are legit
-                    .retrieve() // get a response
-                    .bodyToMono(BrightSpaceEnrollment.class) // specify that we just want the body of the response and
-                                                             // throw
-                    // it into a BrightSpaceUser class (which is just a 1to1 model of
-                    // the data we're getting)
-                    .block(); // this will throw an error if something goes wrong
-        } catch (Exception e) {
-            System.out.println("error: " + e.getMessage());
-            return null;
-        }
-    }
+
 }

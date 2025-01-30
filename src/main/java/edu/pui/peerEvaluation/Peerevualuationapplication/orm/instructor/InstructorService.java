@@ -18,6 +18,11 @@ public class InstructorService {
         instructorRepository.saveAndFlush(instructor);
         return instructor;
     }
+    
+    public Instructor findInstructorByEmail(String email) {
+        return instructorRepository.findByEmail(email).orElse(null);
+        }
+
 
 }
 

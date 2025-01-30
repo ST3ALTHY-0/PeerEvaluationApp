@@ -3,12 +3,13 @@ package edu.pui.peerEvaluation.Peerevualuationapplication.brightSpaceApi.brightS
 import java.util.List;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 //brightspace has two endpoints we need to call to get user info
 //we will call /d2l/api/lp/(version)/users/whoami [GET] to get basic data about user, namely their userId
 //which we then use to call GET /d2l/api/lp/(version)/profile/user/(userId) to get further data about the user namely their email address
 @Data
-public class BrightSpaceUserExtended {
+public class BrightSpaceUserExtended{
     private String Nickname;
     private Birthday Birthday;
     private String HomeTown;

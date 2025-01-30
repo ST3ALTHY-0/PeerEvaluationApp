@@ -72,50 +72,88 @@
     </nav>
     <!-- <h1>Create Evaluation</h1> -->
     <div class="container">
-        <h1 style="margin-bottom: 20px;">Create Evaluation</h1>
+        <h1 style="margin-bottom: 20px;">Create Evaluation Form</h1>
 
-    <form>
+    <form th:action="@{/completeEvaluationForm}" method="get">
         <div class="form-row">
           <div class="form-group col-md-6">
+
             <label class="mr-sm-2" for="inlineFormCustomSelect">Class</label>
-            <select class="custom-select mr-sm-2" id="inlineFormCustomSelect">
+            <select class="custom-select mr-sm-2" id="classSelect" name="classId">
               <option selected>Choose...</option>
-              <option value="1">Class One</option>
-              <option value="2">Class Two</option>
-              <option value="3">Class Three</option>
+              <option th:each="class : ${instructorClassList}" th:value="${class.class_id}" th:text="${class.class_name}"></option>
+              <!-- would be great if user could enter their own class name -->
+
             </select>
           </div>
           <div class="form-group col-md-6">
             <label class="mr-sm-2" for="inlineFormCustomSelect">Project</label>
-            <select class="custom-select mr-sm-2" id="inlineFormCustomSelect">
+            <select class="custom-select mr-sm-2" id="projectSelect" name="projectId">
               <option selected>Choose...</option>
-              <option value="1">Project One</option>
-              <option value="2">Project Two</option>
-              <option value="3">Project Three</option>
+              <option th:each="project : ${projectList}" th:value="${project.project_id}" th:text="${project.project_name}" th:data-class="${project.myClass.class_name}"></option>
+              <!-- would be great if user could enter their own project name -->
+
             </select>
           </div>
         </div>
+
         <div class="form-group">
-            <label for="inputAddress">Students</label> <!-- Add students from API based on the selected class (cache classlist of all classes for instructor so its faster to grab) -->
-            <input type="text" class="form-control" id="inputAddress" placeholder="Students">
+          <label class="mr-sm-2" for="inlineFormCustomSelect">Group Type</label>
+          <!-- each Group will have a list of all groups for a project -->
+          <select class="custom-select mr-sm-2" id="projectSelect" name="projectId">
+            <option selected>Choose...</option>
+            <option th:each="project : ${projectList}" th:value="${project.project_id}" th:text="${project.project_name}" th:data-class="${project.myClass.class_name}"></option>          //
+          </select>
+
           </div>
-        <div class="form-group">
+
+        <!-- <div class="form-group">
           <label for="inputAddress">Groups</label>
+          each group here wi
           <input type="text" class="form-control" id="inputAddress" placeholder="Groups">
+        </div> -->
+
+
+        <div class="form-group">
+          <label class="mr-sm-2" for="inlineFormCustomSelect">Groups and Group Members</label>
+          <!-- each Group will have a list of all groups for a project -->
+          <select class="custom-select mr-sm-2" id="projectSelect" name="projectId">
+            <option th:each="project : ${projectList}" th:value="${project.project_id}" th:text="${project.project_name}" th:data-class="${project.myClass.class_name}"></option>
+          </select>
         </div>
         <!-- <div class="form-group">
           <label for="inputAddress2">Address 2</label>
           <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
         </div> -->
+        <div class="form-group">
+
+          </div>
         
         <div class="form-group">
           <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="gridCheck">
-            <label class="form-check-label" for="gridCheck">
-              Check me out
-            </label>
+            <input class="form-check-input" type="checkbox" id="gridCheck" checked>
+            <label class="form-check-label" for="gridCheck">Enable Grading</label>
+          </div>
+          <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="gridCheck2">
+            <label class="form-check-label" for="gridCheck2">Use Standard Evaluation Form</label>
           </div>
         </div>
+        
+          <div class="form-row">
+            <div class="form-group col-auto">
+              <a href="/evaluationFormExtraSettings" class="btn btn-primary">Preview Evaluation Form</a>
+            </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="dueDate">Due Date</label>
+                <input type="date" class="form-control" id="dueDate" name="dueDate">
+              </div>
+                </div>
+
+
         <div class="form-row">
             <div class="form-group col-md-10">
                 <button type="back" class="btn btn-primary">Back</button>
@@ -136,6 +174,39 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <!-- AI generated javascript -->
+    <script>
+        $(document).ready(function() {
+            $('#classInput').on('input', function() {
+                var inputClass = $(this).val().toLowerCase();
+                $('#projectSelect option').each(function() {
+                    var projectClass = $(this).data('class').toLowerCase();
+                    if (projectClass.includes(inputClass)) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            });
+        });
+
+        $(document).ready(function() {
+            $('#classInput').on('input', function() {
+                var inputClass = $(this).val().toLowerCase();
+                $('#projectSelect option').each(function() {
+                    var projectClass = $(this).data('class').toLowerCase();
+                    if (projectClass.includes(inputClass)) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            });
+        });
+
+        
+    </script>
 </body>
 
 </html>
