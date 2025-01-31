@@ -14,29 +14,27 @@ public interface EvaluationRepository extends JpaRepository<Evaluation, Integer>
     // List<Evaluation> findByStudentId(@Param("studentId") Integer studentId);
 
     // Find evaluations by instructor ID
-    @Query("SELECT e FROM Evaluation e WHERE e.instructor.instructor_id = :instructorId")
+    @Query("SELECT e FROM Evaluation e WHERE e.instructor.instructorId = :instructorId")
     List<Evaluation> findByInstructorId(@Param("instructorId") int instructorId);
 
     // Find evaluations by project ID
-    @Query("SELECT e FROM Evaluation e WHERE e.project.project_id = :projectId")
+    @Query("SELECT e FROM Evaluation e WHERE e.project.projectId = :projectId")
     List<Evaluation> findByProjectId(@Param("projectId") int projectId);
 
     // Find evaluations by completion status
-    @Query("SELECT e FROM Evaluation e WHERE e.is_complete = :isComplete")
+    @Query("SELECT e FROM Evaluation e WHERE e.isComplete = :isComplete")
     List<Evaluation> findByIsCompleted(@Param("isComplete") boolean isComplete);
 
     // Optional: Find evaluations by instructor and completion status
-    @Query("SELECT e FROM Evaluation e WHERE e.instructor.instructor_id = :instructorId AND e.is_complete = :isComplete")
+    @Query("SELECT e FROM Evaluation e WHERE e.instructor.instructorId = :instructorId AND e.isComplete = :isComplete")
     List<Evaluation> findByInstructorIdAndIsCompleted(@Param("instructorId") int instructorId,
             @Param("isComplete") boolean isComplete);
 
     // Optional: Find evaluations by a student
-    @Query("SELECT e FROM Evaluation e JOIN e.students s WHERE s.student_id = :studentId")
+    @Query("SELECT e FROM Evaluation e JOIN e.students s WHERE s.studentId = :studentId")
     List<Evaluation> findByStudentId(Integer studentId);
 
-    @Query("SELECT evaluation_questions FROM Evaluation e WHERE e.evaluation_id = :evaluationId")
+    @Query("SELECT evaluationQuestions FROM Evaluation e WHERE e.evaluationId = :evaluationId")
     List<Evaluation> findEvaluationQuestionsById(Integer evaluationId);
-
-
 
 }

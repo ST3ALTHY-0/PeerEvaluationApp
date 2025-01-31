@@ -81,7 +81,7 @@
             <label class="mr-sm-2" for="inlineFormCustomSelect">Class</label>
             <select class="custom-select mr-sm-2" id="classSelect" name="classId">
               <option selected>Choose...</option>
-              <option th:each="class : ${instructorClassList}" th:value="${class.class_id}" th:text="${class.class_name}"></option>
+              <option th:each="class : ${instructorClassList}" th:value="${class.classId}" th:text="${class.className}"></option>
               <!-- would be great if user could enter their own class name -->
 
             </select>
@@ -90,7 +90,7 @@
             <label class="mr-sm-2" for="inlineFormCustomSelect">Project</label>
             <select class="custom-select mr-sm-2" id="projectSelect" name="projectId">
               <option selected>Choose...</option>
-              <option th:each="project : ${projectList}" th:value="${project.project_id}" th:text="${project.project_name}" th:data-class="${project.myClass.class_name}"></option>
+              <option th:each="project : ${projectList}" th:value="${project.projectId}" th:text="${project.projectName}" th:data-class="${project.myClass.className}"></option>
               <!-- would be great if user could enter their own project name -->
 
             </select>
@@ -102,7 +102,7 @@
           <!-- each Group will have a list of all groups for a project -->
           <select class="custom-select mr-sm-2" id="projectSelect" name="projectId">
             <option selected>Choose...</option>
-            <option th:each="project : ${projectList}" th:value="${project.project_id}" th:text="${project.project_name}" th:data-class="${project.myClass.class_name}"></option>          //
+            <option th:each="project : ${projectList}" th:value="${project.projectId}" th:text="${project.projectName}" th:data-class="${project.myClass.className}"></option>
           </select>
 
           </div>
@@ -118,7 +118,7 @@
           <label class="mr-sm-2" for="inlineFormCustomSelect">Groups and Group Members</label>
           <!-- each Group will have a list of all groups for a project -->
           <select class="custom-select mr-sm-2" id="projectSelect" name="projectId">
-            <option th:each="project : ${projectList}" th:value="${project.project_id}" th:text="${project.project_name}" th:data-class="${project.myClass.class_name}"></option>
+            <option th:each="project : ${projectList}" th:value="${project.projectId}" th:text="${project.projectName}" th:data-class="${project.myClass.className}"></option>
           </select>
         </div>
         <!-- <div class="form-group">
