@@ -14,7 +14,7 @@ public interface ProjectGroupRepository extends JpaRepository<ProjectGroup, Inte
 
     // Write the necessary queries and functions that will be needed
 
-    @Query("SELECT pg FROM ProjectGroup pg WHERE pg.group_id = :projectGroupId")
+    @Query("SELECT pg FROM ProjectGroup pg WHERE pg.groupId = :projectGroupId")
     public <Optional>ProjectGroup findByProjectId(int projectGroupId);
 
     // @Query("SELECT group_id FROM ProjectGroup pg WHERE pg.group_name = :grou")

@@ -24,26 +24,26 @@ public class Feedback {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int feedback_id;
+    private int feedbackId;
 
-    private int grade_percent;
+    private int gradePercent;
 
-    private LocalDateTime date_completed;
+    private LocalDateTime dateCompleted;
 
     @ManyToOne
-    @JoinColumn(name = "evaluation_id", nullable = false)
+    @JoinColumn(name = "evaluationId", nullable = false)
     private Evaluation evaluation;
 
     @ManyToOne
-    @JoinColumn(name = "rated_by_student_id", referencedColumnName = "student_id")
-    private Student rated_by_student;
+    @JoinColumn(name = "ratedByStudentId", referencedColumnName = "studentId")
+    private Student ratedByStudent;
 
     @ManyToOne
-    @JoinColumn(name = "rated_student_id", referencedColumnName = "student_id")
-    private Student rated_student;
+    @JoinColumn(name = "ratedStudentId", referencedColumnName = "studentId")
+    private Student ratedStudent;
 
     @ManyToOne
-    @JoinColumn(name = "group_id", referencedColumnName = "group_id")
+    @JoinColumn(name = "groupId", referencedColumnName = "groupId")
     private ProjectGroup group;
 
     // evaluation response

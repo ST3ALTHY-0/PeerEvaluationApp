@@ -64,7 +64,7 @@ public class EvaluationController {
                 // Save each response and add to list
                 EvaluationResponse evaluationResponse = new EvaluationResponse();
                 evaluationResponse.setQuestion(evaluationQuestionService.findById(response.getQuestionId()));
-                evaluationResponse.setResponse_text(response.getResponse());
+                evaluationResponse.setResponseText(response.getResponse());
                 evaluationResponse.setFeedback(feedback);
                 evalResponses.add(evaluationResponse);
                 System.out.println(evaluationResponse);
@@ -73,11 +73,11 @@ public class EvaluationController {
             evaluationResponseService.saveAllAndFlush(evalResponses);
 
             // set feedback
-            feedback.setDate_completed(LocalDateTime.now());
+            feedback.setDateCompleted(LocalDateTime.now());
             feedback.setEvaluation(evaluationService.findById(evaluationId));
-            feedback.setGrade_percent(0); // set later
-            feedback.setRated_by_student(studentService.findStudentById(ratingStudentId)); // prob needs changed
-            feedback.setRated_student(studentService.findStudentById(studentId));
+            feedback.setGradePercent(0); // set later
+            feedback.setRatedByStudent(studentService.findStudentById(ratingStudentId)); // prob needs changed
+            feedback.setRatedStudent(studentService.findStudentById(studentId));
             feedback.setResponses(evalResponses);
             System.out.println(feedback);
 

@@ -18,14 +18,14 @@ import lombok.Data;
 public class EvaluationQuestion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int question_id;
+    private int questionId;
 
-    private String question_text;
+    private String questionText;
 
-    private boolean enforce_answer; // not null
+    private boolean enforceAnswer; // not null
 
     @ManyToOne
-    @JoinColumn(name = "evaluation_id", referencedColumnName = "evaluation_id")
+    @JoinColumn(name = "evaluationId", referencedColumnName = "evaluationId")
     private Evaluation evaluation;
 
     @OneToOne(mappedBy = "question")

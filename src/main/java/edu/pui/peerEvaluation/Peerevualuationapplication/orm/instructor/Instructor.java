@@ -21,11 +21,11 @@ import lombok.Data;
 public class Instructor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int instructor_id;
+    private int instructorId;
 
-    private String instructor_name;
+    private String instructorName;
 
-    private String instructor_email;
+    private String instructorEmail;
 
     // @Version
     // private int version;

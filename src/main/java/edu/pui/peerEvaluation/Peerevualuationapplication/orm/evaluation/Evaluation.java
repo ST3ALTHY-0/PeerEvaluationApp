@@ -29,22 +29,22 @@ import lombok.Data;
 public class Evaluation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int evaluation_id;
+    private int evaluationId;
 
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
-    private boolean is_complete;
+    private boolean isComplete;
 
     @ManyToOne
-    @JoinColumn(name = "instructor_id", referencedColumnName = "instructor_id")
+    @JoinColumn(name = "instructorId", referencedColumnName = "instructorId")
     private Instructor instructor;
 
     @OneToOne
-    @JoinColumn(name = "project_id", referencedColumnName = "project_id")
+    @JoinColumn(name = "projectId", referencedColumnName = "projectId")
     private Project project;
 
     @OneToMany(mappedBy = "evaluation")
-    private List<EvaluationQuestion> evaluation_questions;
+    private List<EvaluationQuestion> evaluationQuestions;
 
     @OneToMany(mappedBy = "evaluation", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Feedback> feedbacks;

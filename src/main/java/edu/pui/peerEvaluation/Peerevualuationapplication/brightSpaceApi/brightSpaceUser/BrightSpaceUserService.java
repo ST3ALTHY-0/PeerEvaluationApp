@@ -14,15 +14,15 @@ public class BrightSpaceUserService {
 
     public Student switchStudentUserDataType(BrightSpaceUser brightSpaceUser, BrightSpaceUserExtended brightSpaceUserExtended) {
         Student student = new Student();
-        student.setStudent_email(brightSpaceUserExtended.getEmail());
-        student.setStudent_name(brightSpaceUser.getFirstName() + " " + brightSpaceUser.getLastName());
+        student.setStudentEmail(brightSpaceUserExtended.getEmail());
+        student.setStudentName(brightSpaceUser.getFirstName() + " " + brightSpaceUser.getLastName());
         return student;
     }
 
     public Instructor switchInstructorUserDataType(BrightSpaceUser brightSpaceUser, BrightSpaceUserExtended brightSpaceUserExtended) {
         Instructor instructor = new Instructor();
-        instructor.setInstructor_email(brightSpaceUserExtended.getEmail());
-        instructor.setInstructor_name(brightSpaceUser.getFirstName() + " " + brightSpaceUser.getLastName());
+        instructor.setInstructorEmail(brightSpaceUserExtended.getEmail());
+        instructor.setInstructorName(brightSpaceUser.getFirstName() + " " + brightSpaceUser.getLastName());
         return instructor;
     }
 

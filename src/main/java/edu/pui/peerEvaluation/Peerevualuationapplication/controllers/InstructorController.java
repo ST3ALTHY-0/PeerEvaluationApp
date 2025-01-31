@@ -65,7 +65,7 @@ public class InstructorController {
         //for brightspace user, get and transform userData into instructor obj
         //check if exist in db, if so return the instructor
         Instructor instructor = instructorService.findInstructorByEmail(userEmail);
-        System.out.println(instructor.getInstructor_name());
+        System.out.println(instructor.getInstructorName());
         List<MyClass> classList = instructor.getClasses();
         List<Project> projects = new ArrayList<Project>();
         for(MyClass c : classList){

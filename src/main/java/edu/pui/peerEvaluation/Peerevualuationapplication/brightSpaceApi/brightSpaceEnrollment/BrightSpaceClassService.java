@@ -20,8 +20,8 @@ public class BrightSpaceClassService {
 
     public MyClass switchClassDataTypeInstructor(BrightSpaceEnrollment brightSpaceEnrollment, Instructor instructor) {
         MyClass myClass = new MyClass();
-        myClass.setClass_name(brightSpaceEnrollment.getOrgUnit().getName());
-        myClass.setClass_code(brightSpaceEnrollment.getOrgUnit().getCode());
+        myClass.setClassName(brightSpaceEnrollment.getOrgUnit().getName());
+        myClass.setClassCode(brightSpaceEnrollment.getOrgUnit().getCode());
         myClass.setInstructor(instructor);
         return myClass;
     }

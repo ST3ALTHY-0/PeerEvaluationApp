@@ -25,23 +25,23 @@ public class Project {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int project_id;
+    private int projectId;
 
-    private String project_name;
+    private String projectName;
 
-    private int points_worth;
+    private int pointsWorth;
 
     // @Version
     // private int version;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "class_id", referencedColumnName = "class_id")
+    @JoinColumn(name = "classId", referencedColumnName = "classId")
     private MyClass myClass;
 
     // this class is referenced by
     // project_group
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
-    private List<ProjectGroup> project_groups;
+    private List<ProjectGroup> projectGroups;
 
     // evaluation
     @OneToOne(mappedBy = "project", cascade = CascadeType.ALL)

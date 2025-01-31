@@ -39,7 +39,7 @@ public class StudentViewController {
     public String studentViewEvaluations(@AuthenticationPrincipal OAuth2User principal, Model model) {
         List<Evaluation> userEvalList = evaluationService.findAll();
         for (Evaluation e : userEvalList) {
-            System.out.println(e.getEvaluation_id());
+            System.out.println(e.getEvaluationId());
         }
         model.addAttribute("userEvalList", userEvalList);
         return "student/viewEvaluations";
@@ -50,11 +50,11 @@ public class StudentViewController {
             @RequestParam("evaluationId") int evaluationId) {
         String currentStudentEmail = principal.getAttribute("email");
         Student currentStudent = studentService.findStudentByEmail(currentStudentEmail);
-        Integer currentStudentId = currentStudent.getStudent_id();
+        Integer currentStudentId = currentStudent.getStudentId();
         model.addAttribute("currentStudentId", currentStudentId);
         Evaluation evaluation = evaluationService.findById(evaluationId);
         model.addAttribute("evaluation", evaluation);
-        ProjectGroup projectGroup = projectGroupService.findById(evaluation.getProject().getProject_id());
+        ProjectGroup projectGroup = projectGroupService.findById(evaluation.getProject().getProjectId());
         model.addAttribute("projectGroup", projectGroup);
         //System.out.println(projectGroup);
         return "student/completeEvaluation";

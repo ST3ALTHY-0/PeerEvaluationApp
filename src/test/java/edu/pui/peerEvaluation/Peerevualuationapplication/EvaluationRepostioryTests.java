@@ -74,8 +74,8 @@ class EvaluationRepositoryTests {
 
         Instructor instructor = instructorRepository.findById(1).orElse(null);
         assertThat(instructor).isNotNull();
-        assertThat(instructor.getInstructor_name()).isEqualTo("Luke Monroe");
-        assertThat(instructor.getInstructor_email()).isEqualTo("monroe.luke36@gmail.com");
+        assertThat(instructor.getInstructorName()).isEqualTo("Luke Monroe");
+        assertThat(instructor.getInstructorEmail()).isEqualTo("monroe.luke36@gmail.com");
     }
 
     @Test
@@ -85,8 +85,8 @@ class EvaluationRepositoryTests {
 
         Student student = studentRepository.findById(1).orElse(null);
         assertThat(student).isNotNull();
-        assertThat(student.getStudent_name()).isEqualTo("Luke Monroe");
-        assertThat(student.getStudent_email()).isEqualTo("monroe.luke36@gmail.com");
+        assertThat(student.getStudentName()).isEqualTo("Luke Monroe");
+        assertThat(student.getStudentEmail()).isEqualTo("monroe.luke36@gmail.com");
     }
 
     @Test
@@ -96,8 +96,8 @@ class EvaluationRepositoryTests {
 
         MyClass myClass = classRepository.findById(1).orElse(null);
         assertThat(myClass).isNotNull();
-        assertThat(myClass.getClass_name()).isEqualTo("Introduction to Programming");
-        assertThat(myClass.getClass_code()).isEqualTo("CS101");
+        assertThat(myClass.getClassName()).isEqualTo("Introduction to Programming");
+        assertThat(myClass.getClassCode()).isEqualTo("CS101");
     }
 
     @Test
@@ -107,8 +107,8 @@ class EvaluationRepositoryTests {
 
         Project project = projectRepository.findById(1).orElse(null);
         assertThat(project).isNotNull();
-        assertThat(project.getProject_name()).isEqualTo("Programming Basics Project");
-        assertThat(project.getPoints_worth()).isEqualTo(100);
+        assertThat(project.getProjectName()).isEqualTo("Programming Basics Project");
+        assertThat(project.getPointsWorth()).isEqualTo(100);
     }
 
     @Test
@@ -118,7 +118,7 @@ class EvaluationRepositoryTests {
 
         ProjectGroup group = projectGroupRepository.findById(1).orElse(null);
         assertThat(group).isNotNull();
-        assertThat(group.getGroup_name()).isEqualTo("Group Alpha");
+        assertThat(group.getGroupName()).isEqualTo("Group Alpha");
     }
 
 
@@ -129,7 +129,7 @@ class EvaluationRepositoryTests {
 
         Evaluation evaluation = evaluationRepository.findById(1).orElse(null);
         assertThat(evaluation).isNotNull();
-        assertThat(evaluation.is_complete()).isFalse();
+        assertThat(evaluation.isComplete()).isFalse();
     }
 
     @Test
@@ -139,7 +139,7 @@ class EvaluationRepositoryTests {
 
         Feedback feedback = feedbackRepository.findById(1).orElse(null);
         assertThat(feedback).isNotNull();
-        assertThat(feedback.getGrade_percent()).isEqualTo(90);
+        assertThat(feedback.getGradePercent()).isEqualTo(90);
     }
 
     @Test
@@ -149,7 +149,7 @@ class EvaluationRepositoryTests {
 
         EvaluationQuestion question = evaluationQuestionRepository.findById(1).orElse(null);
         assertThat(question).isNotNull();
-        assertThat(question.getQuestion_text()).isEqualTo("How well did your teammate contribute to the project?");
+        assertThat(question.getQuestionText()).isEqualTo("How well did your teammate contribute to the project?");
     }
 
     @Test
@@ -159,7 +159,7 @@ class EvaluationRepositoryTests {
 
         EvaluationResponse response = evaluationResponseRepository.findById(1).orElse(null);
         assertThat(response).isNotNull();
-        assertThat(response.getResponse_text()).isEqualTo("Sarah was very helpful and contributed significantly to the project.");
+        assertThat(response.getResponseText()).isEqualTo("Sarah was very helpful and contributed significantly to the project.");
     }
 
 

@@ -13,7 +13,7 @@ import edu.pui.peerEvaluation.Peerevualuationapplication.orm.projectGroup.Projec
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Integer> {
 
-    @Query("SELECT s FROM Student s WHERE s.student_email = :email")
+    @Query("SELECT s FROM Student s WHERE s.studentEmail = :email")
     Optional<Student> findByEmail(String email);
     
 
