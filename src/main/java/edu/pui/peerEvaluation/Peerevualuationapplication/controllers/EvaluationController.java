@@ -43,7 +43,7 @@ public class EvaluationController {
     @Autowired
     private StudentService studentService;
 
-    @PostMapping("/feedback")
+    @PostMapping("/feedback/submit")
     public String submitFeedback(@RequestParam("evaluationId") Integer evaluationId,
             @RequestParam("evaluatorId") Integer ratingStudentId,
             @RequestParam("ratedStudentId") Integer ratedStudentId,
@@ -67,6 +67,7 @@ public class EvaluationController {
                 evaluationResponse.setResponse_text(response.getResponse());
                 evaluationResponse.setFeedback(feedback);
                 evalResponses.add(evaluationResponse);
+                System.out.println(evaluationResponse);
             }
             // save responses to db
             evaluationResponseService.saveAllAndFlush(evalResponses);
@@ -78,6 +79,8 @@ public class EvaluationController {
             feedback.setRated_by_student(studentService.findStudentById(ratingStudentId)); // prob needs changed
             feedback.setRated_student(studentService.findStudentById(studentId));
             feedback.setResponses(evalResponses);
+            System.out.println(feedback);
+
             // feedback.setGroup(); //set group, might need to pass project group from
             // thymeleaf
 
@@ -89,6 +92,6 @@ public class EvaluationController {
         model.addAttribute("message", "Feedback submitted successfully");
 
         // Redirect or return a view name
-        return "redirect:/somePage";
+        return "/student/feedback/finished";
     }
 }

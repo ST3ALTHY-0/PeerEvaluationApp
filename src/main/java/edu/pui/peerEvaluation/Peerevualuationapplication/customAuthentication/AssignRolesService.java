@@ -26,9 +26,9 @@ public class AssignRolesService {
                                                         // class list of a user and if they are enrolled as a
                                                         // student/instructor/both
         if (email != null && email.endsWith("@gmail.com")) {
-            return Collections.singletonList(new SimpleGrantedAuthority(Roles.INSTRUCTOR));
-        } else if (email.endsWith("@hotmail.com")) {
             return Collections.singletonList(new SimpleGrantedAuthority(Roles.STUDENT));
+        } else if (email.endsWith("@hotmail.com")) {
+            return Collections.singletonList(new SimpleGrantedAuthority(Roles.INSTRUCTOR));
         } else {
             return Arrays.asList(new SimpleGrantedAuthority(Roles.STUDENT),
                     new SimpleGrantedAuthority(Roles.INSTRUCTOR));

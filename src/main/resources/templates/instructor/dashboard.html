@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Instructor Dashboard</title>
+    <!-- Bootstrap CDN link -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/Style.css" rel="stylesheet">
+    <!-- Google Fonts for better typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<style>
+    html,
+    body {
+        height: 100%;
+        background-color: #f8f9fa;
+        font-family: 'Roboto', sans-serif;
+    }
+
+    body {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .navbar {
+        background-color: #007bff; /* Updated to a modern blue */
+        margin-bottom: 50px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    }
+
+    .navbar-brand {
+        color: white !important;
+        font-weight: 500;
+        font-size: 1.5rem;
+    }
+
+    .footer {
+        background-color: #343a40; /* Darker footer for contrast */
+        padding: 20px 0;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        text-align: center;
+        color: white; /* White text for better readability */
+    }
+
+    .container2 {
+        flex: 1;
+    }
+
+    .btn-custom {
+        margin-bottom: 20px; /* Space out the buttons */
+        padding: 20px 40px; /* Increase padding for a larger button */
+        background-color: #007bff; /* Matching the navbar color */
+        border: none;
+        border-radius: 5px; /* Rounded corners */
+        color: white;
+        font-size: 1.2rem;
+        transition: background-color 0.3s ease; /* Smooth hover effect */
+    }
+
+    .btn-custom:hover {
+        background-color: #0056b3; /* Darker shade on hover */
+    }
+
+    .btn-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 50vh; /* Adjust as needed */
+    }
+
+    h1 {
+        color: #343a40; /* Darker text for better contrast */
+        margin-bottom: 30px;
+        font-weight: 700;
+    }
+
+    .container {
+        max-width: 800px; /* Limit container width for better readability */
+    }
+</style>
+
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand" href="#">Peer Evaluation</a>
+    </nav>
+    <div class="container text-center">
+        <h1>Instructor Dashboard</h1>
+        <!-- <p th:text="'Hello, ' + ${name}"></p> -->
+
+        <div class="container btn-container">
+            <a href="/createEvaluation" class="btn btn-custom">Create A New Peer Evaluation</a>
+            <a href="/createEvaluation" class="btn btn-custom">View Past and in-progress Evaluations</a>
+        </div>
+    </div>
+    
+    <footer class="footer">
+        <div class="container2">
+            <span>© 2025 Peer Evaluation. All rights reserved.</span>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS and Popper.js (optional for Bootstrap features like dropdowns) -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+
+</html>
