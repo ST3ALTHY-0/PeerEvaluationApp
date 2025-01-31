@@ -19,6 +19,10 @@ public class InstructorService {
         return instructor;
     }
 
+    public Instructor findInstructorByEmail(String email) {
+        return instructorRepository.findByEmail(email).orElse(null);
+    }
+
 }
 
 // I really need to see what sort of information is available when using

@@ -1,5 +1,7 @@
 package edu.pui.peerEvaluation.Peerevualuationapplication.orm.student;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -10,6 +12,9 @@ import edu.pui.peerEvaluation.Peerevualuationapplication.orm.projectGroup.Projec
 
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Integer> {
+
+    @Query("SELECT s FROM Student s WHERE s.studentEmail = :email")
+    Optional<Student> findByEmail(String email);
 
     // Write the necessary queries and functions that will be needed
 
@@ -32,8 +37,12 @@ public interface StudentRepository extends JpaRepository<Student, Integer> {
     // find which student ID they are in my DB, if possible email will be stored
     // when the student is first created and we can check the new logged ined
     // student's email with the student emails in the DB to get their id
-
     // student selects which project they want to do evaluations for
+
+    // find the evaluation
+
+    // useless maybe
+
     // @Query("SELECT p, c " +
     // "FROM Project p " +
     // "JOIN p.aClass c " +
@@ -48,6 +57,4 @@ public interface StudentRepository extends JpaRepository<Student, Integer> {
     // "WHERE pg.project = :project AND s.id = :studentId")
     // Optional<ProjectGroup> findByProjectAndStudent(@Param("project") Project
     // project, @Param("studentId") Integer studentId);
-
-    // find the evaluation
 }

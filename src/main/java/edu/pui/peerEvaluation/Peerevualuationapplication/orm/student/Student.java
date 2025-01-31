@@ -26,23 +26,23 @@ public class Student {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int student_id;
+    private int studentId;
 
-    private String student_name;
-    private String student_email;
+    private String studentName;
+    private String studentEmail;
 
-    @OneToMany(mappedBy = "rated_by_student", cascade = CascadeType.ALL)
-    private List<Feedback> given_grades;
+    @OneToMany(mappedBy = "ratedByStudent", cascade = CascadeType.ALL)
+    private List<Feedback> givenGrades;
 
-    @OneToMany(mappedBy = "rated_student", cascade = CascadeType.ALL)
-    private List<Feedback> received_grades;
+    @OneToMany(mappedBy = "ratedStudent", cascade = CascadeType.ALL)
+    private List<Feedback> receivedGrades;
 
     @ManyToMany
-    @JoinTable(name = "group_membership", joinColumns = @JoinColumn(name = "student_id"), inverseJoinColumns = @JoinColumn(name = "group_id"))
+    @JoinTable(name = "groupMembership", joinColumns = @JoinColumn(name = "studentId"), inverseJoinColumns = @JoinColumn(name = "groupId"))
     private Set<ProjectGroup> groups = new HashSet<>();
 
     @ManyToMany
-    @JoinTable(name = "evaluation_student", joinColumns = @JoinColumn(name = "student_id"), inverseJoinColumns = @JoinColumn(name = "evaluation_id"))
+    @JoinTable(name = "evaluationStudent", joinColumns = @JoinColumn(name = "studentId"), inverseJoinColumns = @JoinColumn(name = "evaluationId"))
     private Set<Evaluation> evaluations = new HashSet<>();
 
     // another join table for class_student

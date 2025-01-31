@@ -6,9 +6,11 @@ import java.util.List;
 import java.util.Set;
 
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.evaluationQuestion.EvaluationQuestion;
+import edu.pui.peerEvaluation.Peerevualuationapplication.orm.feedback.Feedback;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.instructor.Instructor;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.project.Project;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.student.Student;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,20 +29,25 @@ import lombok.Data;
 public class Evaluation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int evaluation_id;
+    private int evaluationId;
 
-    private LocalDateTime date_completed;
+    private LocalDateTime createdAt;
+
+    private boolean isComplete;
 
     @ManyToOne
-    @JoinColumn(name = "instructor_id", referencedColumnName = "instructor_id")
+    @JoinColumn(name = "instructorId", referencedColumnName = "instructorId")
     private Instructor instructor;
 
     @OneToOne
-    @JoinColumn(name = "project_id", referencedColumnName = "project_id")
+    @JoinColumn(name = "projectId", referencedColumnName = "projectId")
     private Project project;
 
     @OneToMany(mappedBy = "evaluation")
-    private List<EvaluationQuestion> evaluation_questions;
+    private List<EvaluationQuestion> evaluationQuestions;
+
+    @OneToMany(mappedBy = "evaluation", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Feedback> feedbacks;
 
     @ManyToMany(mappedBy = "evaluations")
     private Set<Student> students = new HashSet<>();

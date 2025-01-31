@@ -15,6 +15,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.Data;
 
 @Data
@@ -24,20 +25,23 @@ public class Project {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int project_id;
+    private int projectId;
 
-    private String project_name;
+    private String projectName;
 
-    private int points_worth;
+    private int pointsWorth;
+
+    // @Version
+    // private int version;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "class_id")
-    private MyClass aClass;
+    @JoinColumn(name = "classId", referencedColumnName = "classId")
+    private MyClass myClass;
 
     // this class is referenced by
     // project_group
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
-    private List<ProjectGroup> project_groups;
+    private List<ProjectGroup> projectGroups;
 
     // evaluation
     @OneToOne(mappedBy = "project", cascade = CascadeType.ALL)

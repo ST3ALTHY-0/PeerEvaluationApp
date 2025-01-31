@@ -12,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.Data;
 
 @Data
@@ -20,14 +21,18 @@ import lombok.Data;
 public class Instructor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int instructor_id;
+    private int instructorId;
 
-    private String instructor_name;
-    private String instructor_email;
+    private String instructorName;
 
-    @OneToMany(mappedBy = "instructor", cascade = CascadeType.ALL)
+    private String instructorEmail;
+
+    // @Version
+    // private int version;
+
+    @OneToMany(mappedBy = "instructor")
     private List<MyClass> classes;
 
-    @OneToMany(mappedBy = "instructor", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "instructor")
     private List<Evaluation> evaluations;
 }

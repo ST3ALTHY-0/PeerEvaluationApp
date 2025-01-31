@@ -19,15 +19,15 @@ public class EvaluationResponse {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int response_id;
+    private int responseId;
 
-    private String response_text;
+    private String responseText;
 
     @OneToOne
-    @JoinColumn(name = "question_id", referencedColumnName = "question_id")
+    @JoinColumn(name = "questionId", referencedColumnName = "questionId")
     private EvaluationQuestion question;
 
     @ManyToOne
-    @JoinColumn(name = "feedback_id", referencedColumnName = "feedback_id")
+    @JoinColumn(name = "feedbackId", referencedColumnName = "feedbackId")
     private Feedback feedback;
 }

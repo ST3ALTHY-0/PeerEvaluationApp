@@ -22,18 +22,20 @@ import lombok.Data;
 public class MyClass {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String class_id;
+    private int classId;
 
-    private String class_name;
+    private String className;
+
+    private String classCode;
 
     // manyToOne means that many classes can have the same instructor
     @ManyToOne
     // JoinColumn means that the instructor will be related to classes via
     // instructor_id (primary key)
-    @JoinColumn(name = "instructor_id")
+    @JoinColumn(name = "instructorId")
     private Instructor instructor;
 
-    @OneToMany(mappedBy = "aClass", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "myClass", cascade = CascadeType.ALL)
     private List<Project> projects;
 
 }

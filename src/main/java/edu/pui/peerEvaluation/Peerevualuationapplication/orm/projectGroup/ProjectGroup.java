@@ -25,19 +25,19 @@ import lombok.Data;
 public class ProjectGroup {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int group_id;
+    private int groupId;
 
-    private String group_name;
+    private String groupName;
 
     @ManyToOne
-    @JoinColumn(name = "project_id", nullable = false)
+    @JoinColumn(name = "projectId", nullable = false)
     private Project project;
 
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
     private List<Feedback> grades;
 
     @ManyToMany(mappedBy = "groups")
-    private Set<Student> students = new HashSet<>();
+    private List<Student> students;
 
     // maybe there should be Project Table that this Table references
     // Project Table could contain Project_id, Project_name, points_worth,
