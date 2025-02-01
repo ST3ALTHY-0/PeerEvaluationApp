@@ -92,7 +92,7 @@ class EvaluationRepositoryTests {
     @Test
     void testClassData() {
         List<MyClass> classes = classRepository.findAll();
-        assertThat(classes).hasSize(3);
+        assertThat(classes).hasSize(4);
 
         MyClass myClass = classRepository.findById(1).orElse(null);
         assertThat(myClass).isNotNull();
@@ -103,7 +103,7 @@ class EvaluationRepositoryTests {
     @Test
     void testProjectData() {
         List<Project> projects = projectRepository.findAll();
-        assertThat(projects).hasSize(3);
+        assertThat(projects).hasSize(5);
 
         Project project = projectRepository.findById(1).orElse(null);
         assertThat(project).isNotNull();

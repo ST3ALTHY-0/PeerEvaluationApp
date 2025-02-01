@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import edu.pui.peerEvaluation.Peerevualuationapplication.DTO.EvaluationForm;
+import edu.pui.peerEvaluation.Peerevualuationapplication.DTO.EvaluationQuestionDTO;
 import edu.pui.peerEvaluation.Peerevualuationapplication.DTO.Response;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.evaluation.Evaluation;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.evaluation.EvaluationService;
@@ -43,7 +45,7 @@ public class EvaluationController {
     @Autowired
     private StudentService studentService;
 
-    @PostMapping("/feedback/submit")
+    @PostMapping("/submit/feedback")
     public String submitFeedback(@RequestParam("evaluationId") Integer evaluationId,
             @RequestParam("evaluatorId") Integer ratingStudentId,
             @RequestParam("ratedStudentId") Integer ratedStudentId,
@@ -93,5 +95,31 @@ public class EvaluationController {
 
         // Redirect or return a view name
         return "/student/feedback/finished";
+    }
+
+    @PostMapping("/submit/form")
+    public String createEvaluation(@ModelAttribute EvaluationForm evaluationForm){
+        //need to get class/project ids
+        //need to get groupCategory BS id
+
+        //need to get eval form info
+        //how many questions? what do the questions ask
+        //mandatory answer?
+        //Due Date?
+        //other settings?
+        System.out.println("Class ID: " + evaluationForm.getClassId());
+        System.out.println("Project ID: " + evaluationForm.getProjectId());
+        System.out.println("Group Type: " + evaluationForm.getGroupType());
+        System.out.println("Group Members: " + evaluationForm.getGroupMembers());
+        System.out.println("Enable Grading: " + evaluationForm.isEnableGrading());
+        System.out.println("Use Standard Form: " + evaluationForm.isUseStandardForm());
+        // for(EvaluationQuestionDTO question : evaluationForm.getEvaluationQuestions()){
+        //     System.out.println("Question: " + question.getQuestionText());
+        // }
+        System.out.println("Questions: " + evaluationForm.getEvaluationQuestions());
+
+        System.out.println("Due Date: " + evaluationForm.getDueDate());
+
+        return "/instructor/dashboard";
     }
 }

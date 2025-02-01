@@ -161,7 +161,7 @@
     <div class="container">
         <h1 th:text="'Complete Evaluation for ' + ${evaluation.project.projectName}"></h1>
 
-        <form th:action="@{/evaluation/feedback/submit}" method="post">
+        <form th:action="@{/evaluation/submit/feedback}" method="post">
             <div th:each="student : ${projectGroup.students}" th:if="${student.studentId} != ${currentStudentId}">
                 <h2 th:text="${student.studentName}"></h2>
                 <input type="hidden" name="ratedStudentId" th:value="${student.studentId}">
