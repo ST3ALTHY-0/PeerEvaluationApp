@@ -89,10 +89,10 @@ public class MainController {
         return "login";
     }
 
-    @GetMapping("/error")
-    public String error() {
-        return "error";
-    }
+    // @GetMapping("/error")
+    // public String error() {
+    //     return "error";
+    // }
 
 
 

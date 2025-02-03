@@ -14,6 +14,9 @@ public class ProjectService {
 
     public Project addProject(Project project) {
         return projectRepository.saveAndFlush(project);
+    }
 
+    public Project findById(Integer id){
+        return projectRepository.findById(id).orElse(null);
     }
 }

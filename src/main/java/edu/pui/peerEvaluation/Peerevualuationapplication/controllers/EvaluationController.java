@@ -6,10 +6,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
-import edu.pui.peerEvaluation.Peerevualuationapplication.DTO.EvaluationForm;
+
+import edu.pui.peerEvaluation.Peerevualuationapplication.DTO.EvaluationFeedbackDTO;
+import edu.pui.peerEvaluation.Peerevualuationapplication.DTO.EvaluationFeedbackFormDTO;
+import edu.pui.peerEvaluation.Peerevualuationapplication.DTO.EvaluationFormDTO;
 import edu.pui.peerEvaluation.Peerevualuationapplication.DTO.EvaluationQuestionDTO;
-import edu.pui.peerEvaluation.Peerevualuationapplication.DTO.Response;
+import edu.pui.peerEvaluation.Peerevualuationapplication.DTO.ResponseDTO;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.evaluation.Evaluation;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.evaluation.EvaluationService;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.evaluationQuestion.EvaluationQuestionService;
@@ -17,88 +22,70 @@ import edu.pui.peerEvaluation.Peerevualuationapplication.orm.evaluationResponse.
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.evaluationResponse.EvaluationResponseService;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.feedback.Feedback;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.feedback.FeedbackService;
+import edu.pui.peerEvaluation.Peerevualuationapplication.orm.instructor.Instructor;
+import edu.pui.peerEvaluation.Peerevualuationapplication.orm.instructor.InstructorService;
+import edu.pui.peerEvaluation.Peerevualuationapplication.orm.student.Student;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.student.StudentService;
 
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Controller
 @RequestMapping("/evaluation")
 public class EvaluationController {
 
-    @Autowired
-    private FeedbackService feedbackService;
-    @Autowired
-    private EvaluationQuestionService evaluationQuestionService;
+    private static final Logger logger = LoggerFactory.getLogger(EvaluationController.class);
+
+    
+    private final FeedbackService feedbackService;
+    private final EvaluationQuestionService evaluationQuestionService;
+    private final EvaluationResponseService evaluationResponseService;
+    private final EvaluationService evaluationService;
+    private final StudentService studentService;
+    private final InstructorService instructorService;
 
     @Autowired
-    private EvaluationResponseService evaluationResponseService;
-
-    @Autowired
-    private EvaluationService evaluationService;
-
-    @Autowired
-    private StudentService studentService;
+    public EvaluationController(FeedbackService feedbackService, 
+                                EvaluationQuestionService evaluationQuestionService, 
+                                EvaluationResponseService evaluationResponseService, 
+                                EvaluationService evaluationService, 
+                                StudentService studentService, 
+                                InstructorService instructorService) {
+        this.feedbackService = feedbackService;
+        this.evaluationQuestionService = evaluationQuestionService;
+        this.evaluationResponseService = evaluationResponseService;
+        this.evaluationService = evaluationService;
+        this.studentService = studentService;
+        this.instructorService = instructorService;
+    }
 
     @PostMapping("/submit/feedback")
-    public String submitFeedback(@RequestParam("evaluationId") Integer evaluationId,
-            @RequestParam("evaluatorId") Integer ratingStudentId,
-            @RequestParam("ratedStudentId") Integer ratedStudentId,
-            @RequestParam("projectGroupId") Integer projectGroupId,
-            @ModelAttribute("responses") Map<Integer, List<Response>> responses,
+    public String submitFeedback(@ModelAttribute EvaluationFeedbackFormDTO evaluationFeedbackFormDTO,
+    // @RequestParam("extraResponse") ResponseDTO extraResponse,
             Model model) {
-        // Process the feedback
-        for (Map.Entry<Integer, List<Response>> entry : responses.entrySet()) {
-            Integer studentId = entry.getKey();
-            List<Response> studentResponses = entry.getValue();
 
-            // create obj
-            Feedback feedback = new Feedback();
-            List<EvaluationResponse> evalResponses = new ArrayList<EvaluationResponse>();
+                logger.debug("Received feedback: {}", evaluationFeedbackFormDTO);
 
-            // Process each student's responses
-            for (Response response : studentResponses) {
-                // Save each response and add to list
-                EvaluationResponse evaluationResponse = new EvaluationResponse();
-                evaluationResponse.setQuestion(evaluationQuestionService.findById(response.getQuestionId()));
-                evaluationResponse.setResponseText(response.getResponse());
-                evaluationResponse.setFeedback(feedback);
-                evalResponses.add(evaluationResponse);
-                System.out.println(evaluationResponse);
-            }
-            // save responses to db
-            evaluationResponseService.saveAllAndFlush(evalResponses);
+                List<EvaluationFeedbackDTO> evaluationFeedbackDTOList = evaluationFeedbackFormDTO.getEvaluationFeedbackDTOList();
+                System.out.println("HELLOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO11");
 
-            // set feedback
-            feedback.setDateCompleted(LocalDateTime.now());
-            feedback.setEvaluation(evaluationService.findById(evaluationId));
-            feedback.setGradePercent(0); // set later
-            feedback.setRatedByStudent(studentService.findStudentById(ratingStudentId)); // prob needs changed
-            feedback.setRatedStudent(studentService.findStudentById(studentId));
-            feedback.setResponses(evalResponses);
-            System.out.println(feedback);
+                System.out.println(evaluationFeedbackDTOList);
 
-            // feedback.setGroup(); //set group, might need to pass project group from
-            // thymeleaf
 
-            // save feedback to db
-            feedbackService.addFeedback(feedback);
-        }
 
         // Add attributes to the model if needed
         model.addAttribute("message", "Feedback submitted successfully");
-
+        model.addAttribute("evaluationFeedbackDTOList", evaluationFeedbackDTOList);
         // Redirect or return a view name
         return "/student/feedback/finished";
     }
 
+    @Transactional
     @PostMapping("/submit/form")
-    public String createEvaluation(@ModelAttribute EvaluationForm evaluationForm){
+    public String createEvaluation(@ModelAttribute EvaluationFormDTO evaluationForm){
         //need to get class/project ids
         //need to get groupCategory BS id
 
@@ -107,19 +94,29 @@ public class EvaluationController {
         //mandatory answer?
         //Due Date?
         //other settings?
+        Student me = studentService.findStudentByEmail("monroe.luke36@gmail.com");
+        Instructor in = instructorService.findInstructorByEmail("monroe.luke36@gmail.com");
+
+        System.out.println("ssssss");
         System.out.println("Class ID: " + evaluationForm.getClassId());
         System.out.println("Project ID: " + evaluationForm.getProjectId());
-        System.out.println("Group Type: " + evaluationForm.getGroupType());
+        //System.out.println("Group Type: " + evaluationForm.getGroupCategory());
         System.out.println("Group Members: " + evaluationForm.getGroupMembers());
         System.out.println("Enable Grading: " + evaluationForm.isEnableGrading());
         System.out.println("Use Standard Form: " + evaluationForm.isUseStandardForm());
-        // for(EvaluationQuestionDTO question : evaluationForm.getEvaluationQuestions()){
-        //     System.out.println("Question: " + question.getQuestionText());
-        // }
-        System.out.println("Questions: " + evaluationForm.getEvaluationQuestions());
 
+        if(evaluationForm.getEvaluationQuestions() != null){
+        for (EvaluationQuestionDTO question : evaluationForm.getEvaluationQuestions()) {
+            System.out.println("Question: " + question.getQuestionText());
+            System.out.println("Is Required: " + question.isRequired());
+        }
+    }
         System.out.println("Due Date: " + evaluationForm.getDueDate());
 
+        Evaluation eval = evaluationService.convertToEntity(evaluationForm, me, in);
+        evaluationService.addEvaluation(eval); //causing concurrentModificationException
+
+        System.out.println(evaluationService.findByStudentId(1));
         return "/instructor/dashboard";
     }
 }

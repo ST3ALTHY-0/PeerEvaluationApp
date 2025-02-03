@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface EvaluationRepository extends JpaRepository<Evaluation, Integer> {
 
-    // define any custom queries
+
 
     // example
     // @Query("SELECT e FROM Evaluation e WHERE e.studentId = :studentId")

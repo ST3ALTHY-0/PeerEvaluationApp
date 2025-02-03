@@ -243,7 +243,7 @@
           <div class="form-row">
             <div class="form-group col-md-6">
               <label th:for="NumberOfQuestions">Number of Questions for </label>
-              <input type="number" class="form-control score" th:id="NumberOfQuestions" th:name="NumberOfQuestions"
+              <input type="number" class="form-control score" id="NumberOfQuestions" name="NumberOfQuestions"
                 min="0" max="5">
             </div>
           </div>
@@ -295,19 +295,18 @@
         var numberOfQuestions = $(this).val();
         var questionsContainer = $('#questionsContainer');
         questionsContainer.empty(); // Clear previous questions
-
         for (var i = 1; i <= numberOfQuestions; i++) {
           var questionHtml = `
             <div class="form-row">
 
                 <div class="form-group col-md-9">
                 <label for="question${i}">Question ${i}</label>
-                <input type="text" class="form-control" id="question${i}" name="questions[${i}].questionText" required>
+                <input type="text" class="form-control" id="question${i}" name="evaluationQuestions[${i}].questionText" required>
                 </div>
 
                 <div class="form-group col-md-3 d-flex align-items-center">
                 <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="isRequired${i}" name="questions[${i}].isRequired">
+                <input class="form-check-input" type="checkbox" id="isRequired${i}" name="evaluationQuestions[${i}].isRequired">
                   <label class="form-check-label" for="isRequired${i}">Require an answer</label>
                 </div>
                 </div>

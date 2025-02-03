@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.evaluationQuestion.EvaluationQuestion;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.feedback.Feedback;
@@ -22,10 +23,12 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
 @Entity
 @Table(name = "evaluation")
+@EqualsAndHashCode(exclude = {"project"})
 public class Evaluation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,6 +37,10 @@ public class Evaluation {
     private LocalDateTime createdAt;
 
     private boolean isComplete;
+
+    private boolean isGraded;
+
+    private LocalDateTime dueDate;
 
     @ManyToOne
     @JoinColumn(name = "instructorId", referencedColumnName = "instructorId")
@@ -50,5 +57,5 @@ public class Evaluation {
     private List<Feedback> feedbacks;
 
     @ManyToMany(mappedBy = "evaluations")
-    private Set<Student> students = new HashSet<>();
+    private List<Student> students;
 }

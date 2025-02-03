@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import edu.pui.peerEvaluation.Peerevualuationapplication.DTO.EvaluationForm;
+import edu.pui.peerEvaluation.Peerevualuationapplication.DTO.EvaluationFormDTO;
 import edu.pui.peerEvaluation.Peerevualuationapplication.DTO.EvaluationQuestionDTO;
 import edu.pui.peerEvaluation.Peerevualuationapplication.brightSpaceApi.BrightSpaceAPIService;
 import edu.pui.peerEvaluation.Peerevualuationapplication.brightSpaceApi.brightSpaceGroup.BrightSpaceGroupCategory;
@@ -132,7 +132,7 @@ public class InstructorController {
     }
 
     @PostMapping("/previewEvaluationForm")
-    public String previewEvaluationForm(Model model, @ModelAttribute EvaluationForm evaluationForm) {
+    public String previewEvaluationForm(Model model, @ModelAttribute EvaluationFormDTO evaluationForm) {
 
         System.out.println(evaluationForm);
 

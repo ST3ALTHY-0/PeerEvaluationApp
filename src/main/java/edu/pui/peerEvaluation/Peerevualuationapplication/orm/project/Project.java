@@ -17,10 +17,12 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
 @Entity
 @Table(name = "project")
+@EqualsAndHashCode(exclude = {"myClass", "projectGroups", "evaluation"})
 public class Project {
 
     @Id

@@ -17,19 +17,16 @@ import lombok.Data;
 
 @Data
 public class EvaluationFeedbackDTO {
-
-    private LocalDateTime date_completed;
-
-    private Evaluation evaluation;
-
-    private Student rated_by_student;
-
-    private Student rated_student;
-
-    private ProjectGroup group;
- 
-    private List<EvaluationResponse> responses;
-
-    //private List<RatingResponse> ratingResponses;
+    private Integer evaluationId;
+    private Integer ratedByStudentId;
+    private Integer ratedStudentId;
+    private Integer grade;
+    private Integer projectGroupId;
+    private List<ResponseDTO> responses;
 
 }
+// @RequestParam("evaluationId") Integer evaluationId,
+//             @RequestParam("evaluatorId") Integer ratingStudentId,
+//             @RequestParam("ratedStudentId") Integer ratedStudentId,
+//             @RequestParam("projectGroupId") Integer projectGroupId,
+//             @ModelAttribute("responses") Map<Integer, List<ResponseDTO>> responses

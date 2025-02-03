@@ -16,4 +16,8 @@ public class MyClassService {
     public MyClass addMyClass(MyClass myClass){
         return myClassRepository.saveAndFlush(myClass);
     }
+
+    public MyClass findById(Integer id){
+        return myClassRepository.findById(id).orElse(null);
+    }
 }

@@ -12,6 +12,8 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
+//this is perhaps a bad way of making this class,
+//questions should be reusable, but im not sure they are rn
 @Data
 @Entity
 @Table(name = "evaluation_question")

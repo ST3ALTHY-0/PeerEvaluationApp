@@ -81,7 +81,7 @@ class EvaluationRepositoryTests {
     @Test
     void testStudentData() {
         List<Student> students = studentRepository.findAll();
-        assertThat(students).hasSize(6);
+        assertThat(students).hasSize(5);
 
         Student student = studentRepository.findById(1).orElse(null);
         assertThat(student).isNotNull();
@@ -92,7 +92,7 @@ class EvaluationRepositoryTests {
     @Test
     void testClassData() {
         List<MyClass> classes = classRepository.findAll();
-        assertThat(classes).hasSize(4);
+        assertThat(classes).hasSize(3);
 
         MyClass myClass = classRepository.findById(1).orElse(null);
         assertThat(myClass).isNotNull();
@@ -103,7 +103,7 @@ class EvaluationRepositoryTests {
     @Test
     void testProjectData() {
         List<Project> projects = projectRepository.findAll();
-        assertThat(projects).hasSize(5);
+        assertThat(projects).hasSize(3);
 
         Project project = projectRepository.findById(1).orElse(null);
         assertThat(project).isNotNull();

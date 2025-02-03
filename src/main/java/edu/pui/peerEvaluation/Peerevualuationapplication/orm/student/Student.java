@@ -39,11 +39,11 @@ public class Student {
 
     @ManyToMany
     @JoinTable(name = "groupMembership", joinColumns = @JoinColumn(name = "studentId"), inverseJoinColumns = @JoinColumn(name = "groupId"))
-    private Set<ProjectGroup> groups = new HashSet<>();
+    private List<ProjectGroup> groups;
 
     @ManyToMany
     @JoinTable(name = "evaluationStudent", joinColumns = @JoinColumn(name = "studentId"), inverseJoinColumns = @JoinColumn(name = "evaluationId"))
-    private Set<Evaluation> evaluations = new HashSet<>();
+    private List<Evaluation> evaluations;
 
     // another join table for class_student
 
