@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.student.Student;
@@ -24,5 +25,15 @@ public interface ProjectGroupRepository extends JpaRepository<ProjectGroup, Inte
 
     // @Query("SELECT students FROM ProjectGroup pg JOIN pg.students s WHERE
     // pg.group_id = :projectGroupId")
+
+    @Query("SELECT pg FROM ProjectGroup pg " +
+    "JOIN pg.project p " +
+    "JOIN pg.students s " +
+    "JOIN Evaluation e ON e.project.projectId = p.projectId " +
+    "WHERE e.evaluationId = :evaluationId " +
+    "AND s.studentId = :studentId")
+ProjectGroup findByEvaluationIdAndStudentId(@Param("evaluationId") Integer evaluationId, 
+                                         @Param("studentId") Integer studentId);
+
 
 }

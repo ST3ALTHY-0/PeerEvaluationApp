@@ -24,11 +24,13 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Data
 @Entity
 @Table(name = "evaluation")
-@EqualsAndHashCode(exclude = {"project"})
+@EqualsAndHashCode(exclude = {"evaluationQuestions", "project"})
+@ToString(exclude = {"instructor", "project"})
 public class Evaluation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

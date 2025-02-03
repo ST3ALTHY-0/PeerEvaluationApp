@@ -24,8 +24,12 @@ public class ProjectGroupService {
         return projectGroupRepository.saveAllAndFlush(projectGroups);
     }
 
-    public ProjectGroup findById(int projectGroupId) {
+    public ProjectGroup findById(Integer projectGroupId) {
         return projectGroupRepository.findByProjectId(projectGroupId);
+    }
+
+    public ProjectGroup findByEvaluationIdAndStudentId(Integer evaluationId, Integer studentId){
+        return projectGroupRepository.findByEvaluationIdAndStudentId(evaluationId, studentId);
     }
 
 }

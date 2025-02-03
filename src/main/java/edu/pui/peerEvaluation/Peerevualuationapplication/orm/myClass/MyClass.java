@@ -16,11 +16,13 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Data
 @Entity
 @Table(name = "class")
 @EqualsAndHashCode(exclude = {"projects"})
+@ToString(exclude = {"instructor", "projects"})
 public class MyClass {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

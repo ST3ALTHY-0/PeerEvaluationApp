@@ -75,8 +75,6 @@ public class EvaluationService {
 
         evaluation.setInstructor(in);
 
-
-
         List<Student> studentsss = new ArrayList<>();
         studentsss.add(me);
         evaluation.setStudents(studentsss);

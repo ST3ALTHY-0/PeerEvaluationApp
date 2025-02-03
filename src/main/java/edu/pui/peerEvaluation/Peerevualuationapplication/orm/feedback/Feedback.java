@@ -7,6 +7,7 @@ import edu.pui.peerEvaluation.Peerevualuationapplication.orm.evaluation.Evaluati
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.evaluationResponse.EvaluationResponse;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.projectGroup.ProjectGroup;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.student.Student;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -47,6 +48,6 @@ public class Feedback {
     private ProjectGroup group;
 
     // evaluation response
-    @OneToMany(mappedBy = "feedback")
+    @OneToMany(mappedBy = "feedback", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<EvaluationResponse> responses;
 }

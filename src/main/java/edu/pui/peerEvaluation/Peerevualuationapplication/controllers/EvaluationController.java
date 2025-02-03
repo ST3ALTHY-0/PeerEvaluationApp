@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
-
 import edu.pui.peerEvaluation.Peerevualuationapplication.DTO.EvaluationFeedbackDTO;
 import edu.pui.peerEvaluation.Peerevualuationapplication.DTO.EvaluationFeedbackFormDTO;
 import edu.pui.peerEvaluation.Peerevualuationapplication.DTO.EvaluationFormDTO;
@@ -39,7 +38,6 @@ public class EvaluationController {
 
     private static final Logger logger = LoggerFactory.getLogger(EvaluationController.class);
 
-    
     private final FeedbackService feedbackService;
     private final EvaluationQuestionService evaluationQuestionService;
     private final EvaluationResponseService evaluationResponseService;
@@ -48,12 +46,12 @@ public class EvaluationController {
     private final InstructorService instructorService;
 
     @Autowired
-    public EvaluationController(FeedbackService feedbackService, 
-                                EvaluationQuestionService evaluationQuestionService, 
-                                EvaluationResponseService evaluationResponseService, 
-                                EvaluationService evaluationService, 
-                                StudentService studentService, 
-                                InstructorService instructorService) {
+    public EvaluationController(FeedbackService feedbackService,
+            EvaluationQuestionService evaluationQuestionService,
+            EvaluationResponseService evaluationResponseService,
+            EvaluationService evaluationService,
+            StudentService studentService,
+            InstructorService instructorService) {
         this.feedbackService = feedbackService;
         this.evaluationQuestionService = evaluationQuestionService;
         this.evaluationResponseService = evaluationResponseService;
@@ -64,57 +62,56 @@ public class EvaluationController {
 
     @PostMapping("/submit/feedback")
     public String submitFeedback(@ModelAttribute EvaluationFeedbackFormDTO evaluationFeedbackFormDTO,
-    // @RequestParam("extraResponse") ResponseDTO extraResponse,
+            // @RequestParam("extraResponse") ResponseDTO extraResponse,
             Model model) {
 
-                logger.debug("Received feedback: {}", evaluationFeedbackFormDTO);
+        logger.debug("Received feedback: {}", evaluationFeedbackFormDTO);
 
-                List<EvaluationFeedbackDTO> evaluationFeedbackDTOList = evaluationFeedbackFormDTO.getEvaluationFeedbackDTOList();
-                System.out.println("HELLOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO11");
+        for(EvaluationFeedbackDTO feedbackDTO : evaluationFeedbackFormDTO.getEvaluationFeedbackDTOList())
+        {
+            System.out.println("GroupID: " + feedbackDTO.getProjectGroupId());
+            Feedback feedback = feedbackService.convertToEntity(feedbackDTO);
+            feedbackService.addFeedback(feedback);
+        }
 
-                System.out.println(evaluationFeedbackDTOList);
-
-
-
-        // Add attributes to the model if needed
         model.addAttribute("message", "Feedback submitted successfully");
-        model.addAttribute("evaluationFeedbackDTOList", evaluationFeedbackDTOList);
+
         // Redirect or return a view name
         return "/student/feedback/finished";
     }
 
     @Transactional
     @PostMapping("/submit/form")
-    public String createEvaluation(@ModelAttribute EvaluationFormDTO evaluationForm){
-        //need to get class/project ids
-        //need to get groupCategory BS id
+    public String createEvaluation(@ModelAttribute EvaluationFormDTO evaluationForm) {
+        // need to get class/project ids
+        // need to get groupCategory BS id
 
-        //need to get eval form info
-        //how many questions? what do the questions ask
-        //mandatory answer?
-        //Due Date?
-        //other settings?
+        // need to get eval form info
+        // how many questions? what do the questions ask
+        // mandatory answer?
+        // Due Date?
+        // other settings?
         Student me = studentService.findStudentByEmail("monroe.luke36@gmail.com");
         Instructor in = instructorService.findInstructorByEmail("monroe.luke36@gmail.com");
 
         System.out.println("ssssss");
         System.out.println("Class ID: " + evaluationForm.getClassId());
         System.out.println("Project ID: " + evaluationForm.getProjectId());
-        //System.out.println("Group Type: " + evaluationForm.getGroupCategory());
+        // System.out.println("Group Type: " + evaluationForm.getGroupCategory());
         System.out.println("Group Members: " + evaluationForm.getGroupMembers());
         System.out.println("Enable Grading: " + evaluationForm.isEnableGrading());
         System.out.println("Use Standard Form: " + evaluationForm.isUseStandardForm());
 
-        if(evaluationForm.getEvaluationQuestions() != null){
-        for (EvaluationQuestionDTO question : evaluationForm.getEvaluationQuestions()) {
-            System.out.println("Question: " + question.getQuestionText());
-            System.out.println("Is Required: " + question.isRequired());
+        if (evaluationForm.getEvaluationQuestions() != null) {
+            for (EvaluationQuestionDTO question : evaluationForm.getEvaluationQuestions()) {
+                System.out.println("Question: " + question.getQuestionText());
+                System.out.println("Is Required: " + question.isRequired());
+            }
         }
-    }
         System.out.println("Due Date: " + evaluationForm.getDueDate());
 
         Evaluation eval = evaluationService.convertToEntity(evaluationForm, me, in);
-        evaluationService.addEvaluation(eval); //causing concurrentModificationException
+        evaluationService.addEvaluation(eval); // causing concurrentModificationException
 
         System.out.println(evaluationService.findByStudentId(1));
         return "/instructor/dashboard";

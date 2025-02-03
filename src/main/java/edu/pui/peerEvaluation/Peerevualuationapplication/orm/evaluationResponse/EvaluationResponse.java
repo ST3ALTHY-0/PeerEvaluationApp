@@ -11,10 +11,12 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
 @Entity
 @Table(name = "evaluation_response")
+@EqualsAndHashCode(exclude = {"question"})
 public class EvaluationResponse {
 
     @Id
