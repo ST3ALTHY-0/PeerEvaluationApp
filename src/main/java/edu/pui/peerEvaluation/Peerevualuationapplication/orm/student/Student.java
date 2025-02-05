@@ -40,11 +40,4 @@ public class Student {
     @ManyToMany
     @JoinTable(name = "groupMembership", joinColumns = @JoinColumn(name = "studentId"), inverseJoinColumns = @JoinColumn(name = "groupId"))
     private List<ProjectGroup> groups;
-
-    @ManyToMany
-    @JoinTable(name = "evaluationStudent", joinColumns = @JoinColumn(name = "studentId"), inverseJoinColumns = @JoinColumn(name = "evaluationId"))
-    private List<Evaluation> evaluations;
-
-    // another join table for class_student
-
 }

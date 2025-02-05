@@ -48,6 +48,8 @@ public class FeedbackService {
         feedback.setEvaluation(evaluationService.findById(feedbackDTO.getEvaluationId()));
         feedback.setGradePercent(feedbackDTO.getGrade());
         feedback.setDateCompleted(LocalDateTime.now());
+        System.out.println("FeedbackDTO PG ID: " +feedbackDTO.getProjectGroupId());
+        feedback.setGroup(projectGroupService.findById(feedbackDTO.getProjectGroupId()));
 
         List<EvaluationResponse> evaluationResponses = feedbackDTO.getResponses().stream()
                 .map(dto -> {

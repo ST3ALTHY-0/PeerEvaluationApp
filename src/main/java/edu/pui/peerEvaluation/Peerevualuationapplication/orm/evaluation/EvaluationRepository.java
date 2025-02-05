@@ -30,11 +30,28 @@ public interface EvaluationRepository extends JpaRepository<Evaluation, Integer>
     List<Evaluation> findByInstructorIdAndIsCompleted(@Param("instructorId") int instructorId,
             @Param("isComplete") boolean isComplete);
 
-    // Optional: Find evaluations by a student
-    @Query("SELECT e FROM Evaluation e JOIN e.students s WHERE s.studentId = :studentId")
-    List<Evaluation> findByStudentId(Integer studentId);
-
     @Query("SELECT evaluationQuestions FROM Evaluation e WHERE e.evaluationId = :evaluationId")
     List<Evaluation> findEvaluationQuestionsById(Integer evaluationId);
+
+    @Query("SELECT DISTINCT e FROM Evaluation e " +
+           "JOIN e.projectGroups pg " +
+           "JOIN pg.students s " +
+           "WHERE s.id = :studentId")
+    List<Evaluation> findEvaluationsByStudentId(@Param("studentId") Integer studentId);
+
+    @Query("SELECT DISTINCT e FROM Evaluation e " +
+    "JOIN e.projectGroups pg " +
+    "JOIN pg.students s " +
+    "LEFT JOIN Feedback f ON f.evaluation = e AND f.ratedByStudent.id = :studentId " +
+    "WHERE s.studentId = :studentId AND f.feedbackId IS NULL")
+List<Evaluation> findAllByStudentIdAndNoFeedback(@Param("studentId") int studentId);
+
+@Query("SELECT DISTINCT e FROM Evaluation e " +
+"JOIN e.projectGroups pg " +
+"JOIN pg.students s " +
+"LEFT JOIN Feedback f ON f.evaluation = e AND f.ratedByStudent.id = :studentId " +
+"WHERE s.id = :studentId AND f.feedbackId IS NOT NULL")
+List<Evaluation> findAllByStudentIdWithFeedback(@Param("studentId") int studentId);
+
 
 }

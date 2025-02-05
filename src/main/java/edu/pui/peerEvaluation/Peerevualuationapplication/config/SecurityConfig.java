@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
@@ -50,6 +51,13 @@ public class SecurityConfig {
                                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                                                 .requestMatchers("/", "/login").permitAll()
                                                 .anyRequest().authenticated()) //allow anyone access to login page
+                                .sessionManagement(Customizer.withDefaults())
+                                .
+                                sessionManagement(sessionManagement -> sessionManagement
+                                    .maximumSessions(1)
+                                    .expiredUrl("/login?expired=true")
+                                    .maxSessionsPreventsLogin(true)
+                                )
                                 // Configure OAuth2 login
                                 .oauth2Login(oauth2Login -> oauth2Login
                                                 .loginPage("/login")

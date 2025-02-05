@@ -29,7 +29,11 @@ public class ProjectGroupService {
     }
 
     public ProjectGroup findByEvaluationIdAndStudentId(Integer evaluationId, Integer studentId){
-        return projectGroupRepository.findByEvaluationIdAndStudentId(evaluationId, studentId);
+        return projectGroupRepository.findByEvaluationIdAndStudentId(evaluationId, studentId).orElse(null);
+    }
+
+    public List<ProjectGroup> findAllByStudentId(Integer studentId){
+        return projectGroupRepository.findAllByStudentId(studentId);
     }
 
 }

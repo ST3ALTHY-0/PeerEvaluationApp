@@ -1,5 +1,6 @@
 package edu.pui.peerEvaluation.Peerevualuationapplication.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -37,12 +38,25 @@ public class StudentViewController {
     public String studentViewEvaluations(@AuthenticationPrincipal OAuth2User principal, Model model) {
 
         Student student = studentService.findStudentByEmail("monroe.luke36@gmail.com");
-        List<Evaluation> userEvalList = evaluationService.findByStudentId(student.getStudentId());
-        for (Evaluation e : userEvalList) {
-            System.out.println(e.getEvaluationId());
-        }
+
+        List<Evaluation> userEvalList = evaluationService.findAllByStudentIdAndNoFeedback(student.getStudentId());
+
+
         model.addAttribute("userEvalList", userEvalList);
+        
         return "student/viewEvaluations";
+    }
+
+    @GetMapping("/viewPastEvaluations")
+    public String studentViewPastEvaluations(@AuthenticationPrincipal OAuth2User principal, Model model) {
+
+        Student student = studentService.findStudentByEmail("monroe.luke36@gmail.com");
+
+        List<Evaluation> userEvalList = evaluationService.findAllByStudentIdWithFeedback(student.getStudentId());
+
+        model.addAttribute("userEvalList", userEvalList);
+        
+        return "student/viewPastEvaluations";
     }
 
     @GetMapping("/completeEvaluation")
@@ -53,9 +67,11 @@ public class StudentViewController {
         Student currentStudent = studentService.findStudentByEmail(currentStudentEmail);
         Integer currentStudentId = currentStudent.getStudentId();
         Evaluation evaluation = evaluationService.findById(evaluationId);
-        ProjectGroup projectGroup = projectGroupService.findByEvaluationIdAndStudentId(currentStudentId, currentStudentId);
 
-        // System.out.println("HELLLO PGID: " + projectGroup.getGroupId());
+        ProjectGroup projectGroup = projectGroupService.findByEvaluationIdAndStudentId(evaluationId, currentStudentId);
+
+        System.out.println("Eval Id: " + evaluation.getEvaluationId());
+         System.out.println("HELLLO PGID: " + projectGroup.getGroupId());
         // System.out.println("HELLLO currentStudentId: " + currentStudentId);
         // System.out.println("HELLLO evaluation: " + evaluation);
 

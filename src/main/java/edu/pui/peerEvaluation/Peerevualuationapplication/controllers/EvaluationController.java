@@ -28,6 +28,7 @@ import edu.pui.peerEvaluation.Peerevualuationapplication.orm.student.StudentServ
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,8 +65,15 @@ public class EvaluationController {
     public String submitFeedback(@ModelAttribute EvaluationFeedbackFormDTO evaluationFeedbackFormDTO,
             // @RequestParam("extraResponse") ResponseDTO extraResponse,
             Model model) {
+                System.out.println(evaluationFeedbackFormDTO);
 
         logger.debug("Received feedback: {}", evaluationFeedbackFormDTO);
+
+        List<EvaluationFeedbackDTO> filteredFeedbackList = evaluationFeedbackFormDTO.getEvaluationFeedbackDTOList().stream()
+                .filter(feedback -> feedback.getEvaluationId() != null && feedback.getRatedByStudentId() != null && feedback.getRatedStudentId() != null)
+                .collect(Collectors.toList());
+
+        evaluationFeedbackFormDTO.setEvaluationFeedbackDTOList(filteredFeedbackList);
 
         for(EvaluationFeedbackDTO feedbackDTO : evaluationFeedbackFormDTO.getEvaluationFeedbackDTOList())
         {
@@ -110,10 +118,9 @@ public class EvaluationController {
         }
         System.out.println("Due Date: " + evaluationForm.getDueDate());
 
-        Evaluation eval = evaluationService.convertToEntity(evaluationForm, me, in);
+        Evaluation eval = evaluationService.convertToEntity(evaluationForm, in);
         evaluationService.addEvaluation(eval); // causing concurrentModificationException
 
-        System.out.println(evaluationService.findByStudentId(1));
         return "/instructor/dashboard";
     }
 }

@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import edu.pui.peerEvaluation.Peerevualuationapplication.orm.evaluation.Evaluation;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.feedback.Feedback;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.project.Project;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.student.Student;
@@ -32,6 +33,10 @@ public class ProjectGroup {
     @ManyToOne
     @JoinColumn(name = "projectId", nullable = false)
     private Project project;
+
+    @ManyToOne
+    @JoinColumn(name = "evaluationId")
+    private Evaluation evaluation;
 
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
     private List<Feedback> grades;

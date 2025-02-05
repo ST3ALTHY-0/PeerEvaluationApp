@@ -10,6 +10,7 @@ import edu.pui.peerEvaluation.Peerevualuationapplication.orm.evaluationQuestion.
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.feedback.Feedback;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.instructor.Instructor;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.project.Project;
+import edu.pui.peerEvaluation.Peerevualuationapplication.orm.projectGroup.ProjectGroup;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.student.Student;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -58,6 +59,6 @@ public class Evaluation {
     @OneToMany(mappedBy = "evaluation", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Feedback> feedbacks;
 
-    @ManyToMany(mappedBy = "evaluations")
-    private List<Student> students;
+    @OneToMany(mappedBy = "evaluation")
+    private List<ProjectGroup> projectGroups;
 }
