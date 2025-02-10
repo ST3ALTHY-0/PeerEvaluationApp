@@ -35,6 +35,4 @@ public class Instructor {
     @OneToMany(mappedBy = "instructor")
     private List<MyClass> classes;
 
-    @OneToMany(mappedBy = "instructor")
-    private List<Evaluation> evaluations;
 }

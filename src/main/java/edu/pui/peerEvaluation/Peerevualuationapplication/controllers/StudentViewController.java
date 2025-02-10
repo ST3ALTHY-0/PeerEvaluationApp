@@ -49,7 +49,6 @@ public class StudentViewController {
 
     @GetMapping("/viewPastEvaluations")
     public String studentViewPastEvaluations(@AuthenticationPrincipal OAuth2User principal, Model model) {
-
         Student student = studentService.findStudentByEmail("monroe.luke36@gmail.com");
 
         List<Evaluation> userEvalList = evaluationService.findAllByStudentIdWithFeedback(student.getStudentId());
@@ -68,7 +67,7 @@ public class StudentViewController {
         Integer currentStudentId = currentStudent.getStudentId();
         Evaluation evaluation = evaluationService.findById(evaluationId);
 
-        ProjectGroup projectGroup = projectGroupService.findByEvaluationIdAndStudentId(evaluationId, currentStudentId);
+        ProjectGroup projectGroup = projectGroupService.findProjectGroupByEvaluationIdAndStudentId(evaluationId, currentStudentId);
 
         System.out.println("Eval Id: " + evaluation.getEvaluationId());
          System.out.println("HELLLO PGID: " + projectGroup.getGroupId());

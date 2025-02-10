@@ -25,15 +25,19 @@ public class ProjectGroupService {
     }
 
     public ProjectGroup findById(Integer projectGroupId) {
-        return projectGroupRepository.findByProjectId(projectGroupId);
+        return projectGroupRepository.findByProjectId(projectGroupId).orElse(null);
     }
 
-    public ProjectGroup findByEvaluationIdAndStudentId(Integer evaluationId, Integer studentId){
-        return projectGroupRepository.findByEvaluationIdAndStudentId(evaluationId, studentId).orElse(null);
-    }
+    // public ProjectGroup findByEvaluationIdAndStudentId(Integer evaluationId, Integer studentId, Integer projectId){
+    //     return projectGroupRepository.findByEvaluationIdAndStudentIdAndProjectId(evaluationId, studentId, projectId).orElse(null);
+    // }
 
     public List<ProjectGroup> findAllByStudentId(Integer studentId){
         return projectGroupRepository.findAllByStudentId(studentId);
+    }
+
+    public ProjectGroup findProjectGroupByEvaluationIdAndStudentId(Integer evaluationId, Integer studentId){
+        return projectGroupRepository.findProjectGroupByEvaluationIdAndStudentId(evaluationId, studentId).orElse(null);
     }
 
 }

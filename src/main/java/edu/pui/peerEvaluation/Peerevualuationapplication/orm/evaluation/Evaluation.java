@@ -8,6 +8,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.evaluationQuestion.EvaluationQuestion;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.feedback.Feedback;
+import edu.pui.peerEvaluation.Peerevualuationapplication.orm.groupCategory.GroupCategory;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.instructor.Instructor;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.project.Project;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.projectGroup.ProjectGroup;
@@ -18,6 +19,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -31,7 +33,6 @@ import lombok.ToString;
 @Entity
 @Table(name = "evaluation")
 @EqualsAndHashCode(exclude = {"evaluationQuestions", "project"})
-@ToString(exclude = {"instructor", "project"})
 public class Evaluation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,11 +45,7 @@ public class Evaluation {
     private boolean isGraded;
 
     private LocalDateTime dueDate;
-
-    @ManyToOne
-    @JoinColumn(name = "instructorId", referencedColumnName = "instructorId")
-    private Instructor instructor;
-
+    
     @OneToOne
     @JoinColumn(name = "projectId", referencedColumnName = "projectId")
     private Project project;
@@ -59,6 +56,11 @@ public class Evaluation {
     @OneToMany(mappedBy = "evaluation", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Feedback> feedbacks;
 
-    @OneToMany(mappedBy = "evaluation")
-    private List<ProjectGroup> projectGroups;
+    @ManyToMany
+    @JoinTable(
+        name = "evaluation_group_category",
+        joinColumns = @JoinColumn(name = "evaluation_id"),
+        inverseJoinColumns = @JoinColumn(name = "group_category_id")
+    )
+    private List<GroupCategory> groupCategories;
 }

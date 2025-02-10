@@ -21,6 +21,8 @@ import edu.pui.peerEvaluation.Peerevualuationapplication.brightSpaceApi.brightSp
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.evaluation.Evaluation;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.evaluation.EvaluationService;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.evaluationQuestion.EvaluationQuestion;
+import edu.pui.peerEvaluation.Peerevualuationapplication.orm.groupCategory.GroupCategory;
+import edu.pui.peerEvaluation.Peerevualuationapplication.orm.groupCategory.GroupCategoryService;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.instructor.Instructor;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.instructor.InstructorService;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.myClass.MyClass;
@@ -39,16 +41,18 @@ public class InstructorController {
     private final ProjectGroupService projectGroupService;
     private final StudentService studentService;
     private final InstructorService instructorService;
+    private final GroupCategoryService groupCategoryService;
 
     // declare any/all endpoint urls we will use
 
     @Autowired
     public InstructorController(EvaluationService evaluationService, ProjectGroupService projectGroupService,
-            StudentService studentService, InstructorService instructorService) {
+            StudentService studentService, InstructorService instructorService, GroupCategoryService groupCategoryService) {
         this.evaluationService = evaluationService;
         this.projectGroupService = projectGroupService;
         this.studentService = studentService;
         this.instructorService = instructorService;
+        this.groupCategoryService = groupCategoryService;
     }
 
     @GetMapping("/viewEvaluations")
@@ -73,46 +77,11 @@ public class InstructorController {
         model.addAttribute("instructorClassList", classList);
         model.addAttribute("projectList", projects);
 
-        BrightSpaceGroupCategory groupCategory = new BrightSpaceGroupCategory();
-        groupCategory.setGroupCategoryId(12345L);
-        groupCategory.setName("Example Group Category");
-        groupCategory.setDescription("This is an example description.");
-        groupCategory.setEnrollmentStyle(1);
-        groupCategory.setEnrollmentQuantity(10);
-        groupCategory.setMaxUsersPerGroup(5);
-        groupCategory.setAutoEnroll(true);
-        groupCategory.setRandomizeEnrollments(false);
-        groupCategory.setGroups(List.of(111L, 222L, 333L));
-        groupCategory.setAllocateAfterExpiry(false);
-        groupCategory.setSelfEnrollmentExpiryDate("2023-12-31T23:59:59Z");
-        groupCategory.setRestrictedByOrgUnitId(67890L);
-        groupCategory.setDescriptionsVisibleToEnrolees(true);
 
-        BrightSpaceGroupCategory groupCategory2 = new BrightSpaceGroupCategory();
-        groupCategory2.setGroupCategoryId(56789L);
-        groupCategory2.setName("Example Group Category 2");
-        groupCategory2.setDescription("This is an example description. 2");
-        groupCategory2.setEnrollmentStyle(1);
-        groupCategory2.setEnrollmentQuantity(10);
-        groupCategory2.setMaxUsersPerGroup(5);
-        groupCategory2.setAutoEnroll(true);
-        groupCategory2.setRandomizeEnrollments(false);
-        groupCategory2.setGroups(List.of(111L, 222L, 333L));
-        groupCategory2.setAllocateAfterExpiry(false);
-        groupCategory2.setSelfEnrollmentExpiryDate("2023-12-31T23:59:59Z");
-        groupCategory2.setRestrictedByOrgUnitId(67890L);
-        groupCategory2.setDescriptionsVisibleToEnrolees(true);
-
-        List<BrightSpaceGroupCategory> groupCategoryList = new ArrayList<>();
-        groupCategoryList.add(groupCategory);
-        groupCategoryList.add(groupCategory2);
-
-        System.out.println(groupCategory.getName());
-        System.out.println(groupCategory2.getName());
+        List<GroupCategory> groupCategories = groupCategoryService.findAllByInstructorId(instructor.getInstructorId());
 
 
-
-        model.addAttribute("groupCategoryList", groupCategoryList);
+        model.addAttribute("groupCategoryList", groupCategories);
 
         // else create new user for db
 
@@ -152,11 +121,6 @@ public class InstructorController {
 
         sampleEvaluation.setEvaluationQuestions(eQuestions);
 
-
-        Project sampleProject = new Project();
-        sampleProject.setProjectId(1);
-        sampleProject.setProjectName("Sample Project");
-        sampleEvaluation.setProject(sampleProject);
 
         ProjectGroup sampleProjectGroup = new ProjectGroup();
         sampleProjectGroup.setGroupId(1);

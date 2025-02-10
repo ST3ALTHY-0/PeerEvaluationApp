@@ -21,8 +21,11 @@ import edu.pui.peerEvaluation.Peerevualuationapplication.orm.evaluationResponse.
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.evaluationResponse.EvaluationResponseService;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.feedback.Feedback;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.feedback.FeedbackService;
+import edu.pui.peerEvaluation.Peerevualuationapplication.orm.groupCategory.GroupCategory;
+import edu.pui.peerEvaluation.Peerevualuationapplication.orm.groupCategory.GroupCategoryService;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.instructor.Instructor;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.instructor.InstructorService;
+import edu.pui.peerEvaluation.Peerevualuationapplication.orm.projectGroup.ProjectGroup;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.student.Student;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.student.StudentService;
 
@@ -45,6 +48,7 @@ public class EvaluationController {
     private final EvaluationService evaluationService;
     private final StudentService studentService;
     private final InstructorService instructorService;
+    private final GroupCategoryService groupCategoryService;
 
     @Autowired
     public EvaluationController(FeedbackService feedbackService,
@@ -52,19 +56,22 @@ public class EvaluationController {
             EvaluationResponseService evaluationResponseService,
             EvaluationService evaluationService,
             StudentService studentService,
-            InstructorService instructorService) {
+            InstructorService instructorService,
+            GroupCategoryService groupCategoryService) {
         this.feedbackService = feedbackService;
         this.evaluationQuestionService = evaluationQuestionService;
         this.evaluationResponseService = evaluationResponseService;
         this.evaluationService = evaluationService;
         this.studentService = studentService;
         this.instructorService = instructorService;
+        this.groupCategoryService = groupCategoryService;
     }
 
     @PostMapping("/submit/feedback")
     public String submitFeedback(@ModelAttribute EvaluationFeedbackFormDTO evaluationFeedbackFormDTO,
             // @RequestParam("extraResponse") ResponseDTO extraResponse,
             Model model) {
+
                 System.out.println(evaluationFeedbackFormDTO);
 
         logger.debug("Received feedback: {}", evaluationFeedbackFormDTO);
@@ -74,53 +81,44 @@ public class EvaluationController {
                 .collect(Collectors.toList());
 
         evaluationFeedbackFormDTO.setEvaluationFeedbackDTOList(filteredFeedbackList);
-
         for(EvaluationFeedbackDTO feedbackDTO : evaluationFeedbackFormDTO.getEvaluationFeedbackDTOList())
         {
             System.out.println("GroupID: " + feedbackDTO.getProjectGroupId());
             Feedback feedback = feedbackService.convertToEntity(feedbackDTO);
             feedbackService.addFeedback(feedback);
         }
-
         model.addAttribute("message", "Feedback submitted successfully");
 
         // Redirect or return a view name
         return "/student/feedback/finished";
     }
 
-    @Transactional
-    @PostMapping("/submit/form")
-    public String createEvaluation(@ModelAttribute EvaluationFormDTO evaluationForm) {
-        // need to get class/project ids
-        // need to get groupCategory BS id
+   @Transactional
+@PostMapping("/submit/form")
+public String createEvaluation(@ModelAttribute EvaluationFormDTO evaluationForm) {
+    System.out.println("AHHHHHHHHHHHHHHHHH" + evaluationForm);
+    Evaluation eval = evaluationService.convertToEntity(evaluationForm);
 
-        // need to get eval form info
-        // how many questions? what do the questions ask
-        // mandatory answer?
-        // Due Date?
-        // other settings?
-        Student me = studentService.findStudentByEmail("monroe.luke36@gmail.com");
-        Instructor in = instructorService.findInstructorByEmail("monroe.luke36@gmail.com");
+    GroupCategory gc = groupCategoryService.findById(evaluationForm.getGroupCategoryId());
 
-        System.out.println("ssssss");
-        System.out.println("Class ID: " + evaluationForm.getClassId());
-        System.out.println("Project ID: " + evaluationForm.getProjectId());
-        // System.out.println("Group Type: " + evaluationForm.getGroupCategory());
-        System.out.println("Group Members: " + evaluationForm.getGroupMembers());
-        System.out.println("Enable Grading: " + evaluationForm.isEnableGrading());
-        System.out.println("Use Standard Form: " + evaluationForm.isUseStandardForm());
+    GroupCategory groupCategory = new GroupCategory();
+    groupCategory.setCategoryName(gc.getCategoryName());
+    groupCategory.setMyClass(gc.getMyClass());
 
-        if (evaluationForm.getEvaluationQuestions() != null) {
-            for (EvaluationQuestionDTO question : evaluationForm.getEvaluationQuestions()) {
-                System.out.println("Question: " + question.getQuestionText());
-                System.out.println("Is Required: " + question.isRequired());
-            }
-        }
-        System.out.println("Due Date: " + evaluationForm.getDueDate());
-
-        Evaluation eval = evaluationService.convertToEntity(evaluationForm, in);
-        evaluationService.addEvaluation(eval); // causing concurrentModificationException
-
-        return "/instructor/dashboard";
+    // Create a deep copy of the projectGroups collection
+    List<ProjectGroup> projectGroupsCopy = new ArrayList<>();
+    for (ProjectGroup pg : gc.getProjectGroups()) {
+        ProjectGroup pgCopy = new ProjectGroup();
+        pgCopy.setGroupName(pg.getGroupName());
+        pgCopy.setGroupCategory(groupCategory); // Set the new groupCategory reference
+        pgCopy.setStudents(new ArrayList<>(pg.getStudents())); // Copy the students list
+        projectGroupsCopy.add(pgCopy);
     }
+    groupCategory.setProjectGroups(projectGroupsCopy);
+
+    evaluationService.addEvaluation(eval);
+    groupCategoryService.addGroupCategory(groupCategory);
+
+    return "/instructor/dashboard";
+}
 }

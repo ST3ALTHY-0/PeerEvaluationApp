@@ -17,26 +17,28 @@ public interface ProjectGroupRepository extends JpaRepository<ProjectGroup, Inte
     // Write the necessary queries and functions that will be needed
 
     @Query("SELECT pg FROM ProjectGroup pg WHERE pg.groupId = :projectGroupId")
-    public <Optional> ProjectGroup findByProjectId(int projectGroupId);
+    public Optional<ProjectGroup> findByProjectId(int projectGroupId);
 
-    // @Query("SELECT group_id FROM ProjectGroup pg WHERE pg.group_name = :grou")
+//     @Query("SELECT pg FROM ProjectGroup pg " +
+//             "JOIN pg.students s " +
+//             "JOIN pg.groupCategory gc " +
+//             "JOIN gc.evaluation e " +
+//             "JOIN gc.project p " +
+//             "WHERE e.evaluationId = :evaluationId " +
+//             "AND s.studentId = :studentId " +
+//             "AND p.projectId = :projectId")
+//     Optional<ProjectGroup> findByEvaluationIdAndStudentIdAndProjectId(@Param("evaluationId") Integer evaluationId,
+//             @Param("studentId") Integer studentId,
+//             @Param("projectId") Integer projectId);
 
-    // @Query("SELECT s FROM ProjectGroup pg JOIN pg.students s WHERE pg.group_id =
-    // :projectGroupId")
-
-    // @Query("SELECT students FROM ProjectGroup pg JOIN pg.students s WHERE
-    // pg.group_id = :projectGroupId")
-
-    @Query("SELECT pg FROM ProjectGroup pg " +
-           "JOIN pg.students s " +
-           "WHERE pg.evaluation.id = :evaluationId " +
-           "AND s.studentId = :studentId")
-    Optional<ProjectGroup> findByEvaluationIdAndStudentId(@Param("evaluationId") Integer evaluationId, 
-                                                           @Param("studentId") Integer studentId);
+            @Query("SELECT pg FROM ProjectGroup pg " +
+            "JOIN pg.students s " +
+            "JOIN pg.groupCategory gc " +
+            "WHERE element(gc.evaluations).evaluationId = :evaluationId " +
+            "AND s.studentId = :studentId")
+     Optional<ProjectGroup> findProjectGroupByEvaluationIdAndStudentId(@Param("evaluationId") Integer evaluationId, 
+                                                                       @Param("studentId") Integer studentId);
 
     @Query("SELECT pg FROM ProjectGroup pg JOIN pg.students s WHERE s.studentId = :studentId")
     List<ProjectGroup> findAllByStudentId(@Param("studentId") Integer studentId);
-
-
-
 }

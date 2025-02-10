@@ -12,6 +12,7 @@ import edu.pui.peerEvaluation.Peerevualuationapplication.orm.evaluation.Evaluati
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.evaluationQuestion.EvaluationQuestion;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.evaluationQuestion.EvaluationQuestionService;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.evaluationResponse.EvaluationResponse;
+import edu.pui.peerEvaluation.Peerevualuationapplication.orm.project.ProjectService;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.projectGroup.ProjectGroupService;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.student.StudentService;
 
@@ -23,16 +24,18 @@ public class FeedbackService {
     private final StudentService studentService;
     private final EvaluationService evaluationService;
     private final EvaluationQuestionService evaluationQuestionService;
+    private final ProjectService projectService;
 
     @Autowired
     public FeedbackService(FeedbackRepository feedbackRepository, ProjectGroupService projectGroupService,
             StudentService studentService, EvaluationService evaluationService,
-            EvaluationQuestionService evaluationQuestionService) {
+            EvaluationQuestionService evaluationQuestionService, ProjectService projectService) {
         this.feedbackRepository = feedbackRepository;
         this.projectGroupService = projectGroupService;
         this.studentService = studentService;
         this.evaluationService = evaluationService;
         this.evaluationQuestionService = evaluationQuestionService;
+        this.projectService = projectService;
     }
 
     public Feedback addFeedback(Feedback feedback) {
@@ -50,6 +53,7 @@ public class FeedbackService {
         feedback.setDateCompleted(LocalDateTime.now());
         System.out.println("FeedbackDTO PG ID: " +feedbackDTO.getProjectGroupId());
         feedback.setGroup(projectGroupService.findById(feedbackDTO.getProjectGroupId()));
+        feedback.setProject(projectService.findById(feedbackDTO.getProjectId()));
 
         List<EvaluationResponse> evaluationResponses = feedbackDTO.getResponses().stream()
                 .map(dto -> {

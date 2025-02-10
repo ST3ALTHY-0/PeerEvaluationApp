@@ -2,6 +2,7 @@ package edu.pui.peerEvaluation.Peerevualuationapplication.orm.myClass;
 
 import java.util.List;
 
+import edu.pui.peerEvaluation.Peerevualuationapplication.orm.groupCategory.GroupCategory;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.instructor.Instructor;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.project.Project;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.projectGroup.ProjectGroup;
@@ -41,5 +42,8 @@ public class MyClass {
 
     @OneToMany(mappedBy = "myClass", cascade = CascadeType.ALL)
     private List<Project> projects;
+
+    @OneToMany(mappedBy = "myClass", cascade = CascadeType.ALL)
+    private List<GroupCategory> groupCategories;
 
 }

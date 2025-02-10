@@ -1,13 +1,12 @@
-package edu.pui.peerEvaluation.Peerevualuationapplication.orm.projectGroup;
+package edu.pui.peerEvaluation.Peerevualuationapplication.orm.groupCategory;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.evaluation.Evaluation;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.feedback.Feedback;
-import edu.pui.peerEvaluation.Peerevualuationapplication.orm.groupCategory.GroupCategory;
+import edu.pui.peerEvaluation.Peerevualuationapplication.orm.myClass.MyClass;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.project.Project;
+import edu.pui.peerEvaluation.Peerevualuationapplication.orm.projectGroup.ProjectGroup;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.student.Student;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -23,22 +22,27 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "project_group")
-public class ProjectGroup {
-    @Id
+@Table(name = "group_category")
+public class GroupCategory {
+        @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int groupId;
+    private int groupCategoryId;
+ 
+    private String categoryName; //maybe not needed
 
-    private String groupName;
+    // @ManyToOne
+    // @JoinColumn(name = "projectId", nullable = false)
+    // private Project project;
 
     @ManyToOne
-    @JoinColumn(name = "groupCategoryId")
-    private GroupCategory groupCategory;
+    @JoinColumn(name = "classId", nullable = false)
+    private MyClass myClass;
 
-    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
-    private List<Feedback> grades;
+    @ManyToMany(mappedBy = "groupCategories")
+    private List<Evaluation> evaluations;
 
-    @ManyToMany(mappedBy = "groups")
-    private List<Student> students;
+    @OneToMany(mappedBy = "groupCategory", cascade = CascadeType.ALL)
+    private List<ProjectGroup> projectGroups;
+
 
 }

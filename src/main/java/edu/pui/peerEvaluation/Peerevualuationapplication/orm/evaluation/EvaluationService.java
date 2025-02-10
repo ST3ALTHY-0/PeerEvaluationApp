@@ -71,7 +71,7 @@ public class EvaluationService {
     }
 
     // convert Eval Form DTO into ORM Evaluation obj for saving in DB
-    public Evaluation convertToEntity(EvaluationFormDTO evaluationForm, Instructor in) {
+    public Evaluation convertToEntity(EvaluationFormDTO evaluationForm) {
         // set basic attributes
         Evaluation evaluation = new Evaluation();
         evaluation.setProject(projectService.findById(evaluationForm.getProjectId()));
@@ -81,7 +81,7 @@ public class EvaluationService {
         // Parse the dueDate as LocalDate and convert to LocalDateTime at the start of the day
         LocalDate dueDate = LocalDate.parse(evaluationForm.getDueDate());
         evaluation.setDueDate(dueDate.atStartOfDay());
-        evaluation.setInstructor(in);
+
 
         // if the instructor wants to use default form we set the questions to the
         // questions of the first evaluation (default evaluation)

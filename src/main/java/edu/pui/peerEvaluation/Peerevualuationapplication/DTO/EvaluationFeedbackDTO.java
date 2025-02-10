@@ -22,6 +22,7 @@ public class EvaluationFeedbackDTO {
     private Integer ratedStudentId;
     private Integer grade;
     private Integer projectGroupId;
+    private Integer projectId;
     private List<ResponseDTO> responses;
 
 }

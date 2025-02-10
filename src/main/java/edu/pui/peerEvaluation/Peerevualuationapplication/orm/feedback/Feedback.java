@@ -5,6 +5,7 @@ import java.util.List;
 
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.evaluation.Evaluation;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.evaluationResponse.EvaluationResponse;
+import edu.pui.peerEvaluation.Peerevualuationapplication.orm.project.Project;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.projectGroup.ProjectGroup;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.student.Student;
 import jakarta.persistence.CascadeType;
@@ -30,6 +31,10 @@ public class Feedback {
     private int gradePercent;
 
     private LocalDateTime dateCompleted;
+
+    @ManyToOne
+    @JoinColumn(name = "projectId")
+    private Project project;
 
     @ManyToOne
     @JoinColumn(name = "evaluationId", nullable = false)
