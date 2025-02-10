@@ -58,7 +58,7 @@ public class Evaluation {
 
     @ManyToMany
     @JoinTable(
-        name = "evaluation_group_category",
+        name = "group_category_evaluations",
         joinColumns = @JoinColumn(name = "evaluation_id"),
         inverseJoinColumns = @JoinColumn(name = "group_category_id")
     )

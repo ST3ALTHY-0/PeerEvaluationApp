@@ -98,26 +98,18 @@ public class EvaluationController {
 public String createEvaluation(@ModelAttribute EvaluationFormDTO evaluationForm) {
     System.out.println("AHHHHHHHHHHHHHHHHH" + evaluationForm);
     Evaluation eval = evaluationService.convertToEntity(evaluationForm);
+    List<GroupCategory> currentGroupCategories = eval.getGroupCategories();
+    GroupCategory formGroupCategory = groupCategoryService.findById(evaluationForm.getGroupCategoryId());
 
-    GroupCategory gc = groupCategoryService.findById(evaluationForm.getGroupCategoryId());
-
-    GroupCategory groupCategory = new GroupCategory();
-    groupCategory.setCategoryName(gc.getCategoryName());
-    groupCategory.setMyClass(gc.getMyClass());
-
-    // Create a deep copy of the projectGroups collection
-    List<ProjectGroup> projectGroupsCopy = new ArrayList<>();
-    for (ProjectGroup pg : gc.getProjectGroups()) {
-        ProjectGroup pgCopy = new ProjectGroup();
-        pgCopy.setGroupName(pg.getGroupName());
-        pgCopy.setGroupCategory(groupCategory); // Set the new groupCategory reference
-        pgCopy.setStudents(new ArrayList<>(pg.getStudents())); // Copy the students list
-        projectGroupsCopy.add(pgCopy);
+    if (currentGroupCategories == null) {
+        currentGroupCategories = new ArrayList<>();
     }
-    groupCategory.setProjectGroups(projectGroupsCopy);
+
+    currentGroupCategories.add(formGroupCategory);
+    eval.setGroupCategories(currentGroupCategories);
 
     evaluationService.addEvaluation(eval);
-    groupCategoryService.addGroupCategory(groupCategory);
+    //groupCategoryService.addGroupCategory(groupCategory);
 
     return "/instructor/dashboard";
 }
