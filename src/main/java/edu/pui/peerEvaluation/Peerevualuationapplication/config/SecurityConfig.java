@@ -49,52 +49,23 @@ public class SecurityConfig {
                 http
                                 // Authorize requests
                                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                                                .requestMatchers("/", "/login").permitAll()
-                                                .anyRequest().authenticated()) //allow anyone access to login page
+                                                //.requestMatchers("/", "/login").permitAll()
+                                                .anyRequest().permitAll()) //allow anyone access to login page
                                 .sessionManagement(Customizer.withDefaults())
                                 .
                                 sessionManagement(sessionManagement -> sessionManagement
                                     .maximumSessions(1)
                                     .expiredUrl("/login?expired=true")
                                     .maxSessionsPreventsLogin(true)
-                                )
+                                );
                                 // Configure OAuth2 login
-                                .oauth2Login(oauth2Login -> oauth2Login
-                                                .loginPage("/login")
-                                                .successHandler(new CustomAuthenticationSuccessHandler())
-                                                .userInfoEndpoint(userInfoEndpoint -> userInfoEndpoint
-                                                                .userService(customOAuth2UserService)));
+                                // .oauth2Login(oauth2Login -> oauth2Login
+                                //                 .loginPage("/login")
+                                //                 .successHandler(new CustomAuthenticationSuccessHandler())
+                                //                 .userInfoEndpoint(userInfoEndpoint -> userInfoEndpoint
+                                //                                 .userService(customOAuth2UserService)));
                 return http.build();
         }
+    }
 
-        // Removes any auth requirements for testing
-        // @Bean
-        // public SecurityFilterChain securityFilterChain(HttpSecurity http) throws
-        // Exception{
-        // return http.authorizeHttpRequests( auth -> {
-        // auth.requestMatchers("/instructor", "/student")
-        // .permitAll(); // Allow unauthenticated access to these endpoints
-        // })
-        // .build();
-        // }
 
-        // To build a client registration
-        // @Bean
-        // public ClientRegistrationRepository clientRegistrationRepository() {
-        // return new
-        // InMemoryClientRegistrationRepository(this.googleClientRegistration());
-        // }
-
-        // private ClientRegistration googleClientRegistration() {
-        // return ClientRegistration.withRegistrationId("google")
-        // .clientId("your-client-id")
-        // .clientSecret("your-client-secret")
-        // .scope("openid", "profile", "email")
-        // .authorizationUri("https://accounts.google.com/o/oauth2/auth")
-        // .tokenUri("https://oauth2.googleapis.com/token")
-        // .userInfoUri("https://www.googleapis.com/oauth2/v3/userinfo")
-        // .redirectUri("{baseUrl}/login/oauth2/code/{registrationId}")
-        // .clientName("Google")
-        // .build();
-        // }
-}

@@ -12,6 +12,8 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 /*
  * This controller maps get requests to the respective webpages
  */
@@ -30,6 +32,7 @@ import edu.pui.peerEvaluation.Peerevualuationapplication.orm.student.Student;
 import edu.pui.peerEvaluation.Peerevualuationapplication.orm.project.Project;
 
 import edu.pui.peerEvaluation.Peerevualuationapplication.services.OAuth2Service;
+import edu.pui.peerEvaluation.Peerevualuationapplication.DTO.LoginDTO;
 import edu.pui.peerEvaluation.Peerevualuationapplication.brightSpaceApi.BrightSpaceAPIService;
 import edu.pui.peerEvaluation.Peerevualuationapplication.brightSpaceApi.brightSpaceUser.*;
 
@@ -86,6 +89,16 @@ public class MainController {
 
     @GetMapping("/login")
     public String login() {
+        return "login";
+    }
+
+    @PostMapping("/login/submit")
+    public String loginSubmit(@ModelAttribute LoginDTO loginDTO) {
+        //validate input
+
+        //return error if wrong input is entered
+
+
         return "login";
     }
 

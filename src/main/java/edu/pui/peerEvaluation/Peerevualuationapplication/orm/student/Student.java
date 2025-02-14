@@ -30,7 +30,9 @@ public class Student {
 
     private String studentName;
     private String studentEmail;
-
+    private String puid;
+    private Boolean overrideAccessToEvaluation; //if an instructor wants to open a eval for a singular person after an eval is finished for everyone else we can override access here
+    
     @OneToMany(mappedBy = "ratedByStudent", cascade = CascadeType.ALL)
     private List<Feedback> givenGrades;
 
