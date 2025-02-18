@@ -64,21 +64,6 @@
       color: #495057;
     }
 
-    .custom-select {
-      border-radius: 5px;
-      border: 1px solid #ced4da;
-      transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .custom-select:hover {
-      border-color: #007bff;
-    }
-
-    .custom-select:focus {
-      border-color: #007bff;
-      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-    }
-
     .btn-primary {
       background-color: #007bff;
       border: none;
@@ -162,44 +147,23 @@
   <div class="container">
     <h1>Create Evaluation Form</h1>
     <div class="formContainer">
-      <form th:action="@{/evaluation/submit/form}" method="post">
-        <!-- Class Selection -->
-        <div class="form-row">
-          <div class="form-group col-md-6">
-            <label for="classSelect">Class</label>
-            <select class="custom-select" id="classSelect" name="classId">
-              <option value="" disabled selected>Select a class</option>
-              <option th:each="class : ${instructorClassList}" th:value="${class.classId}" th:text="${class.className}"></option>
-              <option value="custom">Custom Class</option>
-            </select>
-            <input type="text" id="customClassInput" name="customClassName" placeholder="Enter class name" style="display: none; margin-top: 10px;">
-          </div>
-          <div class="form-group col-md-6">
-            <label for="projectSelect">Project</label>
-            <select class="custom-select" id="projectSelect" name="projectId">
-              <option value="" disabled selected>Select a project</option>
-              <option th:each="project : ${projectList}" th:value="${project.projectId}" th:text="${project.projectName}"></option>
-            </select>
-          </div>
+      <form th:action="@{/evaluation/submit/form}" method="post" enctype="multipart/form-data">
+        <!-- Class Code -->
+        <div class="form-group">
+          <label for="classCode">Class Code</label>
+          <input type="text" class="form-control" id="classCode" name="classCode" required>
         </div>
 
-        <!-- Group Category Selection -->
+        <!-- Project Name -->
         <div class="form-group">
-          <label for="groupCategorySelect">Group Category</label>
-          <select class="custom-select" id="groupCategorySelect" name="groupCategoryId" >
-            <option value="" disabled selected>Select a Group Category</option>
-            <option th:each="groupCategory : ${groupCategoryList}" th:value="${groupCategory.groupCategoryId}" th:text="${groupCategory.categoryName}"></option>
-            <option value="custom">Add your own groups</option>
-          </select>
-          <input type="text" id="customGroupCategoryInput" name="customGroupCategoryName" placeholder="Enter group category name" style="display: none; margin-top: 10px;">
+          <label for="projectName">Project Name</label>
+          <input type="text" class="form-control" id="projectName" name="projectName" required>
         </div>
 
-        <!-- Group Members Selection TODO: change this to an easy way to add group members-->
+        <!-- CSV File Upload -->
         <div class="form-group">
-          <label for="groupMembersSelect">Groups and Group Members</label>
-          <select class="custom-select" id="groupMembersSelect" name="groupMembers" multiple>
-            <option th:each="member : ${groupMembersList}" th:value="${member.memberId}" th:text="${member.memberName}"></option>
-          </select>
+          <label for="csvFile">Upload CSV File</label>
+          <input type="file" class="form-control-file" id="csvFile" name="csvFile" accept=".csv" required>
         </div>
 
         <!-- Customize Evaluation Form -->
@@ -241,6 +205,7 @@
           </div>
         </div>
 
+
         <div class="form-row" style="margin-top: 4vh;">
           <div class="form-group col-md-6 text-left">
             <a href="/instructor/dashboard" class="btn btn-secondary">Back</a>
@@ -263,28 +228,8 @@
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-  <script>
-    $(document).ready(function () {
-      // Show/hide custom class input
-      $('#classSelect').change(function () {
-        if ($(this).val() === 'custom') {
-          $('#customClassInput').show().attr('required', true);
-        } else {
-          $('#customClassInput').hide().removeAttr('required').val('');
-        }
-      });
-
-      // Show/hide custom group category input
-      $('#groupCategorySelect').change(function () {
-        if ($(this).val() === 'custom') {
-          $('#customGroupCategoryInput').show().attr('required', true);
-        } else {
-          $('#customGroupCategoryInput').hide().removeAttr('required').val('');
-        }
-      });
-
-      // Dynamic questions
-      $('#NumberOfQuestions').on('input', function () {
+<script>
+  $('#NumberOfQuestions').on('input', function () {
         var numberOfQuestions = $(this).val();
         var questionsContainer = $('#questionsContainer');
         questionsContainer.empty();
@@ -306,8 +251,9 @@
           questionsContainer.append(questionHtml);
         }
       });
-    });
-  </script>
+
+</script>
+
 </body>
 
 </html>

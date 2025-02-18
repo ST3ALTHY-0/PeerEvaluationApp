@@ -1,17 +1,5 @@
 package edu.pui.peerEvaluation.Peerevualuationapplication;
 
-import edu.pui.peerEvaluation.Peerevualuationapplication.orm.instructor.InstructorRepository;
-import edu.pui.peerEvaluation.Peerevualuationapplication.orm.student.StudentRepository;
-import edu.pui.peerEvaluation.Peerevualuationapplication.orm.myClass.MyClassRepository;
-import edu.pui.peerEvaluation.Peerevualuationapplication.orm.project.ProjectRepository;
-import edu.pui.peerEvaluation.Peerevualuationapplication.orm.projectGroup.ProjectGroupRepository;
-import edu.pui.peerEvaluation.Peerevualuationapplication.orm.evaluation.EvaluationRepository;
-import edu.pui.peerEvaluation.Peerevualuationapplication.orm.feedback.FeedbackRepository;
-import edu.pui.peerEvaluation.Peerevualuationapplication.orm.evaluationQuestion.EvaluationQuestionRepository;
-import edu.pui.peerEvaluation.Peerevualuationapplication.orm.evaluationResponse.EvaluationResponseRepository;
-import edu.pui.peerEvaluation.Peerevualuationapplication.orm.instructor.Instructor;
-
-
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,20 +10,30 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
+import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluation.Evaluation;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluation.EvaluationRepository;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluationQuestion.EvaluationQuestion;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluationQuestion.EvaluationQuestionRepository;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluationResponse.EvaluationResponse;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluationResponse.EvaluationResponseRepository;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.feedback.Feedback;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.feedback.FeedbackRepository;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.instructor.Instructor;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.instructor.InstructorRepository;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.myClass.MyClass;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.myClass.MyClassRepository;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.project.Project;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.project.ProjectRepository;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.projectGroup.ProjectGroup;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.projectGroup.ProjectGroupRepository;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.student.Student;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.student.StudentRepository;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import edu.pui.peerEvaluation.Peerevualuationapplication.orm.student.Student;
-import edu.pui.peerEvaluation.Peerevualuationapplication.orm.myClass.MyClass;
-import edu.pui.peerEvaluation.Peerevualuationapplication.orm.project.Project;
-import edu.pui.peerEvaluation.Peerevualuationapplication.orm.projectGroup.ProjectGroup;
-
-import edu.pui.peerEvaluation.Peerevualuationapplication.orm.evaluation.Evaluation;
-import edu.pui.peerEvaluation.Peerevualuationapplication.orm.feedback.Feedback;
-import edu.pui.peerEvaluation.Peerevualuationapplication.orm.evaluationQuestion.EvaluationQuestion;
-import edu.pui.peerEvaluation.Peerevualuationapplication.orm.evaluationResponse.EvaluationResponse;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DataJpaTest
