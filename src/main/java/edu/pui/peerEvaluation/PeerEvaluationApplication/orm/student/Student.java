@@ -33,7 +33,6 @@ public class Student {
     private String studentName;
     private String studentEmail;
     private String puid;
-    private Boolean overrideAccessToEvaluation; //if an instructor wants to open a eval for a singular person after an eval is finished for everyone else we can override access here
     
     @OneToMany(mappedBy = "ratedByStudent", cascade = CascadeType.ALL)
     private List<Feedback> givenGrades;
@@ -41,7 +40,7 @@ public class Student {
     @OneToMany(mappedBy = "ratedStudent", cascade = CascadeType.ALL)
     private List<Feedback> receivedGrades;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.MERGE})
     @JoinTable(name = "groupMembership", joinColumns = @JoinColumn(name = "studentId"), inverseJoinColumns = @JoinColumn(name = "groupId"))
     private List<ProjectGroup> groups;
 

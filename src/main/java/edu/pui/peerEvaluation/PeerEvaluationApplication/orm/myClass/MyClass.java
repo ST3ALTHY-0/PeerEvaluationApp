@@ -23,7 +23,7 @@ import lombok.ToString;
 @Entity
 @Table(name = "class")
 @EqualsAndHashCode(exclude = {"projects"})
-@ToString(exclude = {"instructor", "projects"})
+@ToString(exclude = {"instructor", "projects", "groupCategories"})
 public class MyClass {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -15,8 +15,6 @@ import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.student.Student;
 @Service
 public class BrightSpaceCSVParser {
 
-    
-
     public List<CSVData> parseDataFromCSV(MultipartFile csvFile) throws Exception {
         final List<CSVData> csvDataList = new ArrayList<>();
         final CSVReader reader = new CSVReader(new InputStreamReader(csvFile.getInputStream()));
@@ -32,7 +30,6 @@ public class BrightSpaceCSVParser {
         for (int i = 0; i < headers.length; i++) {
             if (headers[i].endsWith("Subtotal Numerator")) {
                 subtotalNumeratorIndex = i;
-
                 // find the project name
                 projectName = headers[i].substring(0, headers[i].indexOf("Subtotal Numerator")).trim();
 
@@ -83,7 +80,6 @@ public class BrightSpaceCSVParser {
             dto.setProject(project);
             dto.setStudent(student);
             dto.setStudentGrade(csvData.getProjectNumerator());
-
             return dto;
         }).collect(Collectors.toList());
     }

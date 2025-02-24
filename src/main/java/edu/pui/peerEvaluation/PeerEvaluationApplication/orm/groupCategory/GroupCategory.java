@@ -19,10 +19,12 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.ToString;
 
 @Data
 @Entity
 @Table(name = "group_category")
+@ToString(exclude = {"myClass", "projectGroups"})
 public class GroupCategory {
         @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

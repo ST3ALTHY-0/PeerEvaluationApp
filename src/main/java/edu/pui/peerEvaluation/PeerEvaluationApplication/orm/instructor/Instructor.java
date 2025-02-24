@@ -29,9 +29,6 @@ public class Instructor {
 
     private String instructorEmail;
 
-    // @Version
-    // private int version;
-
     @OneToMany(mappedBy = "instructor")
     private List<MyClass> classes;
 

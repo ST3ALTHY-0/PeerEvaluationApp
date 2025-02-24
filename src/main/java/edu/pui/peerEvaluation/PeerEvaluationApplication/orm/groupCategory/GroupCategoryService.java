@@ -22,7 +22,6 @@ public class GroupCategoryService {
         for (GroupCategory groupCategory : groupCategories) {
             GroupCategory copy = new GroupCategory();
             copy.setGroupCategoryId(groupCategory.getGroupCategoryId());
-            copy.setCategoryName(groupCategory.getCategoryName());
             copy.setMyClass(groupCategory.getMyClass());
             copy.setEvaluations(groupCategory.getEvaluations());
             copy.setProjectGroups(new ArrayList<>(groupCategory.getProjectGroups())); // Defensive copying

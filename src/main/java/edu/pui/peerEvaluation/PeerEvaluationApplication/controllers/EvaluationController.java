@@ -29,6 +29,7 @@ import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.groupCategory.GroupC
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.instructor.Instructor;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.instructor.InstructorService;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.myClass.MyClass;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.myClass.MyClassService;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.project.Project;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.projectGroup.ProjectGroup;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.student.Student;
@@ -56,6 +57,9 @@ public class EvaluationController {
     private final InstructorService instructorService;
     private final BrightSpaceCSVParser brightSpaceCSVParser;
     private final SaveBrightSpaceData saveBrightSpaceData;
+    private final GroupCategoryService groupCategoryService;
+    private final MyClassService myClassService;
+
     @Autowired
     public EvaluationController(
             FeedbackService feedbackService,
@@ -63,13 +67,18 @@ public class EvaluationController {
             StudentService studentService,
             InstructorService instructorService,
             BrightSpaceCSVParser brightSpaceCSVParser,
+            GroupCategoryService groupCategoryService,
+            MyClassService myClassService,
             SaveBrightSpaceData saveBrightSpaceData) {
+            
         this.feedbackService = feedbackService;
         this.evaluationService = evaluationService;
         this.studentService = studentService;
         this.instructorService = instructorService;
         this.brightSpaceCSVParser = brightSpaceCSVParser;
         this.saveBrightSpaceData = saveBrightSpaceData;
+        this.myClassService = myClassService;
+        this.groupCategoryService = groupCategoryService;
         }
 
     @PostMapping("/submit/feedback")
@@ -103,11 +112,17 @@ public String createEvaluation(@RequestParam("csvFile") MultipartFile file, @Mod
         List<CSVData> csvDataList = brightSpaceCSVParser.parseDataFromCSV(file);
         List<CSVDataDTO> csvDataDTOList = brightSpaceCSVParser.transformData(csvDataList);
 
-        Project project = csvDataDTOList.get(0).getProject();
-        MyClass myClass = saveBrightSpaceData.saveClassAndProjectToDB(project, evaluationFormDTO.getClassCode());
+        Project thisProject = csvDataDTOList.get(0).getProject();
+        MyClass myClass = myClassService.findByClassCode(evaluationFormDTO.getClassCode());
+        thisProject.setMyClass(myClass);
+        Project savedProject = saveBrightSpaceData.saveProjectToDB(thisProject);
 
+        //TODO: check that gc isnt already saved in db
+        GroupCategory groupCategory = new GroupCategory();
+        groupCategory.setMyClass(myClass);
+        groupCategoryService.addGroupCategory(groupCategory);
 
-        saveBrightSpaceData.saveCSVDataToDB(csvDataDTOList, myClass);
+        saveBrightSpaceData.saveCSVDataToDB(csvDataDTOList, myClass, groupCategory, savedProject);
 
         
         //System.out.println(csvData);

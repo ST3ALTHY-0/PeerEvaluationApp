@@ -24,7 +24,6 @@ public class EvaluationOverride {
 
     private LocalDateTime extendedDeadline;
 
-
    @ManyToOne
     @JoinColumn(name = "evaluationId")
     private Evaluation evaluation;
