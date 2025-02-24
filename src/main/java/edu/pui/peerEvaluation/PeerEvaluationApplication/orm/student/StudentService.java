@@ -17,6 +17,10 @@ public class StudentService {
         this.studentRepository = studentRepository;
     }
 
+    public Student saveStudent(Student student){
+        return studentRepository.save(student);
+    }
+
     public Student addStudent(Student student) {
         return studentRepository.saveAndFlush(student);
     }

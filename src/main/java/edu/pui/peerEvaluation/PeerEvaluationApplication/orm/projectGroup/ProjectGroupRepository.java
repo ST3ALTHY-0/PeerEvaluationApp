@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.project.Project;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.student.Student;
 
 @Repository
@@ -41,4 +42,8 @@ public interface ProjectGroupRepository extends JpaRepository<ProjectGroup, Inte
 
     @Query("SELECT pg FROM ProjectGroup pg JOIN pg.students s WHERE s.studentId = :studentId")
     List<ProjectGroup> findAllByStudentId(@Param("studentId") Integer studentId);
+
+    @Query("SELECT pg FROM ProjectGroup pg WHERE groupName = :groupName AND project = :project")
+    Optional<ProjectGroup> findByGroupNameAndProject(String groupName, Project project);
+
 }

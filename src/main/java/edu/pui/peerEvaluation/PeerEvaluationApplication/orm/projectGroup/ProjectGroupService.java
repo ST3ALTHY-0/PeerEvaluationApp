@@ -5,7 +5,9 @@ import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
+import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.project.Project;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.student.Student;
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class ProjectGroupService {
@@ -14,6 +16,10 @@ public class ProjectGroupService {
 
     public ProjectGroupService(ProjectGroupRepository projectGroupRepository) {
         this.projectGroupRepository = projectGroupRepository;
+    }
+
+    public ProjectGroup saveProjectGroup(ProjectGroup projectGroup){
+        return projectGroupRepository.save(projectGroup);
     }
 
     public ProjectGroup addProjectGroup(ProjectGroup projectGroup) {
@@ -28,16 +34,16 @@ public class ProjectGroupService {
         return projectGroupRepository.findByProjectId(projectGroupId).orElse(null);
     }
 
-    // public ProjectGroup findByEvaluationIdAndStudentId(Integer evaluationId, Integer studentId, Integer projectId){
-    //     return projectGroupRepository.findByEvaluationIdAndStudentIdAndProjectId(evaluationId, studentId, projectId).orElse(null);
-    // }
-
     public List<ProjectGroup> findAllByStudentId(Integer studentId){
         return projectGroupRepository.findAllByStudentId(studentId);
     }
 
     public ProjectGroup findProjectGroupByEvaluationIdAndStudentId(Integer evaluationId, Integer studentId){
         return projectGroupRepository.findProjectGroupByEvaluationIdAndStudentId(evaluationId, studentId).orElse(null);
+    }
+
+    public ProjectGroup findByGroupNameAndProject(String groupName, Project project){
+        return projectGroupRepository.findByGroupNameAndProject(groupName, project).orElse(null); 
     }
 
 }

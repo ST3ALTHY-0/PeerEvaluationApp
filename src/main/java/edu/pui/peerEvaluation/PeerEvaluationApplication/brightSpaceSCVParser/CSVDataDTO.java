@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.groupCategory.GroupCategory;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.project.Project;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.projectGroup.ProjectGroup;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.student.Student;
 import lombok.Data;
@@ -15,8 +16,7 @@ import lombok.Data;
 public class CSVDataDTO {
 
     private Student student;
-    private ProjectGroup group;
-    private GroupCategory groupCategory;
-    private Integer pointsWorth;
+    private Project project;
+    private String group;
     private Integer studentGrade;
 }

@@ -35,10 +35,16 @@ public class ProjectGroup {
     @JoinColumn(name = "groupCategoryId")
     private GroupCategory groupCategory;
 
+    @ManyToOne
+    @JoinColumn(name = "projectId")
+    private Project project;
+
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
     private List<Feedback> grades;
 
     @ManyToMany(mappedBy = "groups")
     private List<Student> students;
+
+
 
 }

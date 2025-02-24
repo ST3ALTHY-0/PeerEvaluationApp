@@ -13,8 +13,12 @@ public class StudentGradeService {
         this.studentGradeRepository = studentGradeRepository;
     }
 
-    public StudentGrade addStudentGrade(StudentGrade studentGrade){
+    public StudentGrade saveStudentGrade(StudentGrade studentGrade){
         return studentGradeRepository.save(studentGrade);
+    }
+
+    public StudentGrade addStudentGrade(StudentGrade studentGrade){
+        return studentGradeRepository.saveAndFlush(studentGrade);
     }
     
 }

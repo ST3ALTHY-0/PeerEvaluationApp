@@ -16,6 +16,7 @@ import edu.pui.peerEvaluation.PeerEvaluationApplication.DTO.ResponseDTO;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.brightSpaceSCVParser.BrightSpaceCSVParser;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.brightSpaceSCVParser.CSVData;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.brightSpaceSCVParser.CSVDataDTO;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.brightSpaceSCVParser.SaveBrightSpaceData;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluation.Evaluation;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluation.EvaluationService;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluationQuestion.EvaluationQuestionService;
@@ -27,6 +28,8 @@ import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.groupCategory.GroupC
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.groupCategory.GroupCategoryService;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.instructor.Instructor;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.instructor.InstructorService;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.myClass.MyClass;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.project.Project;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.projectGroup.ProjectGroup;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.student.Student;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.student.StudentService;
@@ -52,19 +55,22 @@ public class EvaluationController {
     private final StudentService studentService;
     private final InstructorService instructorService;
     private final BrightSpaceCSVParser brightSpaceCSVParser;
+    private final SaveBrightSpaceData saveBrightSpaceData;
     @Autowired
     public EvaluationController(
             FeedbackService feedbackService,
             EvaluationService evaluationService,
             StudentService studentService,
             InstructorService instructorService,
-            BrightSpaceCSVParser brightSpaceCSVParser) {
+            BrightSpaceCSVParser brightSpaceCSVParser,
+            SaveBrightSpaceData saveBrightSpaceData) {
         this.feedbackService = feedbackService;
         this.evaluationService = evaluationService;
         this.studentService = studentService;
         this.instructorService = instructorService;
         this.brightSpaceCSVParser = brightSpaceCSVParser;
-    }
+        this.saveBrightSpaceData = saveBrightSpaceData;
+        }
 
     @PostMapping("/submit/feedback")
     public String submitFeedback(@ModelAttribute EvaluationFeedbackFormDTO evaluationFeedbackFormDTO,
@@ -95,8 +101,13 @@ public String createEvaluation(@RequestParam("csvFile") MultipartFile file, @Mod
 
     try {
         List<CSVData> csvDataList = brightSpaceCSVParser.parseDataFromCSV(file);
-
         List<CSVDataDTO> csvDataDTOList = brightSpaceCSVParser.transformData(csvDataList);
+
+        Project project = csvDataDTOList.get(0).getProject();
+        MyClass myClass = saveBrightSpaceData.saveClassAndProjectToDB(project, evaluationFormDTO.getClassCode());
+
+
+        saveBrightSpaceData.saveCSVDataToDB(csvDataDTOList, myClass);
 
         
         //System.out.println(csvData);

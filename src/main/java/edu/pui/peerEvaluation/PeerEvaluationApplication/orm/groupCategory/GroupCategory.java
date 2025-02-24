@@ -28,8 +28,6 @@ public class GroupCategory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int groupCategoryId;
  
-    private String categoryName; //maybe not needed
-
     // @ManyToOne
     // @JoinColumn(name = "projectId", nullable = false)
     // private Project project;

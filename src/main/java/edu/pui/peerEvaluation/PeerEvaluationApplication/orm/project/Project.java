@@ -36,10 +36,8 @@ public class Project {
 
     private String projectName;
 
-    private int pointsWorth;
+    private Integer pointsWorth;
 
-    // @Version
-    // private int version;
 
     @OneToOne(mappedBy = "project", cascade = CascadeType.ALL)
     private Evaluation evaluation;
@@ -48,15 +46,13 @@ public class Project {
     @JoinColumn(name = "classId", referencedColumnName = "classId")
     private MyClass myClass;
 
-    // this class is referenced by
-    // project_group
-    // @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
-    // private List<GroupCategory> groupCategories;
-
     // evaluation
     @OneToOne(mappedBy = "project", cascade = CascadeType.ALL)
     private Feedback feedback;
 
      @OneToMany(mappedBy = "project")
     private List<StudentGrade> studentGrades;
+
+    @OneToMany(mappedBy = "project")
+    private List<ProjectGroup> projectGroups;
 }

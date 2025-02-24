@@ -19,4 +19,8 @@ public class ProjectService {
     public Project findById(Integer id){
         return projectRepository.findById(id).orElse(null);
     }
+
+    public Project saveProject(Project project){
+        return projectRepository.save(project);
+    }
 }
