@@ -1,6 +1,7 @@
 package edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluation;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -63,7 +64,7 @@ public class Evaluation {
         joinColumns = @JoinColumn(name = "evaluation_id"),
         inverseJoinColumns = @JoinColumn(name = "group_category_id")
     )
-    private List<GroupCategory> groupCategories;
+    private List<GroupCategory> groupCategories = new ArrayList<>();
 
     @OneToMany(mappedBy = "evaluation")
     private List<EvaluationOverride> evaluationOverrides;

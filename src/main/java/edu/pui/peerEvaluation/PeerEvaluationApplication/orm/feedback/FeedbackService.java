@@ -42,32 +42,4 @@ public class FeedbackService {
         return feedbackRepository.saveAndFlush(feedback);
     }
 
-    public Feedback convertToEntity(EvaluationFeedbackDTO feedbackDTO) {
-        System.out.println("FeedbackkDTO: " + feedbackDTO);
-        Feedback feedback = new Feedback();
-        //feedback.setGroup(projectGroupService.findById(feedbackDTO.getProjectGroupId()));
-        feedback.setRatedByStudent(studentService.findStudentById(feedbackDTO.getRatedByStudentId()));
-        feedback.setRatedStudent(studentService.findStudentById(feedbackDTO.getRatedStudentId()));
-        feedback.setEvaluation(evaluationService.findById(feedbackDTO.getEvaluationId()));
-        feedback.setGradePercent(feedbackDTO.getGrade());
-        feedback.setDateCompleted(LocalDateTime.now());
-        System.out.println("FeedbackDTO PG ID: " +feedbackDTO.getProjectGroupId());
-        feedback.setGroup(projectGroupService.findById(feedbackDTO.getProjectGroupId()));
-        feedback.setProject(projectService.findById(feedbackDTO.getProjectId()));
-
-        List<EvaluationResponse> evaluationResponses = feedbackDTO.getResponses().stream()
-                .map(dto -> {
-                    EvaluationResponse response = new EvaluationResponse();
-                    response.setResponseText(dto.getResponse());
-                    response.setQuestion(evaluationQuestionService.findById(dto.getQuestionId()));
-                    response.setFeedback(feedback);
-                    return response;
-                })
-                .collect(Collectors.toList());
-
-        feedback.setResponses(evaluationResponses);
-
-        return feedback;
-    }
-
 }

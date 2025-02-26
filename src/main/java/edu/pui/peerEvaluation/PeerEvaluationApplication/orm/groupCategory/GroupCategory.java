@@ -1,5 +1,6 @@
 package edu.pui.peerEvaluation.PeerEvaluationApplication.orm.groupCategory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluation.Evaluation;
@@ -39,7 +40,7 @@ public class GroupCategory {
     private MyClass myClass;
 
     @ManyToMany(mappedBy = "groupCategories")
-    private List<Evaluation> evaluations;
+    private List<Evaluation> evaluations = new ArrayList<>();
 
     @OneToMany(mappedBy = "groupCategory", cascade = CascadeType.ALL)
     private List<ProjectGroup> projectGroups;

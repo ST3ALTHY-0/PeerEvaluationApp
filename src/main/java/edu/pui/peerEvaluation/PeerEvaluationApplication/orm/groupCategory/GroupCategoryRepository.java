@@ -7,7 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface GroupCategoryRepository extends JpaRepository<GroupCategory, Integer> {
+import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.baseEntity.BaseEntityRepository;
+
+public interface GroupCategoryRepository extends BaseEntityRepository<GroupCategory, Integer> {
 
     @Query("SELECT gc FROM GroupCategory gc " +
            "JOIN gc.myClass mc " +

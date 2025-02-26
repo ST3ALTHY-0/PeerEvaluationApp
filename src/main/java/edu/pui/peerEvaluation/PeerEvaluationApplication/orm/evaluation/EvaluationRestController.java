@@ -15,9 +15,6 @@ public class EvaluationRestController{
         this.evaluationService = evaluationService;
     }
 
-    @GetMapping("/projectGroup/{projectGroupId}")
-    public Evaluation getGroup(@PathVariable Integer evaluationId) {
-        return evaluationService.findById(evaluationId);
-    }
+
     
 }

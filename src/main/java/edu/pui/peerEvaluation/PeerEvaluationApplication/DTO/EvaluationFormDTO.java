@@ -10,7 +10,6 @@ public class EvaluationFormDTO {
     
     private String classCode;
     private String projectName;
-
     private boolean enableGrading;
     private boolean useStandardForm;
     private String dueDate;
