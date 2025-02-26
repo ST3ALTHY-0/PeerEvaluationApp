@@ -71,48 +71,57 @@ public class SaveBrightSpaceData {
             Project project) {
         logger.debug("Processing CSV data: " + csvDataDTOList);
 
+        List<Student> studentsToSave = new ArrayList<>();
+        List<ProjectGroup> groupsToSave = new ArrayList<>();
+        Map<String, ProjectGroup> projectGroupMap = new HashMap<>();
+
         for (CSVDataDTO csvDataDTO : csvDataDTOList) {
             logger.debug("Processing student {} for group {}", csvDataDTO.getStudent().getStudentEmail(),
                     csvDataDTO.getGroup());
 
-            Student student = saveCSVDataToDBIndividualStudent(csvDataDTO);
-            ProjectGroup projectGroup = getOrCreateProjectGroup(csvDataDTO, groupCategory, projectGroupMap, project);
+            Student student = getOrCreateStudent(csvDataDTO);
+            ProjectGroup projectGroup = projectGroupMap.computeIfAbsent(csvDataDTO.getGroup(),
+                    key -> getOrCreateProjectGroup(csvDataDTO, groupCategory, project));
 
             logger.debug("Adding student {} to group {}", student.getStudentEmail(), projectGroup.getGroupName());
 
-            List<Student> groupStudentList = addStudentToNewGroupList(student, projectGroup);
-            List<ProjectGroup> groupList = addNewGroupToStudentsGroupList(student, projectGroup);
+            student.getGroups().add(projectGroup);
+            projectGroup.getStudents().add(student);
 
-            student.setGroups(groupList);
-            projectGroup.setStudents(groupStudentList);
-            projectGroupService.addProjectGroup(projectGroup);
+            studentsToSave.add(student);
+            groupsToSave.add(projectGroup);
         }
 
+        studentService.saveAllStudents(studentsToSave);
+        projectGroupService.saveAllProjectGroups(groupsToSave);
+
+        entityManager.flush(); // Single flush after batch insert
     }
 
-    private Student saveCSVDataToDBIndividualStudent(CSVDataDTO csvDataDTO) {
-        Student student = studentService.findStudentByEmail(csvDataDTO.getStudent().getStudentEmail());
-        if (student == null) {
-            student = csvDataDTO.getStudent();
-            studentService.addStudent(student);
-        }
-        return student;
+    private Student getOrCreateStudent(CSVDataDTO csvDataDTO) {
+        return studentService.findStudentByEmail(csvDataDTO.getStudent().getStudentEmail())
+                .orElseGet(() -> {
+                    Student newStudent = csvDataDTO.getStudent();
+                    studentService.addStudent(newStudent);
+                    return newStudent;
+                });
     }
 
-    private ProjectGroup getOrCreateProjectGroup(CSVDataDTO csvDataDTO, GroupCategory groupCategory,
-            Map<String, ProjectGroup> projectGroupMap, Project project) {
+    private ProjectGroup getOrCreateProjectGroup(CSVDataDTO csvDataDTO, GroupCategory groupCategory, Project project) {
         String groupName = project.getProjectName() + " " + csvDataDTO.getGroup();
 
-        return projectGroupMap.computeIfAbsent(groupName, key -> {
-            logger.debug("Creating new Project Group: {}", groupName);
+        return projectGroupService.findByGroupNameAndProject(groupName, project)
+                .orElseGet(() -> {
+                    logger.debug("Creating new Project Group: {}", groupName);
 
-            ProjectGroup newGroup = new ProjectGroup();
-            newGroup.setGroupName(groupName);
-            newGroup.setProject(project);
-            newGroup.setGroupCategory(groupCategory);
+                    ProjectGroup newGroup = new ProjectGroup();
+                    newGroup.setGroupName(groupName);
+                    newGroup.setProject(project);
+                    newGroup.setGroupCategory(groupCategory);
 
-            return newGroup;
-        });
+                    projectGroupService.saveProjectGroup(newGroup);
+                    return newGroup;
+                });
     }
 
     private List<ProjectGroup> addNewGroupToStudentsGroupList(Student student, ProjectGroup projectGroup) {

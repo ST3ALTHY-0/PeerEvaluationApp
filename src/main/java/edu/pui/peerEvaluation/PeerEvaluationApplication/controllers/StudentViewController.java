@@ -45,7 +45,7 @@ public class StudentViewController {
     public String loginSubmit(@ModelAttribute LoginDTO loginDTO, HttpSession session) {
         //validate input
         //return error if wrong input is entered
-        Student thisStudent = studentService.findStudentByEmail(loginDTO.getEmail());
+        Student thisStudent = studentService.findStudentByEmail(loginDTO.getEmail()).orElse(null);
         session.setAttribute("student", thisStudent); // Store student in session
 
         return "student/dashboard";

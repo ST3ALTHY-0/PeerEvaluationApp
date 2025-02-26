@@ -33,8 +33,11 @@ public class StudentService {
         return studentRepository.findById(id).orElse(null);
     }
 
-    public Student findStudentByEmail(String email) {
-        return studentRepository.findByEmail(email).orElse(null);
+    public Optional<Student> findStudentByEmail(String email) {
+        return studentRepository.findByEmail(email);
+    }
+    public List<Student> saveAllStudents(List<Student> students) {
+        return studentRepository.saveAll(students);
     }
 
 }
