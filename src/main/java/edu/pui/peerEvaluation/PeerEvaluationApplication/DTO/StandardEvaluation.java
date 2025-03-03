@@ -5,8 +5,10 @@ import java.util.List;
 
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluationQuestion.EvaluationQuestion;
 import lombok.Data;
+import org.springframework.stereotype.Component;
 
 @Data
+@Component
 public class StandardEvaluation {
 
     String question1 = "How would you describe this team member’s overall contribution to the project?";

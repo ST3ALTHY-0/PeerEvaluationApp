@@ -22,7 +22,6 @@ public class BrightSpaceClassService {
         MyClass myClass = new MyClass();
         myClass.setClassName(brightSpaceEnrollment.getOrgUnit().getName());
         myClass.setClassCode(brightSpaceEnrollment.getOrgUnit().getCode());
-        myClass.setInstructor(instructor);
         return myClass;
     }
 

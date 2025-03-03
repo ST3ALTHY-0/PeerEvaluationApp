@@ -25,7 +25,7 @@ import lombok.EqualsAndHashCode;
 public class EvaluationQuestion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int questionId;
+    private Integer questionId;
 
     private String questionText;
 

@@ -10,6 +10,8 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +36,9 @@ public class EvaluationService extends BaseEntityService<Evaluation, Integer> {
     private final EvaluationQuestionService evaluationQuestionService;
     private final StudentService studentService;
     private final EvaluationRepository evaluationRepository;
+
+        private static final Logger logger = LoggerFactory.getLogger(EvaluationService.class);
+
 
     @Autowired
     public EvaluationService(ProjectService projectService, EvaluationQuestionService evaluationQuestionService, StudentService studentService, EvaluationRepository evaluationRepository) {
@@ -60,16 +65,16 @@ public class EvaluationService extends BaseEntityService<Evaluation, Integer> {
         return evaluationRepository.findDistinctByGroupCategories_ProjectGroups_Students_StudentIdAndFeedbacks_FeedbackIdIsNotNull(studentId);
     }
 
-    public List<Evaluation> findAll() {
-        return evaluationRepository.findAll();
+
+    public List<Evaluation> findEvaluationsWithoutStudentFeedback(Integer studentId){
+        List<Evaluation> evaluations = evaluationRepository.findEvaluationsWithoutStudentFeedback(studentId);
+        logger.debug("Evaluations without feedback from student {}: {}", studentId, evaluations);
+        System.out.println("Evaluations without feedback from student {" + studentId+ "}: {"+ evaluations +"}");
+        return evaluations;
     }
 
-    public Evaluation findById(int evaluationId) {
-        return evaluationRepository.findById(evaluationId).orElse(null);
-    }
-
-    public void deleteById(int evaluationId) {
-        evaluationRepository.deleteById(evaluationId);
+    public List<Evaluation> findEvaluationsByInstructorId(Integer instructorId){
+        return evaluationRepository.findByProject_Instructor_InstructorId(instructorId);
     }
 
     @Override

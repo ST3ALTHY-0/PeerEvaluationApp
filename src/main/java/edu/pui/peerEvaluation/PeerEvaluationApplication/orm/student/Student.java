@@ -20,6 +20,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
 @Entity
@@ -28,7 +29,7 @@ public class Student {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int studentId;
+    private Integer studentId;
 
     private String studentName;
     private String studentEmail;
@@ -42,6 +43,7 @@ public class Student {
 
     @ManyToMany(cascade = {CascadeType.MERGE})
     @JoinTable(name = "groupMembership", joinColumns = @JoinColumn(name = "studentId"), inverseJoinColumns = @JoinColumn(name = "groupId"))
+    @EqualsAndHashCode.Exclude
     private List<ProjectGroup> groups;
 
     @OneToMany(mappedBy = "student")

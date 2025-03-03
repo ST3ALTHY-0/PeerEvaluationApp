@@ -11,11 +11,15 @@ import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.baseEntity.BaseEntit
 
 public interface GroupCategoryRepository extends BaseEntityRepository<GroupCategory, Integer> {
 
-    @Query("SELECT gc FROM GroupCategory gc " +
-           "JOIN gc.myClass mc " +
-           "JOIN mc.instructor i " +
-           "WHERE i.instructorId = :instructorId")
+    @Query("""
+           SELECT Distinct gc FROM GroupCategory gc
+           JOIN gc.projectGroups pg
+           JOIN pg.project p
+           JOIN p.instructor i
+           WHERE i.instructorId = :instructorId
+           """)
     List<GroupCategory> findAllByInstructorId(@Param("instructorId") Integer instructorId);
+
 
 
 }

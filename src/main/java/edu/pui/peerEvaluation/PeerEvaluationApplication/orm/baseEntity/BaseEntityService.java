@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 
+
 public abstract class BaseEntityService<T, ID> {
 
     protected abstract BaseEntityRepository<T, ID> getRepository();
@@ -20,6 +21,10 @@ public abstract class BaseEntityService<T, ID> {
         return getRepository().save(entity);
     }
 
+    public List<T> saveAll(List<T> entities){
+        return getRepository().saveAll(entities);
+    }
+
     public T saveAndFlush(T entity) {
         return getRepository().saveAndFlush(entity);
     }
@@ -27,4 +32,5 @@ public abstract class BaseEntityService<T, ID> {
     public void deleteById(ID id) {
         getRepository().deleteById(id);
     }
+    
 }

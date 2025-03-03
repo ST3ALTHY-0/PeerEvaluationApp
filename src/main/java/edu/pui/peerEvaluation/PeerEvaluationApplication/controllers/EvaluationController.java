@@ -87,45 +87,48 @@ public class EvaluationController {
             Model model) {
         logger.debug("Received feedback: {}", evaluationFeedbackFormDTO);
 
+        //filter feedback to remove null entities that get added for some reason TODO: fix the null values from happening
         List<EvaluationFeedbackDTO> filteredFeedbackList = evaluationFeedbackFormDTO.getEvaluationFeedbackDTOList().stream()
                 .filter(feedback -> feedback.getEvaluationId() != null && feedback.getRatedByStudentId() != null && feedback.getRatedStudentId() != null)
                 .collect(Collectors.toList());
 
         evaluationFeedbackFormDTO.setEvaluationFeedbackDTOList(filteredFeedbackList);
-        for(EvaluationFeedbackDTO feedbackDTO : evaluationFeedbackFormDTO.getEvaluationFeedbackDTOList())
-        {
-            System.out.println("GroupID: " + feedbackDTO.getProjectGroupId());
-            Feedback feedback = feedbackService.convertToEntity(feedbackDTO);
-            feedbackService.addFeedback(feedback);
-        }
+        saveBrightSpaceData.saveFeedbackToDB(evaluationFeedbackFormDTO);
         model.addAttribute("message", "Feedback submitted successfully");
 
-        // Redirect or return a view name
         return "/student/feedback/finished";
     }
 
-  // @Transactional
 @PostMapping("/submit/form")
 public String createEvaluation(@RequestParam("csvFile") MultipartFile file, @ModelAttribute EvaluationFormDTO evaluationFormDTO) {
-
+     //TODO: maybe make DTO for myClass, groupCategory, and project
+    //save csv data including students, projectGroups, groupCategory, and project
     try {
+        System.out.println("InstructorId: " + evaluationFormDTO.getInstructorId());
+        //parse the data from the csv
         List<CSVData> csvDataList = brightSpaceCSVParser.parseDataFromCSV(file);
+
+        //transform the parsed data into a more usable form 
         List<CSVDataDTO> csvDataDTOList = brightSpaceCSVParser.transformData(csvDataList);
 
+        //get references to the saved Project and the Class that project belongs to
         Project thisProject = csvDataDTOList.get(0).getProject();
         MyClass myClass = myClassService.findByClassCode(evaluationFormDTO.getClassCode());
-        thisProject.setMyClass(myClass);
-        Project savedProject = saveBrightSpaceData.saveProjectToDB(thisProject);
+
+
+        Project project = saveBrightSpaceData.saveProjectToDB(thisProject, evaluationFormDTO.getInstructorId(), myClass);
 
         //TODO: check that gc isnt already saved in db
-        GroupCategory groupCategory = new GroupCategory();
-        groupCategory.setMyClass(myClass);
-        groupCategoryService.addGroupCategory(groupCategory);
+        GroupCategory thisGroupCategory = new GroupCategory();
+        thisGroupCategory.setMyClass(myClass);
+        GroupCategory groupCategory = groupCategoryService.addGroupCategory(thisGroupCategory);
 
-        saveBrightSpaceData.saveCSVDataToDB(csvDataDTOList, myClass, groupCategory, savedProject);
+        //save the students and project groups they belong to in the DB
+        saveBrightSpaceData.saveCSVDataToDB(csvDataDTOList, myClass, groupCategory, project);
 
+        //save the evaluation to the DB
+        saveBrightSpaceData.saveEvaluationToDB(evaluationFormDTO, groupCategory, project);
         
-        //System.out.println(csvData);
     } catch (Exception e) {
         System.out.println("Error: " + e.getMessage());
     }

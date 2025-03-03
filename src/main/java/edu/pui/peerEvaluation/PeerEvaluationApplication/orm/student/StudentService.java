@@ -7,8 +7,11 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.baseEntity.BaseEntityRepository;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.baseEntity.BaseEntityService;
+
 @Service
-public class StudentService {
+public class StudentService extends BaseEntityService<Student, Integer>{
 
     private final StudentRepository studentRepository;
 
@@ -34,10 +37,16 @@ public class StudentService {
     }
 
     public Optional<Student> findStudentByEmail(String email) {
-        return studentRepository.findByEmail(email);
+        return studentRepository.findByStudentEmail(email);
     }
-    public List<Student> saveAllStudents(List<Student> students) {
-        return studentRepository.saveAll(students);
+
+    public Optional<Student> findStudentByEmailAndPuid(String email, String puid){
+        return studentRepository.findByStudentEmailAndPuid(email, puid);
+    }
+
+    @Override
+    protected BaseEntityRepository<Student, Integer> getRepository() {
+        return studentRepository;
     }
 
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluation.Evaluation;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.myClass.MyClass;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.project.Project;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,17 +20,22 @@ import lombok.ToString;
 @Data
 @Entity
 @Table(name = "instructor")
-@ToString(exclude = {"classes"})
-public class Instructor {
+@ToString(exclude = {"projects"})
+public class Instructor{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int instructorId;
+    private Integer instructorId;
 
     private String instructorName;
 
     private String instructorEmail;
 
-    @OneToMany(mappedBy = "instructor")
-    private List<MyClass> classes;
+    private String puid;
+
+    // @OneToMany(mappedBy = "instructor")
+    // private List<MyClass> classes;
+
+    @OneToMany(mappedBy = "instructor", cascade = CascadeType.ALL)
+    private List<Project> projects;
 
 }

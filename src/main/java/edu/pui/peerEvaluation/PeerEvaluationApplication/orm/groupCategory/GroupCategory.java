@@ -1,7 +1,9 @@
 package edu.pui.peerEvaluation.PeerEvaluationApplication.orm.groupCategory;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluation.Evaluation;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.feedback.Feedback;
@@ -20,16 +22,18 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 @Data
 @Entity
 @Table(name = "group_category")
-@ToString(exclude = {"myClass", "projectGroups"})
+@EqualsAndHashCode(exclude = {"evaluations"})
+@ToString(exclude = {"myClass", "projectGroups", "evaluations"})
 public class GroupCategory {
         @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int groupCategoryId;
+    private Integer groupCategoryId;
  
     // @ManyToOne
     // @JoinColumn(name = "projectId", nullable = false)
@@ -40,7 +44,7 @@ public class GroupCategory {
     private MyClass myClass;
 
     @ManyToMany(mappedBy = "groupCategories")
-    private List<Evaluation> evaluations = new ArrayList<>();
+    private Set<Evaluation> evaluations = new HashSet<>();
 
     @OneToMany(mappedBy = "groupCategory", cascade = CascadeType.ALL)
     private List<ProjectGroup> projectGroups;

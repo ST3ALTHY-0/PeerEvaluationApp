@@ -21,11 +21,11 @@ public class EvaluationResponse {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int responseId;
+    private Integer responseId;
 
     private String responseText;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "questionId", referencedColumnName = "questionId")
     private EvaluationQuestion question;
 

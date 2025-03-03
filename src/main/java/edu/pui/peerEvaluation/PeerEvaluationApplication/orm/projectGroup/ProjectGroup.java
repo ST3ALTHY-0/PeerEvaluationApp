@@ -21,6 +21,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
 @Entity
@@ -28,7 +29,7 @@ import lombok.Data;
 public class ProjectGroup {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int groupId;
+    private Integer groupId;
 
     private String groupName;
 
@@ -44,6 +45,7 @@ public class ProjectGroup {
     private List<Feedback> grades;
 
     @ManyToMany(mappedBy = "groups")
+    @EqualsAndHashCode.Exclude
     private List<Student> students = new ArrayList<>();;
 
 

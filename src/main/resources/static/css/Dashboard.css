@@ -1,0 +1,36 @@
+.container2 {
+    flex: 1;
+}
+
+.btn-custom {
+    margin-bottom: 20px; /* Space out the buttons */
+    padding: 20px 40px; /* Increase padding for a larger button */
+    background-color: #007bff; /* Matching the navbar color */
+    border: none;
+    border-radius: 5px; /* Rounded corners */
+    color: white;
+    font-size: 1.2rem;
+    transition: background-color 0.3s ease; /* Smooth hover effect */
+}
+
+.btn-custom:hover {
+    background-color: #0056b3; /* Darker shade on hover */
+}
+
+.btn-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 50vh; /* Adjust as needed */
+}
+
+h1 {
+    color: #343a40; /* Darker text for better contrast */
+    margin-bottom: 30px;
+    font-weight: 700;
+}
+
+.container {
+    max-width: 800px; /* Limit container width for better readability */
+}

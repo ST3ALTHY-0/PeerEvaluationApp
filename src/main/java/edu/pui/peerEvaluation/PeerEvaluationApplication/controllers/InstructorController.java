@@ -2,6 +2,7 @@ package edu.pui.peerEvaluation.PeerEvaluationApplication.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -64,11 +65,18 @@ public class InstructorController {
 
     @PostMapping("login/submit")
     public String loginSubmit(HttpSession session, @ModelAttribute LoginDTO loginDTO){
-        Instructor instructor = instructorService.findInstructorByEmail(loginDTO.getEmail());
+        // Find the instructor by email
+    Optional<Instructor> optionalInstructor = instructorService.findInstructorByEmail(loginDTO.getEmail());
+    
+    // Check if the instructor is present
+    if (!optionalInstructor.isPresent()) {
+        return "login/failed";
+    }
 
-        if(instructor == null) return "login/failed";
+    // Get the instructor from the Optional
+    Instructor instructor = optionalInstructor.get();
 
-        session.setAttribute("instructor", loginDTO);
+        session.setAttribute("instructorId", instructor.getInstructorId());
         return "instructor/dashboard";
     }
 
@@ -79,12 +87,22 @@ public class InstructorController {
 
 
     @GetMapping("/viewEvaluations")
-    public String viewEvaluations() {
+    public String viewEvaluations(HttpSession session, Model model) {
+        //we need to pass all evaluations that have projects with that have this instructor
+
+        //Instructor instructor = instructorService.findById(((Integer) session.getAttribute("instructorId"))).orElse(null);
+        List<Evaluation> evaluations = evaluationService.findEvaluationsByInstructorId(((Integer) session.getAttribute("instructorId")));
+        model.addAttribute("evaluations", evaluations);
+        
+
         return "instructor/viewEvaluations";
     }
 
     @GetMapping("/createEvaluation")
     public String createEvaluation(HttpSession session, Model model) {
+        Integer instructorId = (Integer) session.getAttribute("instructorId");
+        model.addAttribute("instructorId", instructorId);
+        System.out.println("Passing instructorId: " + instructorId);
         return "instructor/createEvaluation";
     }
 

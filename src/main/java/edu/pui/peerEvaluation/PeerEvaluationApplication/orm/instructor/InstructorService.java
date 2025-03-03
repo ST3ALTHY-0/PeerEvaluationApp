@@ -1,10 +1,15 @@
 package edu.pui.peerEvaluation.PeerEvaluationApplication.orm.instructor;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.baseEntity.BaseEntityRepository;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.baseEntity.BaseEntityService;
+
 @Service
-public class InstructorService {
+public class InstructorService extends BaseEntityService<Instructor, Integer> {
 
     private final InstructorRepository instructorRepository;
 
@@ -13,25 +18,18 @@ public class InstructorService {
         this.instructorRepository = instructorRepository;
     }
 
-    public Instructor addInstructor(Instructor instructor) {
-        // do any error handling and logging here
-        instructorRepository.saveAndFlush(instructor);
-        return instructor;
+    public Optional<Instructor> findInstructorByEmail(String email) {
+        return instructorRepository.findByEmail(email);
     }
 
-    public Instructor findInstructorByEmail(String email) {
-        return instructorRepository.findByEmail(email).orElse(null);
+    public Optional<Instructor> findInstructorByEmailAndPuid(String email, String puid) {
+        return instructorRepository.findByInstructorEmailAndPuid(email, puid);
+    }
+
+    @Override
+    protected BaseEntityRepository<Instructor, Integer> getRepository() {
+        return instructorRepository;
     }
 
 }
 
-// I really need to see what sort of information is available when using
-// brightSpace API
-
-// when instructor hits submit on form, some amount of data should be added to
-// DB,
-// firstly the class data should be entered into Class table in DB
-// then some student data should be added to Student Table if possible (maybe
-// email cant be added yet)
-// then project_group data should be added to Project_group Table
-// then group_membership data should be added to Group_membership Table

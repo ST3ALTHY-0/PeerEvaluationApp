@@ -18,15 +18,17 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.ToString;
 
 @Data
 @Entity
 @Table(name = "feedback")
+@ToString(exclude = {"project", "ratedByStudent", "ratedStudent", "evaluation", "group", "responses"})
 public class Feedback {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int feedbackId;
+    private Integer feedbackId;
 
     private int gradePercent;
 

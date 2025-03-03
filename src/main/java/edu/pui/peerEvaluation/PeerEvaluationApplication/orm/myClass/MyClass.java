@@ -22,23 +22,23 @@ import lombok.ToString;
 @Data
 @Entity
 @Table(name = "class")
-@EqualsAndHashCode(exclude = {"projects"})
+@EqualsAndHashCode(exclude = {"projects", "groupCategories"})
 @ToString(exclude = {"instructor", "projects", "groupCategories"})
 public class MyClass {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int classId;
+    private Integer classId;
 
     private String className;
 
     private String classCode;
 
     // manyToOne means that many classes can have the same instructor
-    @ManyToOne
+    //@ManyToOne
     // JoinColumn means that the instructor will be related to classes via
     // instructor_id (primary key)
-    @JoinColumn(name = "instructorId")
-    private Instructor instructor;
+    // @JoinColumn(name = "instructorId")
+    // private Instructor instructor;
 
     @OneToMany(mappedBy = "myClass", cascade = CascadeType.ALL)
     private List<Project> projects;

@@ -2,6 +2,8 @@ package edu.pui.peerEvaluation.PeerEvaluationApplication.orm.feedback;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface FeedbackRepository extends JpaRepository<Feedback, Integer> {
+import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.baseEntity.BaseEntityRepository;
+
+public interface FeedbackRepository extends BaseEntityRepository<Feedback, Integer> {
 
 }

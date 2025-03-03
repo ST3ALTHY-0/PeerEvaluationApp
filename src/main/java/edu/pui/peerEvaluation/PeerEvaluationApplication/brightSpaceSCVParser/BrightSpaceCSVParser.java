@@ -72,7 +72,7 @@ public class BrightSpaceCSVParser {
 
             project.setProjectName(csvData.getProjectName());
             project.setPointsWorth(csvData.getProjectDenominator());
-            student.setPuid(csvData.getPuid());
+            student.setPuid(csvData.getPuid().replace("#", ""));
             student.setStudentName(csvData.getFirstName() + " " + csvData.getLastName());
             student.setStudentEmail(csvData.getStudentEmail());
 

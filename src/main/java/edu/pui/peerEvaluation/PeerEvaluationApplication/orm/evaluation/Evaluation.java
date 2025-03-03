@@ -34,11 +34,12 @@ import lombok.ToString;
 @Data
 @Entity
 @Table(name = "evaluation")
-@EqualsAndHashCode(exclude = {"evaluationQuestions", "project"})
+@EqualsAndHashCode(exclude = {"evaluationQuestions", "project", "groupCategories"})
+@ToString(exclude = {"project", "groupCategories", "feedbacks", "evaluationQuestions"})
 public class Evaluation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int evaluationId;
+    private Integer evaluationId;
 
     private LocalDateTime createdAt;
 
@@ -64,8 +65,14 @@ public class Evaluation {
         joinColumns = @JoinColumn(name = "evaluation_id"),
         inverseJoinColumns = @JoinColumn(name = "group_category_id")
     )
-    private List<GroupCategory> groupCategories = new ArrayList<>();
+    private Set<GroupCategory> groupCategories = new HashSet<>();
 
     @OneToMany(mappedBy = "evaluation")
     private List<EvaluationOverride> evaluationOverrides;
+
+
+    /*
+     * Select e from Evaluation e Join project p on 
+     * 
+     */
 }

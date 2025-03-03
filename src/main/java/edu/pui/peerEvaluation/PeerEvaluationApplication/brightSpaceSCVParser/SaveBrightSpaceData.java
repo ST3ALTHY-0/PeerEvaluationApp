@@ -1,19 +1,24 @@
 package edu.pui.peerEvaluation.PeerEvaluationApplication.brightSpaceSCVParser;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import edu.pui.peerEvaluation.PeerEvaluationApplication.DTO.EvaluationFeedbackDTO;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.DTO.EvaluationFeedbackFormDTO;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.DTO.EvaluationFormDTO;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.DTO.EvaluationQuestionDTO;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.DTO.StandardEvaluation;
@@ -21,8 +26,13 @@ import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluation.Evaluatio
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluation.EvaluationService;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluationQuestion.EvaluationQuestion;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluationQuestion.EvaluationQuestionService;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluationResponse.EvaluationResponse;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluationResponse.EvaluationResponseService;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.feedback.Feedback;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.feedback.FeedbackService;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.groupCategory.GroupCategory;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.groupCategory.GroupCategoryService;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.instructor.Instructor;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.instructor.InstructorService;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.myClass.MyClass;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.myClass.MyClassService;
@@ -48,8 +58,10 @@ public class SaveBrightSpaceData {
     private final StudentGradeService studentGradeService;
     private final EvaluationQuestionService evaluationQuestionService;
     private final EvaluationService evaluationService;
-    private static final Logger logger = LoggerFactory.getLogger(SaveBrightSpaceData.class);
     private final StandardEvaluation standardEvaluation;
+    private final FeedbackService feedbackService;
+    private final EvaluationResponseService evaluationResponseService;
+    private static final Logger logger = LoggerFactory.getLogger(SaveBrightSpaceData.class);
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -60,7 +72,9 @@ public class SaveBrightSpaceData {
             GroupCategoryService groupCategoryService, ProjectService projectService,
             StudentGradeService studentGradeService, EvaluationQuestionService evaluationQuestionService,
             EvaluationService evaluationService,
-            StandardEvaluation standardEvaluation) {
+            StandardEvaluation standardEvaluation,
+            FeedbackService feedbackService,
+            EvaluationResponseService evaluationResponseService) {
         this.studentService = studentService;
         this.projectGroupService = projectGroupService;
         this.instructorService = instructorService;
@@ -71,12 +85,17 @@ public class SaveBrightSpaceData {
         this.evaluationQuestionService = evaluationQuestionService;
         this.evaluationService = evaluationService;
         this.standardEvaluation = standardEvaluation;
+        this.feedbackService = feedbackService;
+        this.evaluationResponseService = evaluationResponseService;
     }
 
     Map<String, ProjectGroup> projectGroupMap = new HashMap<>();
 
-    public Project saveProjectToDB(Project project) {
-        return projectService.addProject(project);
+    public Project saveProjectToDB(Project project, Integer instructorId, MyClass myClass) {
+        Instructor instructor = instructorService.findById(instructorId).orElse(null);
+        project.setMyClass(myClass);
+        project.setInstructor(instructor);
+        return projectService.saveProject(project);
     }
 
     @Transactional
@@ -98,14 +117,14 @@ public class SaveBrightSpaceData {
 
             logger.debug("Adding student {} to group {}", student.getStudentEmail(), projectGroup.getGroupName());
 
-            student.getGroups().add(projectGroup);
-            projectGroup.getStudents().add(student);
+            student.setGroups((List<ProjectGroup>) getAndAddEntityToList(student.getGroups(), projectGroup));
+            projectGroup.setStudents((List<Student>) getAndAddEntityToList(projectGroup.getStudents(), student));
 
             studentsToSave.add(student);
             groupsToSave.add(projectGroup);
         }
 
-        studentService.saveAllStudents(studentsToSave);
+        studentService.saveAll(studentsToSave);
         projectGroupService.saveAllProjectGroups(groupsToSave);
 
         entityManager.flush(); // Single flush after batch insert
@@ -137,43 +156,32 @@ public class SaveBrightSpaceData {
                 });
     }
 
-    // private List<ProjectGroup> addNewGroupToStudentsGroupList(Student student, ProjectGroup projectGroup) {
-    //     List<ProjectGroup> groupList = new ArrayList<>();
-    //     if (student.getGroups() != null) {
-    //         groupList.addAll(student.getGroups());
-    //     }
-    //     groupList.add(projectGroup);
-
-    //     return groupList;
-
-    // }
-
-    // private List<Student> addStudentToNewGroupList(Student student, ProjectGroup projectGroup) {
-
-    //     List<Student> groupStudentList = new ArrayList<>();
-    //     if (projectGroup.getStudents() != null) {
-    //         groupStudentList.addAll(projectGroup.getStudents());
-    //     }
-    //     groupStudentList.add(student);
-    //     return groupStudentList;
-    // }
-
-    public Evaluation saveEvaluationToDB(EvaluationFormDTO evaluationFormDTO, GroupCategory groupCategory, Project project){
+    @Transactional
+    public Evaluation saveEvaluationToDB(EvaluationFormDTO evaluationFormDTO, GroupCategory groupCategory,
+            Project project) {
         Evaluation evaluation = new Evaluation();
-        
-        evaluation.setDueDate(LocalDateTime.parse(evaluationFormDTO.getDueDate()));
+
+        // TODO: we are only asking for a date not a time on webpage, we can change it
+        // later, but for now we will default to midnight on the chosen date
+        LocalDate dueDate = LocalDate.parse(evaluationFormDTO.getDueDate());
+        LocalDateTime dueDateTime = dueDate.atStartOfDay();
+        evaluation.setDueDate(dueDateTime);
+
+        evaluation.setCreatedAt(LocalDateTime.now());
+
         evaluation.setProject(project);
-        
-        if(evaluationFormDTO.isUseStandardForm()){
+
+        if (evaluationFormDTO.isUseStandardForm()) {
             evaluation.setGraded(standardEvaluation.getIsGraded());
-            //TODO change standard eval to contain a List of EvaluationQuestions
+            // TODO change standard eval to contain a List of EvaluationQuestions
             evaluation.setEvaluationQuestions(null);
-            //set Standard Form, maybe have a DTO with set values that we use to assign variables
-        }else{
+            // set Standard Form, maybe have a DTO with set values that we use to assign
+            // variables
+        } else {
             List<EvaluationQuestion> evaluationQuestions = new ArrayList<>();
-            
-            //add the evaluation questions to the DB
-            for(EvaluationQuestionDTO evaluationQuestionDTO : evaluationFormDTO.getEvaluationQuestions()){
+
+            // add the evaluation questions to the DB
+            for (EvaluationQuestionDTO evaluationQuestionDTO : evaluationFormDTO.getEvaluationQuestions()) {
                 EvaluationQuestion evaluationQuestion = new EvaluationQuestion();
                 evaluationQuestion.setEnforceAnswer(evaluationQuestionDTO.isRequired());
                 evaluationQuestion.setQuestionText(evaluationQuestionDTO.getQuestionText());
@@ -185,29 +193,84 @@ public class SaveBrightSpaceData {
             evaluation.setGraded(evaluationFormDTO.isEnableGrading());
         }
 
-
-        List<GroupCategory> groupCategories = getAndAddEntityToList(evaluation.getGroupCategories(), groupCategory);
+        //map the new evaluation to the groupCategory
+        Set<GroupCategory> groupCategories = (Set<GroupCategory>) getAndAddEntityToSet(evaluation.getGroupCategories(), groupCategory);
         evaluation.setGroupCategories(groupCategories);
+        logger.debug("Creating new Evaluation : {}", evaluation);
         evaluationService.save(evaluation);
 
-        List<Evaluation> evaluations = getAndAddEntityToList(groupCategory.getEvaluations(), evaluation);
+        //map the new groupCategory to the evaluation
+        Set<Evaluation> evaluations = (Set<Evaluation>) getAndAddEntityToSet(groupCategory.getEvaluations(), evaluation);
         groupCategory.setEvaluations(evaluations);
+        logger.debug("Updating groupCategory : {}", groupCategory);
         groupCategoryService.save(groupCategory);
 
-
+        entityManager.flush();
         return evaluation;
     }
 
-    //Takes in a list of entities, adds it to a list of other entities and returns it.
-    //This is something we do repeatedly to add a new entity to a list. We do it like this instead of doing
-    //'entity.getEntityList.add(newEntity)' (example : evaluation.getGroupCategories().add(groupCategory)) because I ran into errors with entity.getEntityList() returning null. 
-    private static <T> List<T> getAndAddEntityToList(List<T> entities, T entity) {
+    // Takes in a list of entities and adds another entity to it and returns the new
+    // list
+
+    // This is something we do repeatedly to add a new entity to a list. We do it
+    // like this instead of doing
+    // 'entity.getEntityList.add(newEntity)' (example :
+    // evaluation.getGroupCategories().add(groupCategory)) because I ran into errors
+    // with entity.getEntityList() returning null.
+    private static <T> List<T> getAndAddEntityToList(Iterable<T> entities, T entity) {
         List<T> newEntityList = new ArrayList<>();
         if (entities != null) {
-            newEntityList.addAll(entities);
+            entities.forEach(newEntityList::add);
         }
         newEntityList.add(entity);
         return newEntityList;
     }
 
+    private static <T> Set<T> getAndAddEntityToSet(Iterable<T> entities, T entity) {
+        Set<T> newEntitySet = new HashSet<>();
+        if (entities != null) {
+            entities.forEach(newEntitySet::add);
+        }
+        newEntitySet.add(entity);
+        return newEntitySet;
+    }
+
+    @Transactional
+    public List<Feedback> saveFeedbackToDB(EvaluationFeedbackFormDTO evaluationFeedbackFormDTO) {
+        List<Feedback> feedbacks = new ArrayList<>();
+
+        // Create Feedback Entity based on the feedbackDTO we received and add it to the list
+        for (EvaluationFeedbackDTO feedbackDTO : evaluationFeedbackFormDTO.getEvaluationFeedbackDTOList()) {
+            Feedback feedback = new Feedback();
+
+            feedback.setRatedByStudent(studentService.findStudentById(feedbackDTO.getRatedByStudentId()));
+            feedback.setRatedStudent(studentService.findStudentById(feedbackDTO.getRatedStudentId()));
+            feedback.setEvaluation(evaluationService.findById(feedbackDTO.getEvaluationId()).orElse(null));
+            feedback.setGradePercent(feedbackDTO.getGrade());
+            feedback.setDateCompleted(LocalDateTime.now());
+            feedback.setGroup(projectGroupService.findById(feedbackDTO.getProjectGroupId()));
+            feedback.setProject(projectService.findById(feedbackDTO.getProjectId()));
+
+            // create evaluationResponse entity from feedbackDTO.Responses
+            List<EvaluationResponse> evaluationResponses = new ArrayList<>();
+            if (feedbackDTO.getResponses() != null) {
+                evaluationResponses = feedbackDTO.getResponses().stream()
+                    .map(dto -> {
+                        EvaluationResponse response = new EvaluationResponse();
+                        response.setResponseText(dto.getResponse());
+                        response.setQuestion(evaluationQuestionService.findById(dto.getQuestionId()).orElse(null));
+                        response.setFeedback(feedback);
+                        return response;
+                    })
+                    .collect(Collectors.toList());
+            }
+
+            feedback.setResponses(evaluationResponses);
+            feedbacks.add(feedback);
+        }
+
+        feedbackService.saveAll(feedbacks);
+        entityManager.flush();
+        return feedbacks;
+    }
 }

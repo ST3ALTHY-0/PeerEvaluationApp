@@ -65,7 +65,7 @@ public class StudentViewController {
 
 
         Student student = (Student) session.getAttribute("student");
-        List<Evaluation> userEvalList = evaluationService.findAllByStudentIdAndNoFeedback(student.getStudentId());
+        List<Evaluation> userEvalList = evaluationService.findEvaluationsWithoutStudentFeedback(student.getStudentId());
         model.addAttribute("userEvalList", userEvalList);
         
         return "student/viewEvaluations";
@@ -86,7 +86,7 @@ public class StudentViewController {
             @RequestParam("evaluationId") int evaluationId) {
 
         Student student = (Student) session.getAttribute("student");
-        Evaluation evaluation = evaluationService.findById(evaluationId);
+        Evaluation evaluation = evaluationService.findById(evaluationId).orElse(null);
         ProjectGroup projectGroup = projectGroupService.findProjectGroupByEvaluationIdAndStudentId(evaluationId, student.getStudentId());
 
 

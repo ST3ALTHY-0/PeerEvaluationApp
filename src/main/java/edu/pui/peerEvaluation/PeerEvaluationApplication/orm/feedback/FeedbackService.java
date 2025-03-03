@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import edu.pui.peerEvaluation.PeerEvaluationApplication.DTO.EvaluationFeedbackDTO;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.baseEntity.BaseEntityRepository;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.baseEntity.BaseEntityService;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluation.EvaluationService;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluationQuestion.EvaluationQuestion;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluationQuestion.EvaluationQuestionService;
@@ -17,7 +19,7 @@ import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.projectGroup.Project
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.student.StudentService;
 
 @Service
-public class FeedbackService {
+public class FeedbackService extends BaseEntityService<Feedback, Integer>{
 
     private final FeedbackRepository feedbackRepository;
     private final ProjectGroupService projectGroupService;
@@ -38,8 +40,10 @@ public class FeedbackService {
         this.projectService = projectService;
     }
 
-    public Feedback addFeedback(Feedback feedback) {
-        return feedbackRepository.saveAndFlush(feedback);
+    @Override
+    protected BaseEntityRepository<Feedback, Integer> getRepository() {
+        return feedbackRepository;
     }
+
 
 }

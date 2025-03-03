@@ -20,7 +20,7 @@ import lombok.Data;
 public class EvaluationOverride {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int evaluationOverrideId;
+    private Integer evaluationOverrideId;
 
     private LocalDateTime extendedDeadline;
 

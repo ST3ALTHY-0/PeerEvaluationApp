@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Choose Evaluation</title>
+    <!-- Bootstrap CDN link -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts for better typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="/css/Style.css" rel="stylesheet">
+
+    <style>
+    
+
+        .container {
+            margin-top: 10vh;
+            max-width: 800px; /* Limit container width for better readability */
+        }
+
+        h1 {
+            color: #343a40; /* Darker text for better contrast */
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+
+        .formContainer {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px; /* Rounded corners */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+        }
+
+        .evaluationContainer {
+            background-color: #e9ecef;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px; /* Rounded corners */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+            transition: background-color 0.3s ease; /* Smooth hover effect */
+        }
+
+        .evaluationContainer:hover {
+            background-color: #d6d8db; /* Slightly darker shade on hover */
+            cursor: pointer; /* Change cursor to pointer on hover */
+        }
+
+        .evaluationContainer h4 {
+            color: #007bff; /* Matching the navbar color */
+            font-weight: 500;
+            transition: background-color 0.3s ease; /* Smooth hover effect */
+            text-decoration: none;
+
+        }
+
+        .form-group label {
+            font-weight: 500;
+            color: #495057; /* Darker label text */
+        }
+
+        .custom-select {
+            border-radius: 5px; /* Rounded corners for the dropdown */
+            border: 1px solid #ced4da;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions */
+        }
+
+        .custom-select:hover {
+            border-color: #007bff; /* Highlight on hover */
+        }
+
+        .custom-select:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Focus effect */
+        }
+
+        .a{
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background-color: #007bff; /* Matching the navbar color */
+            border: none;
+            border-radius: 5px; /* Rounded corners */
+            padding: 10px 20px;
+            font-size: 1rem;
+            transition: background-color 0.3s ease; /* Smooth hover effect */
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3; /* Darker shade on hover */
+        }
+
+        .btn-secondary {
+            background-color: #6c757d; /* Gray for the "Back" button */
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268; /* Darker shade on hover */
+        }
+
+
+        /* Responsive adjustments */
+        @media (max-width: 576px) {
+            .container {
+                margin-top: 5vh;
+                padding: 0 15px;
+            }
+
+            .formContainer {
+                padding: 20px;
+            }
+
+            .btn-primary,
+            .btn-secondary {
+                width: 100%; /* Full-width buttons on small screens */
+                margin-bottom: 10px;
+            }
+
+            .form-row {
+                flex-direction: column;
+            }
+
+            .form-group.col-md-6 {
+                width: 100%;
+                text-align: center !important; /* Center align buttons on small screens */
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand">Peer Evaluation</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>Choose Evaluation</h1>
+        <div class="formContainer">
+            <div th:each="evaluation : ${evaluations}">
+                <a th:href="@{/evaluation/details/{evaluation.evaluationId}}">
+                <div class="evaluationContainer">
+                    <h4 th:text="${evaluation.project.myClass.classCode} + '  ' + ${evaluation.project.projectName} + ' ' + ${evaluation.dueDate}">Project Name</h4>
+                    <!-- Add number of people that have responded -->
+                </div>
+            </a>
+            </div>
+            <a href="/instructor/dashboard" class="btn btn-secondary">Back</a>
+
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container2">
+            <span>© 2025 Peer Evaluation. All rights reserved.</span>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

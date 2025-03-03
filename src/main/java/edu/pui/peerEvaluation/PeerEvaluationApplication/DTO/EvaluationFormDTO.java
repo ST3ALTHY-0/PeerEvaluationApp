@@ -13,6 +13,7 @@ public class EvaluationFormDTO {
     private boolean enableGrading;
     private boolean useStandardForm;
     private String dueDate;
+    private Integer instructorId;
     private List<EvaluationQuestionDTO> evaluationQuestions;
 
 }

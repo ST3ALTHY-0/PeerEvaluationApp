@@ -29,7 +29,7 @@ public class StudentGrade {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int studentGradeId;
+    private Integer studentGradeId;
 
     private Integer grade;
     
