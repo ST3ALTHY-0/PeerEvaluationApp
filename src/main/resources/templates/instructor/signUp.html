@@ -146,6 +146,10 @@
                         <p class="card-text text-center">Please sign up using your purdue email address and PUID:</p>
                         <form method="post" action="/instructor/signUp/submit">
                             <div class="form-group">
+                                <label for="name">Name</label>
+                                <input type="name" class="form-control" id="name" name="name" required>
+                            </div>
+                            <div class="form-group">
                                 <label for="email">Email address</label>
                                 <input type="email" class="form-control" id="email" name="email" pattern="[a-zA-Z0-9._%+-]+@purdue\.edu" required>
                             </div>

@@ -5,8 +5,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import edu.pui.peerEvaluation.PeerEvaluationApplication.exception.EntityNotFoundException;
-import edu.pui.peerEvaluation.PeerEvaluationApplication.exception.ErrorDetails;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.exceptions.EntityNotFoundException;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.exceptions.ErrorDetails;
 
 @RestController
 public class StudentController {

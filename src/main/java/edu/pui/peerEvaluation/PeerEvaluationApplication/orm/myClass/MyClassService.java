@@ -3,7 +3,7 @@ package edu.pui.peerEvaluation.PeerEvaluationApplication.orm.myClass;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import edu.pui.peerEvaluation.PeerEvaluationApplication.exception.EntityNotFoundException;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.exceptions.EntityNotFoundException;
 
 @Service
 public class MyClassService {

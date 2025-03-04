@@ -18,8 +18,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.DTO.EvaluationFormDTO;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.DTO.EvaluationQuestionDTO;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.DTO.LoginDTO;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.DTO.SignUpDTO;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.brightSpaceApi.BrightSpaceAPIService;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.brightSpaceApi.brightSpaceGroup.BrightSpaceGroupCategory;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.brightSpaceSCVParser.SaveBrightSpaceData;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.exceptions.InstructorAlreadyExistsException;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluation.Evaluation;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluation.EvaluationService;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluationQuestion.EvaluationQuestion;
@@ -40,21 +43,17 @@ import jakarta.servlet.http.HttpSession;
 public class InstructorController {
 
     private final EvaluationService evaluationService;
-    private final ProjectGroupService projectGroupService;
-    private final StudentService studentService;
     private final InstructorService instructorService;
-    private final GroupCategoryService groupCategoryService;
+    private final SaveBrightSpaceData saveBrightSpaceData;
+
 
     // declare any/all endpoint urls we will use
 
     @Autowired
-    public InstructorController(EvaluationService evaluationService, ProjectGroupService projectGroupService,
-            StudentService studentService, InstructorService instructorService, GroupCategoryService groupCategoryService) {
+    public InstructorController(EvaluationService evaluationService, InstructorService instructorService, SaveBrightSpaceData saveBrightSpaceData) {
         this.evaluationService = evaluationService;
-        this.projectGroupService = projectGroupService;
-        this.studentService = studentService;
         this.instructorService = instructorService;
-        this.groupCategoryService = groupCategoryService;
+        this.saveBrightSpaceData = saveBrightSpaceData;
     }
 
     @GetMapping("/login")
@@ -66,22 +65,18 @@ public class InstructorController {
     @PostMapping("login/submit")
     public String loginSubmit(HttpSession session, @ModelAttribute LoginDTO loginDTO){
         // Find the instructor by email
-    Optional<Instructor> optionalInstructor = instructorService.findInstructorByEmail(loginDTO.getEmail());
+    Instructor instructor = instructorService.findInstructorByEmail(loginDTO.getEmail()).orElse(null);
     
     // Check if the instructor is present
-    if (!optionalInstructor.isPresent()) {
+    if (instructor == null) {
         return "login/failed";
     }
-
-    // Get the instructor from the Optional
-    Instructor instructor = optionalInstructor.get();
-
         session.setAttribute("instructorId", instructor.getInstructorId());
         return "instructor/dashboard";
     }
 
     @GetMapping("/dashboard")
-    public String studentDashboard(HttpSession session) {
+    public String instructorDashboard(HttpSession session) {
         return "instructor/dashboard";
     }
 
@@ -138,6 +133,20 @@ public class InstructorController {
         model.addAttribute("projectGroup", sampleProjectGroup);
 
         return "instructor/previewEvaluationForm";
+    }
+
+    @PostMapping("/signUp/submit")
+    public String signUpSubmit(@ModelAttribute SignUpDTO signUpDTO, HttpSession session, Model model) throws Exception {
+
+        try {
+            Instructor instructor = saveBrightSpaceData.saveInstructorSignUp(signUpDTO);
+            session.setAttribute("instructorId", instructor.getInstructorId());
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", "An error occurred during sign up: " + e.getMessage());
+            return "instructor/error";
+        }
+        
+        return "instructor/dashboard";
     }
 
 }

@@ -1,4 +1,4 @@
-package edu.pui.peerEvaluation.PeerEvaluationApplication.exception;
+package edu.pui.peerEvaluation.PeerEvaluationApplication.exceptions;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

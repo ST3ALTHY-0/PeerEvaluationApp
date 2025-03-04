@@ -12,55 +12,100 @@
     <style>
     
 
-        .container {
-            margin-top: 10vh;
-            max-width: 800px; /* Limit container width for better readability */
-        }
+    .container {
+    margin: 0 auto;
+    padding: 2rem;
+    max-width: 800px;
+    min-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
 
-        h1 {
-            color: #343a40; /* Darker text for better contrast */
-            font-weight: 700;
-            margin-bottom: 30px;
-        }
+h1 {
+    color: #2c3e50;
+    font-weight: 700;
+    font-size: 2.5rem;
+    letter-spacing: -0.025em;
+    margin-bottom: 1rem;
+    transition: color 0.2s ease;
+}
 
-        .formContainer {
-            background-color: white;
-            padding: 30px;
-            border-radius: 10px; /* Rounded corners */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-        }
+.formContainer {
+    background: #ffffff;
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
 
-        .evaluationContainer {
-            background-color: #e9ecef;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-radius: 10px; /* Rounded corners */
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-            transition: background-color 0.3s ease; /* Smooth hover effect */
-        }
+.evaluationHeader {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    background: #007bff;
+    color: white;
+    font-weight: 600;
+    padding: 1rem;
+    border-radius: 8px;
+    text-align: center;
+}
 
-        .evaluationContainer:hover {
-            background-color: #d6d8db; /* Slightly darker shade on hover */
-            cursor: pointer; /* Change cursor to pointer on hover */
-        }
+.evaluationContainer {
+    background: #e9f2fa;
+    padding: 1.5rem;
+    margin-bottom: 1.25rem;
+    border-radius: 8px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    align-items: center;
+    text-align: center;
+    position: relative;
+}
 
-        .evaluationContainer h4 {
-            color: #007bff; /* Matching the navbar color */
-            font-weight: 500;
-            transition: background-color 0.3s ease; /* Smooth hover effect */
-            text-decoration: none;
+.evaluationContainer:hover {
+    transform: translateY(-2px);
+    background: #d9ecf8;
+    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.1);
+    cursor: pointer;
+}
 
-        }
+.evaluationContainerElement h4 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.evaluationContainer a.stretched-link {
+    position: absolute;
+    inset: 0; /* Make sure it covers the whole div */
+}
+
+.evaluationContainerElement:nth-child(1) h4 {
+    color: #007bff;
+}
+
+.evaluationContainerElement:nth-child(2) h4 {
+    color: #28a745;
+}
+
+.evaluationContainerElement:nth-child(3) h4 {
+    color: #6c757d;
+}
+
 
         .form-group label {
             font-weight: 500;
-            color: #495057; /* Darker label text */
+            color: #495057; 
         }
 
         .custom-select {
-            border-radius: 5px; /* Rounded corners for the dropdown */
+            border-radius: 5px; 
             border: 1px solid #ced4da;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions */
+            transition: border-color 0.3s ease, box-shadow 0.3s ease; 
         }
 
         .custom-select:hover {
@@ -145,18 +190,32 @@
     </nav>
 
     <div class="container">
-        <h1>Choose Evaluation</h1>
+        <h1 class="text-center">Choose Evaluation to View Details</h1>
         <div class="formContainer">
-            <div th:each="evaluation : ${evaluations}">
-                <a th:href="@{/evaluation/details/{evaluation.evaluationId}}">
-                <div class="evaluationContainer">
-                    <h4 th:text="${evaluation.project.myClass.classCode} + '  ' + ${evaluation.project.projectName} + ' ' + ${evaluation.dueDate}">Project Name</h4>
-                    <!-- Add number of people that have responded -->
-                </div>
-            </a>
+            <!-- add column names -->
+            <div class="evaluationHeader">
+                <div>Class</div>
+                <div>Project</div>
+                <div>Due Date</div>
             </div>
-            <a href="/instructor/dashboard" class="btn btn-secondary">Back</a>
 
+            <div th:each="evaluation : ${evaluations}" class="evaluation-item">
+                <div class="evaluationContainer" role="button" aria-label="View evaluation details">
+                    <a th:href="@{/evaluation/details/{id}(id=${evaluation.evaluationId})}" class="stretched-link"></a>
+                    <div class="evaluationContainerElement">
+                        <h4 th:text="${evaluation.project.myClass.classCode}"></h4>
+                    </div>
+                    <div class="evaluationContainerElement">
+                        <h4 th:text="${evaluation.project.projectName}"></h4>
+                    </div>
+                    <div class="evaluationContainerElement">
+                        <h4 th:utext="${#temporals.format(evaluation.dueDate.toLocalDate(), 'MMM dd, yyyy')}"></h4>
+                    </div>
+                </div>
+            </div>
+            <a href="/instructor/dashboard" class="btn btn-secondary mt-4">
+                ← Back to Dashboard
+            </a>
         </div>
     </div>
 

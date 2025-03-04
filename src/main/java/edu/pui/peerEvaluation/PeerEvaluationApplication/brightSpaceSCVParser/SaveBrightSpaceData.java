@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -21,7 +22,10 @@ import edu.pui.peerEvaluation.PeerEvaluationApplication.DTO.EvaluationFeedbackDT
 import edu.pui.peerEvaluation.PeerEvaluationApplication.DTO.EvaluationFeedbackFormDTO;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.DTO.EvaluationFormDTO;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.DTO.EvaluationQuestionDTO;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.DTO.LoginDTO;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.DTO.SignUpDTO;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.DTO.StandardEvaluation;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.exceptions.InstructorAlreadyExistsException;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluation.Evaluation;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluation.EvaluationService;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluationQuestion.EvaluationQuestion;
@@ -161,7 +165,7 @@ public class SaveBrightSpaceData {
             Project project) {
         Evaluation evaluation = new Evaluation();
 
-        // TODO: we are only asking for a date not a time on webpage, we can change it
+        // TODO: we are only asking for a date and not a specific time on webpage, we can change it
         // later, but for now we will default to midnight on the chosen date
         LocalDate dueDate = LocalDate.parse(evaluationFormDTO.getDueDate());
         LocalDateTime dueDateTime = dueDate.atStartOfDay();
@@ -172,11 +176,9 @@ public class SaveBrightSpaceData {
         evaluation.setProject(project);
 
         if (evaluationFormDTO.isUseStandardForm()) {
+            //note we dont need to save the evaluationQuestions because of cascading in the evaluation entity
             evaluation.setGraded(standardEvaluation.getIsGraded());
-            // TODO change standard eval to contain a List of EvaluationQuestions
-            evaluation.setEvaluationQuestions(null);
-            // set Standard Form, maybe have a DTO with set values that we use to assign
-            // variables
+            evaluation.setEvaluationQuestions(standardEvaluation.getEvaluationQuestions());
         } else {
             List<EvaluationQuestion> evaluationQuestions = new ArrayList<>();
 
@@ -272,5 +274,21 @@ public class SaveBrightSpaceData {
         feedbackService.saveAll(feedbacks);
         entityManager.flush();
         return feedbacks;
+    }
+
+    @Transactional
+    public Instructor saveInstructorSignUp(SignUpDTO signUpDTO) throws Exception{
+        // Check if the instructor already exists
+        Optional<Instructor> existingInstructor = instructorService.findInstructorByEmail(signUpDTO.getEmail());
+        if (existingInstructor.isPresent()) {
+            throw new InstructorAlreadyExistsException("Instructor with email " + signUpDTO.getEmail() + " already exists.");
+        }
+
+        Instructor instructor = new Instructor();
+        instructor.setInstructorEmail(signUpDTO.getEmail());
+        instructor.setPuid(signUpDTO.getPuid());
+        instructor.setInstructorName(signUpDTO.getName());
+
+        return instructorService.save(instructor);
     }
 }

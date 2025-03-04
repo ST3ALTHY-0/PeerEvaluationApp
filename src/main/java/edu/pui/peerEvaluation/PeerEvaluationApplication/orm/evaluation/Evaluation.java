@@ -53,7 +53,7 @@ public class Evaluation {
     @JoinColumn(name = "projectId", referencedColumnName = "projectId")
     private Project project;
 
-    @OneToMany(mappedBy = "evaluation")
+    @OneToMany(mappedBy = "evaluation", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<EvaluationQuestion> evaluationQuestions;
 
     @OneToMany(mappedBy = "evaluation", cascade = CascadeType.ALL, orphanRemoval = true)

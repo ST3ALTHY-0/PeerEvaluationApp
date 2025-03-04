@@ -1,4 +1,4 @@
-package edu.pui.peerEvaluation.PeerEvaluationApplication.exception;
+package edu.pui.peerEvaluation.PeerEvaluationApplication.exceptions;
 
 
 import org.springframework.http.HttpStatus;

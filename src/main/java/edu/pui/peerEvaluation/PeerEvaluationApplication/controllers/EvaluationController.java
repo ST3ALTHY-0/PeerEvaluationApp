@@ -36,6 +36,7 @@ import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.student.Student;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.student.StudentService;
 
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import java.util.ArrayList;
@@ -132,9 +133,19 @@ public String createEvaluation(@RequestParam("csvFile") MultipartFile file, @Mod
     } catch (Exception e) {
         System.out.println("Error: " + e.getMessage());
     }
-
-
-
     return "/instructor/dashboard";
+}
+
+@GetMapping("/details")
+public String evaluationsDetails(@RequestParam Integer evaluationId, Model model){
+    Evaluation evaluation = evaluationService.findById(evaluationId).orElse(null);
+    
+    if(evaluation == null){
+        model.addAttribute("errorMessage", "No evaluation found");
+        return "/instructor/error"; 
+    }
+
+    model.addAttribute("evaluation", evaluation);
+    return "/instructor/evaluationDetails";
 }
 }
