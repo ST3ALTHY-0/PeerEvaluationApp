@@ -135,6 +135,11 @@ public class InstructorController {
         return "instructor/previewEvaluationForm";
     }
 
+    @GetMapping("/signUp")
+    public String instructorSignUp() {
+        return "instructor/signUp";
+    }
+
     @PostMapping("/signUp/submit")
     public String signUpSubmit(@ModelAttribute SignUpDTO signUpDTO, HttpSession session, Model model) throws Exception {
 

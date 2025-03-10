@@ -125,7 +125,7 @@
                     <label for="inlineFormCustomSelect">Evaluation</label>
                     <select class="custom-select" id="inlineFormCustomSelect" name="evaluationId" aria-describedby="evalHelp">
                         <option selected>Choose...</option>
-                        <option th:each="evaluation : ${userEvalList}" th:value="${evaluation.evaluationId}" th:text="${evaluation.project.myClass.classCode}: ${evaluation.project.projectName}"></option>
+                        <option th:each="evaluation : ${userEvalList}" th:value="${evaluation.evaluationId}" th:text="${evaluation.project.myClass.classCode} + ': ' + ${evaluation.project.projectName}"></option>
                     </select>
                     <small id="evalHelp" class="form-text text-muted">Select an evaluation to proceed.</small>
                 </div>
