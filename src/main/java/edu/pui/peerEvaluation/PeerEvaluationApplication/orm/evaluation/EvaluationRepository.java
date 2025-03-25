@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.baseEntity.BaseEntityRepository;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.feedback.Feedback;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.student.Student;
 
 import java.util.List;
 
@@ -40,38 +42,22 @@ public interface EvaluationRepository extends BaseEntityRepository<Evaluation, I
         List<Evaluation> findByProject_Instructor_InstructorId(
                 Integer instructorId);
 
+        //get number of students who have responded
+
+        //get number of students assigned to evaluation
+
+        
+        @Query("SELECT COUNT(s) FROM Evaluation e JOIN e.groupCategories gc JOIN gc.projectGroups pg JOIN pg.students s WHERE e.evaluationId = :evaluationId")
+        Integer countStudentsAssignedToEvaluation(@Param("evaluationId") Integer evaluationId);
+
+        @Query("SELECT s FROM Evaluation e JOIN e.groupCategories gc JOIN gc.projectGroups pg JOIN pg.students s WHERE e.evaluationId = :evaluationId")
+    List<Student> findStudentsAssignedToEvaluation(@Param("evaluationId") Integer evaluationId);
+
+    @Query("SELECT f FROM Feedback f WHERE f.evaluation.evaluationId = :evaluationId AND f.ratedStudent.studentId = :studentId")
+    List<Feedback> findFeedbacksForStudentInEvaluation(@Param("evaluationId") Integer evaluationId, @Param("studentId") Integer studentId);
+
+    @Query("SELECT f FROM Feedback f WHERE f.evaluation.evaluationId = :evaluationId AND f.ratedByStudent.studentId = :studentId")
+    List<Feedback> findFeedbacksByStudentInEvaluation(@Param("evaluationId") Integer evaluationId, @Param("studentId") Integer studentId);
+
 }
 
-/*
- * @Query("SELECT evaluationQuestions FROM Evaluation e WHERE e.evaluationId = :evaluationId"
- * )
- * List<Evaluation> findEvaluationQuestionsById(Integer evaluationId);
- * 
- * @Query("SELECT DISTINCT e FROM Evaluation e " +
- * "JOIN e.groupCategories gc " +
- * "JOIN gc.projectGroups pg " +
- * "JOIN pg.students s " +
- * "WHERE s.studentId = :studentId")
- * List<Evaluation> findEvaluationsByStudentId(@Param("studentId") Integer
- * studentId);
- * 
- * @Query("SELECT DISTINCT e FROM Evaluation e " +
- * "JOIN e.groupCategories gc " +
- * "JOIN gc.projectGroups pg " +
- * "JOIN pg.students s " +
- * "LEFT JOIN Feedback f ON f.evaluation = e AND f.ratedByStudent.studentId = :studentId "
- * +
- * "WHERE s.studentId = :studentId AND f.feedbackId IS NULL")
- * List<Evaluation> findAllByStudentIdAndNoFeedback(@Param("studentId") int
- * studentId);
- * 
- * @Query("SELECT DISTINCT e FROM Evaluation e " +
- * "JOIN e.groupCategories gc " +
- * "JOIN gc.projectGroups pg " +
- * "JOIN pg.students s " +
- * "LEFT JOIN Feedback f ON f.evaluation = e AND f.ratedByStudent.studentId = :studentId "
- * +
- * "WHERE s.studentId = :studentId AND f.feedbackId IS NOT NULL")
- * List<Evaluation> findAllByStudentIdWithFeedback(@Param("studentId") int
- * studentId);
- */

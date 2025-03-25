@@ -6,4 +6,7 @@ import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.baseEntity.BaseEntit
 
 public interface FeedbackRepository extends BaseEntityRepository<Feedback, Integer> {
 
+
+    //find the avg grade received
+
 }

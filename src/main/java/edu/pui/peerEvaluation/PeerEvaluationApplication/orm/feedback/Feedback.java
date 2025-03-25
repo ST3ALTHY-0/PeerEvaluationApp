@@ -30,7 +30,7 @@ public class Feedback {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer feedbackId;
 
-    private int gradePercent;
+    private Integer gradePercent;
 
     private LocalDateTime dateCompleted;
 

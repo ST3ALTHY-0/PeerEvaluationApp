@@ -22,6 +22,7 @@ import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.baseEntity.BaseEntit
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluationQuestion.EvaluationQuestion;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluationQuestion.EvaluationQuestionRepository;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluationQuestion.EvaluationQuestionService;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.feedback.Feedback;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.instructor.Instructor;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.myClass.MyClassRepository;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.project.ProjectRepository;
@@ -75,6 +76,22 @@ public class EvaluationService extends BaseEntityService<Evaluation, Integer> {
 
     public List<Evaluation> findEvaluationsByInstructorId(Integer instructorId){
         return evaluationRepository.findByProject_Instructor_InstructorId(instructorId);
+    }
+
+    public Integer countStudentsAssignedToEvaluation(Integer evaluationId){
+        return evaluationRepository.countStudentsAssignedToEvaluation(evaluationId);
+    }
+
+    public List<Student> findStudentsAssignedToEvaluation(Integer evaluationId){
+        return evaluationRepository.findStudentsAssignedToEvaluation(evaluationId);
+    }
+
+    public List<Feedback> findFeedbacksForStudentInEvaluation(Integer studentId, Integer evaluationId){
+        return evaluationRepository.findFeedbacksForStudentInEvaluation(evaluationId, studentId);
+    }
+
+    public List<Feedback> findFeedbacksByStudentInEvaluation(Integer studentId, Integer evaluationId){
+        return evaluationRepository.findFeedbacksByStudentInEvaluation(evaluationId, studentId);
     }
 
     @Override

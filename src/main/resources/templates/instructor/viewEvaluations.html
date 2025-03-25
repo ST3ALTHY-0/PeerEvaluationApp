@@ -10,132 +10,135 @@
     <link href="/css/Style.css" rel="stylesheet">
 
     <style>
-    
+        .container {
+            margin: 0 auto;
+            padding: 2rem;
+            max-width: 1200px;
+            min-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
 
-    .container {
-    margin: 0 auto;
-    padding: 2rem;
-    max-width: 800px;
-    min-height: 90vh;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-}
+        h1 {
+            color: #2c3e50;
+            font-weight: 700;
+            font-size: 2.5rem;
+            letter-spacing: -0.025em;
+            margin-bottom: 1rem;
+            transition: color 0.2s ease;
+        }
 
-h1 {
-    color: #2c3e50;
-    font-weight: 700;
-    font-size: 2.5rem;
-    letter-spacing: -0.025em;
-    margin-bottom: 1rem;
-    transition: color 0.2s ease;
-}
+        .formContainer {
+            background: #ffffff;
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
 
-.formContainer {
-    background: #ffffff;
-    padding: 2.5rem;
-    border-radius: 12px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-}
+        .evaluationHeader,
+        .evaluationContainer {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 1rem;
+            align-items: center;
+            text-align: center;
+        }
 
-.evaluationHeader {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
-    background: #007bff;
-    color: white;
-    font-weight: 600;
-    padding: 1rem;
-    border-radius: 8px;
-    text-align: center;
-}
+        .evaluationHeader {
+            background: #007bff;
+            color: white;
+            font-weight: 600;
+            padding: 1rem;
+            border-radius: 8px;
+        }
 
-.evaluationContainer {
-    background: #e9f2fa;
-    padding: 1.5rem;
-    margin-bottom: 1.25rem;
-    border-radius: 8px;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
-    align-items: center;
-    text-align: center;
-    position: relative;
-}
+        .evaluationHeader div,
+        .evaluationContainerElement {
+            flex: 1;
+            min-width: 150px; /* Adjust this value as needed */
+        }
 
-.evaluationContainer:hover {
-    transform: translateY(-2px);
-    background: #d9ecf8;
-    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.1);
-    cursor: pointer;
-}
+        .evaluationContainer {
+            background: #e9f2fa;
+            padding: 1.5rem;
+            margin-bottom: 1.25rem;
+            border-radius: 8px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
+        }
 
-.evaluationContainerElement h4 {
-    margin: 0;
-    font-size: 1.1rem;
-    font-weight: 500;
-    transition: color 0.2s ease;
-}
+        .evaluationContainer:hover {
+            transform: translateY(-2px);
+            background: #d9ecf8;
+            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.1);
+            cursor: pointer;
+        }
 
-.evaluationContainer a.stretched-link {
-    position: absolute;
-    inset: 0; /* Make sure it covers the whole div */
-}
+        .evaluationContainerElement h4 {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
 
-.evaluationContainerElement:nth-child(1) h4 {
-    color: #007bff;
-}
+        .evaluationContainer a.stretched-link {
+            position: absolute;
+            inset: 0; /* Make sure it covers the whole div */
+        }
 
-.evaluationContainerElement:nth-child(2) h4 {
-    color: #28a745;
-}
+        .evaluationContainerElement:nth-child(1) h4 {
+            color: #007bff;
+        }
 
-.evaluationContainerElement:nth-child(3) h4 {
-    color: #6c757d;
-}
+        .evaluationContainerElement:nth-child(2) h4 {
+            color: #28a745;
+        }
 
+        .evaluationContainerElement:nth-child(3) h4 {
+            color: #6c757d;
+        }
 
         .form-group label {
             font-weight: 500;
-            color: #495057; 
+            color: #495057;
         }
 
         .custom-select {
-            border-radius: 5px; 
+            border-radius: 5px;
             border: 1px solid #ced4da;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease; 
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
         .custom-select:hover {
-            border-color: #007bff; /* Highlight on hover */
+            border-color: #007bff;
         }
 
         .custom-select:focus {
             border-color: #007bff;
-            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Focus effect */
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
         }
 
-        .a{
+        .a {
             text-decoration: none;
         }
 
         .btn-primary {
-            background-color: #007bff; /* Matching the navbar color */
+            background-color: #007bff;
             border: none;
-            border-radius: 5px; /* Rounded corners */
+            border-radius: 5px;
             padding: 10px 20px;
             font-size: 1rem;
-            transition: background-color 0.3s ease; /* Smooth hover effect */
+            transition: background-color 0.3s ease;
         }
 
         .btn-primary:hover {
-            background-color: #0056b3; /* Darker shade on hover */
+            background-color: #0056b3;
         }
 
         .btn-secondary {
-            background-color: #6c757d; /* Gray for the "Back" button */
+            background-color: #6c757d;
             border: none;
             border-radius: 5px;
             padding: 10px 20px;
@@ -144,9 +147,8 @@ h1 {
         }
 
         .btn-secondary:hover {
-            background-color: #5a6268; /* Darker shade on hover */
+            background-color: #5a6268;
         }
-
 
         /* Responsive adjustments */
         @media (max-width: 576px) {
@@ -161,7 +163,7 @@ h1 {
 
             .btn-primary,
             .btn-secondary {
-                width: 100%; /* Full-width buttons on small screens */
+                width: 100%;
                 margin-bottom: 10px;
             }
 
@@ -171,7 +173,7 @@ h1 {
 
             .form-group.col-md-6 {
                 width: 100%;
-                text-align: center !important; /* Center align buttons on small screens */
+                text-align: center !important;
             }
         }
     </style>
@@ -196,24 +198,39 @@ h1 {
             <div class="evaluationHeader">
                 <div>Class</div>
                 <div>Project</div>
+                <div>Responses</div>
                 <div>Due Date</div>
+                <div>Export Results To CSV</div>
             </div>
 
             <div th:each="evaluation : ${evaluations}" class="evaluation-item">
                 <div class="evaluationContainer" role="button" aria-label="View evaluation details">
                     <a th:href="@{/evaluation/details/{id}(id=${evaluation.evaluationId})}" class="stretched-link"></a>
+
                     <div class="evaluationContainerElement">
                         <h4 th:text="${evaluation.project.myClass.classCode}"></h4>
                     </div>
+
                     <div class="evaluationContainerElement">
                         <h4 th:text="${evaluation.project.projectName}"></h4>
                     </div>
                     <div class="evaluationContainerElement">
+                        <h4>29/31 (sample)</h4>
+                    </div>
+
+                    <div class="evaluationContainerElement">
                         <h4 th:utext="${#temporals.format(evaluation.dueDate.toLocalDate(), 'MMM dd, yyyy')}"></h4>
                     </div>
                 </div>
+
+                <div>
+                    <a th:href="@{/instructor/downloadCSV/{id}(id=${evaluation.evaluationId})}" class="btn btn-secondary">
+                        Export
+                    </a>
+                </div>
+
             </div>
-            <a href="/instructor/dashboard" class="btn btn-secondary mt-4">
+            <a href="/instructor/dashboard" class="btn btn-secondary">
                 ← Back to Dashboard
             </a>
         </div>
