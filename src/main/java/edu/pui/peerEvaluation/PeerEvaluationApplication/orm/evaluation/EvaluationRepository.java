@@ -18,19 +18,19 @@ public interface EvaluationRepository extends BaseEntityRepository<Evaluation, I
 
         List<Evaluation> findEvaluationQuestionsByEvaluationId(Integer evaluationId);
 
-        List<Evaluation> findDistinctByGroupCategories_ProjectGroups_Students_StudentId(Integer studentId);
+        List<Evaluation> findDistinctByGroupCategory_ProjectGroups_Students_StudentId(Integer studentId);
 
-        List<Evaluation> findDistinctByGroupCategories_ProjectGroups_Students_StudentIdAndFeedbacks_FeedbackIdIsNull(
+        List<Evaluation> findDistinctByGroupCategory_ProjectGroups_Students_StudentIdAndFeedbacks_FeedbackIdIsNull(
                         Integer studentId);
 
-        List<Evaluation> findDistinctByGroupCategories_ProjectGroups_Students_StudentIdAndFeedbacks_FeedbackIdIsNotNull(
+        List<Evaluation> findDistinctByGroupCategory_ProjectGroups_Students_StudentIdAndFeedbacks_FeedbackIdIsNotNull(
                         Integer studentId);
 
-        @EntityGraph(attributePaths = { "groupCategories", "groupCategories.projectGroups",
-                        "groupCategories.projectGroups.students" })
+        @EntityGraph(attributePaths = { "groupCategory", "groupCategory.projectGroups",
+                        "groupCategory.projectGroups.students" })
         @Query("""
                             SELECT DISTINCT e FROM Evaluation e
-                            JOIN e.groupCategories gc
+                            JOIN e.groupCategory gc
                             JOIN gc.projectGroups pg
                             JOIN pg.students s
                             LEFT JOIN e.feedbacks f
@@ -47,10 +47,15 @@ public interface EvaluationRepository extends BaseEntityRepository<Evaluation, I
         //get number of students assigned to evaluation
 
         
-        @Query("SELECT COUNT(s) FROM Evaluation e JOIN e.groupCategories gc JOIN gc.projectGroups pg JOIN pg.students s WHERE e.evaluationId = :evaluationId")
+        @Query("SELECT COUNT(s) FROM Evaluation e JOIN e.groupCategory gc JOIN gc.projectGroups pg JOIN pg.students s WHERE e.evaluationId = :evaluationId")
         Integer countStudentsAssignedToEvaluation(@Param("evaluationId") Integer evaluationId);
 
-        @Query("SELECT s FROM Evaluation e JOIN e.groupCategories gc JOIN gc.projectGroups pg JOIN pg.students s WHERE e.evaluationId = :evaluationId")
+
+        @Query("SELECT COUNT(DISTINCT f.ratedByStudent) FROM Feedback f WHERE f.evaluation.evaluationId = :evaluationId")
+        Integer countStudentsWhoSubmittedFeedback(@Param("evaluationId") Integer evaluationId);
+
+        
+        @Query("SELECT s FROM Evaluation e JOIN e.groupCategory gc JOIN gc.projectGroups pg JOIN pg.students s WHERE e.evaluationId = :evaluationId")
     List<Student> findStudentsAssignedToEvaluation(@Param("evaluationId") Integer evaluationId);
 
     @Query("SELECT f FROM Feedback f WHERE f.evaluation.evaluationId = :evaluationId AND f.ratedStudent.studentId = :studentId")

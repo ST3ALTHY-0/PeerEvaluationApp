@@ -22,7 +22,6 @@ public class BrightSpaceUserService {
     public Instructor switchInstructorUserDataType(BrightSpaceUser brightSpaceUser, BrightSpaceUserExtended brightSpaceUserExtended) {
         Instructor instructor = new Instructor();
         instructor.setInstructorEmail(brightSpaceUserExtended.getEmail());
-        instructor.setInstructorName(brightSpaceUser.getFirstName() + " " + brightSpaceUser.getLastName());
         return instructor;
     }
 

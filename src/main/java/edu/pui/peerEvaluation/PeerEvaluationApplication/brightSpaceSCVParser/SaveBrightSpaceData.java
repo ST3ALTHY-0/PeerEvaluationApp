@@ -103,7 +103,7 @@ public class SaveBrightSpaceData {
     }
 
     @Transactional
-    public void saveCSVDataToDB(List<CSVDataDTO> csvDataDTOList, MyClass myClass, GroupCategory groupCategory,
+    public GroupCategory saveCSVDataToDB(List<CSVDataDTO> csvDataDTOList, MyClass myClass,
             Project project) {
         logger.debug("Processing CSV data: " + csvDataDTOList);
 
@@ -111,14 +111,20 @@ public class SaveBrightSpaceData {
         List<ProjectGroup> groupsToSave = new ArrayList<>();
         Map<String, ProjectGroup> projectGroupMap = new HashMap<>();
 
+        // we are maybe creating and saving redundant groupCategories, but
+        // this is hard to fix without changing the data schema, see line 146
+        GroupCategory groupCategory = new GroupCategory();
+        groupCategory.setMyClass(myClass);
+        GroupCategory savedGroupCategory = groupCategoryService.addGroupCategory(groupCategory);
+
         for (CSVDataDTO csvDataDTO : csvDataDTOList) {
             logger.debug("Processing student {} for group {}", csvDataDTO.getStudent().getStudentEmail(),
                     csvDataDTO.getGroup());
 
             Student student = getOrCreateStudent(csvDataDTO);
-            ProjectGroup projectGroup = projectGroupMap.computeIfAbsent(csvDataDTO.getGroup(),
-                    key -> getOrCreateProjectGroup(csvDataDTO, groupCategory, project));
 
+            ProjectGroup projectGroup = projectGroupMap.computeIfAbsent(csvDataDTO.getGroup(),
+                    key -> createProjectGroup(csvDataDTO, savedGroupCategory, project));
             logger.debug("Adding student {} to group {}", student.getStudentEmail(), projectGroup.getGroupName());
 
             student.setGroups((List<ProjectGroup>) getAndAddEntityToList(student.getGroups(), projectGroup));
@@ -129,9 +135,24 @@ public class SaveBrightSpaceData {
         }
 
         studentService.saveAll(studentsToSave);
+
+        // Wanted to implement a way to check if a projectGroup already exists and to
+        // use that group instead of making a new one if it does exist,
+        // but because project groups are tied to a particular project there really
+        // should'nt be many (if any) cases where we can reuse a project group,
+        // seeing as each time a instructor makes a new evaluation, it makes a new
+        // project
+        // TODO: potentially remove the relationship between projectGroups and project
+        // TODO: and instead have a linking table, or ManyToMany relationship, between
+        // TODO: the two, so we can improve reusability and reduce redundancy
         projectGroupService.saveAllProjectGroups(groupsToSave);
 
+        // TODO: find if groupCategory exists
+        System.out.println(savedGroupCategory);
+        groupCategoryService.addGroupCategory(groupCategory);
+
         entityManager.flush(); // Single flush after batch insert
+        return savedGroupCategory;
     }
 
     private Student getOrCreateStudent(CSVDataDTO csvDataDTO) {
@@ -143,7 +164,7 @@ public class SaveBrightSpaceData {
                 });
     }
 
-    private ProjectGroup getOrCreateProjectGroup(CSVDataDTO csvDataDTO, GroupCategory groupCategory, Project project) {
+    private ProjectGroup createProjectGroup(CSVDataDTO csvDataDTO, GroupCategory groupCategory, Project project) {
         String groupName = project.getProjectName() + " " + csvDataDTO.getGroup();
 
         return projectGroupService.findByGroupNameAndProject(groupName, project)
@@ -163,9 +184,12 @@ public class SaveBrightSpaceData {
     @Transactional
     public Evaluation saveEvaluationToDB(EvaluationFormDTO evaluationFormDTO, GroupCategory groupCategory,
             Project project) {
+
+        logger.debug("EvalForm DTO: {}", evaluationFormDTO);
         Evaluation evaluation = new Evaluation();
 
-        // TODO: we are only asking for a date and not a specific time on webpage, we can change it
+        // TODO: we are only asking for a date and not a specific time on webpage, we
+        // can change it
         // later, but for now we will default to midnight on the chosen date
         LocalDate dueDate = LocalDate.parse(evaluationFormDTO.getDueDate());
         LocalDateTime dueDateTime = dueDate.atStartOfDay();
@@ -176,9 +200,13 @@ public class SaveBrightSpaceData {
         evaluation.setProject(project);
 
         if (evaluationFormDTO.isUseStandardForm()) {
-            //note we dont need to save the evaluationQuestions because of cascading in the evaluation entity
+            // note we dont need to save the evaluationQuestions because of cascading in the
+            // evaluation entity
             evaluation.setGraded(standardEvaluation.getIsGraded());
             evaluation.setEvaluationQuestions(standardEvaluation.getEvaluationQuestions());
+            logger.debug("Evaluation StandardForm: {}", standardEvaluation.getEvaluationQuestions());
+            //TODOL eval question does not get a evaluationId reference, also maybe make it a many to many relationship 
+
         } else {
             List<EvaluationQuestion> evaluationQuestions = new ArrayList<>();
 
@@ -193,16 +221,20 @@ public class SaveBrightSpaceData {
             }
             evaluation.setEvaluationQuestions(evaluationQuestions);
             evaluation.setGraded(evaluationFormDTO.isEnableGrading());
+            logger.debug("Evaluation NonStandardForm: {}", evaluationQuestions);
         }
 
-        //map the new evaluation to the groupCategory
-        Set<GroupCategory> groupCategories = (Set<GroupCategory>) getAndAddEntityToSet(evaluation.getGroupCategories(), groupCategory);
-        evaluation.setGroupCategories(groupCategories);
+        System.out.println("GROUP CATEGORY ID: " + groupCategory.getGroupCategoryId());
+        // map the new evaluation to the groupCategory
+        // Set<GroupCategory> groupCategories = (Set<GroupCategory>)
+        // getAndAddEntityToSet(evaluation.getGroupCategories(), groupCategory);
+        evaluation.setGroupCategory(groupCategory);
         logger.debug("Creating new Evaluation : {}", evaluation);
         evaluationService.save(evaluation);
 
-        //map the new groupCategory to the evaluation
-        Set<Evaluation> evaluations = (Set<Evaluation>) getAndAddEntityToSet(groupCategory.getEvaluations(), evaluation);
+        // map the new groupCategory to the evaluation
+        List<Evaluation> evaluations = (List<Evaluation>) getAndAddEntityToList(groupCategory.getEvaluations(),
+                evaluation);
         groupCategory.setEvaluations(evaluations);
         logger.debug("Updating groupCategory : {}", groupCategory);
         groupCategoryService.save(groupCategory);
@@ -241,7 +273,8 @@ public class SaveBrightSpaceData {
     public List<Feedback> saveFeedbackToDB(EvaluationFeedbackFormDTO evaluationFeedbackFormDTO) {
         List<Feedback> feedbacks = new ArrayList<>();
 
-        // Create Feedback Entity based on the feedbackDTO we received and add it to the list
+        // Create Feedback Entity based on the feedbackDTO we received and add it to the
+        // list
         for (EvaluationFeedbackDTO feedbackDTO : evaluationFeedbackFormDTO.getEvaluationFeedbackDTOList()) {
             Feedback feedback = new Feedback();
 
@@ -257,14 +290,14 @@ public class SaveBrightSpaceData {
             List<EvaluationResponse> evaluationResponses = new ArrayList<>();
             if (feedbackDTO.getResponses() != null) {
                 evaluationResponses = feedbackDTO.getResponses().stream()
-                    .map(dto -> {
-                        EvaluationResponse response = new EvaluationResponse();
-                        response.setResponseText(dto.getResponse());
-                        response.setQuestion(evaluationQuestionService.findById(dto.getQuestionId()).orElse(null));
-                        response.setFeedback(feedback);
-                        return response;
-                    })
-                    .collect(Collectors.toList());
+                        .map(dto -> {
+                            EvaluationResponse response = new EvaluationResponse();
+                            response.setResponseText(dto.getResponse());
+                            response.setQuestion(evaluationQuestionService.findById(dto.getQuestionId()).orElse(null));
+                            response.setFeedback(feedback);
+                            return response;
+                        })
+                        .collect(Collectors.toList());
             }
 
             feedback.setResponses(evaluationResponses);
@@ -277,17 +310,17 @@ public class SaveBrightSpaceData {
     }
 
     @Transactional
-    public Instructor saveInstructorSignUp(SignUpDTO signUpDTO) throws Exception{
+    public Instructor saveInstructorSignUp(SignUpDTO signUpDTO) throws Exception {
         // Check if the instructor already exists
         Optional<Instructor> existingInstructor = instructorService.findInstructorByEmail(signUpDTO.getEmail());
         if (existingInstructor.isPresent()) {
-            throw new InstructorAlreadyExistsException("Instructor with email " + signUpDTO.getEmail() + " already exists.");
+            throw new InstructorAlreadyExistsException(
+                    "Instructor with email " + signUpDTO.getEmail() + " already exists.");
         }
 
         Instructor instructor = new Instructor();
         instructor.setInstructorEmail(signUpDTO.getEmail());
         instructor.setPuid(signUpDTO.getPuid());
-        instructor.setInstructorName(signUpDTO.getName());
 
         return instructorService.save(instructor);
     }

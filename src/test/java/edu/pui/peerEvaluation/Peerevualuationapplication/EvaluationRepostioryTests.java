@@ -72,7 +72,6 @@ class EvaluationRepositoryTests {
 
         Instructor instructor = instructorRepository.findById(1).orElse(null);
         assertThat(instructor).isNotNull();
-        assertThat(instructor.getInstructorName()).isEqualTo("Luke Monroe");
         assertThat(instructor.getInstructorEmail()).isEqualTo("monroe.luke36@gmail.com");
     }
 

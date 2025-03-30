@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.opencsv.CSVWriter;
 
+import edu.pui.peerEvaluation.PeerEvaluationApplication.DTO.EvaluationDetailsDTO;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.DTO.EvaluationFormDTO;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.DTO.EvaluationQuestionDTO;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.DTO.LoginDTO;
@@ -97,15 +98,31 @@ public class InstructorController {
 
     @GetMapping("/viewEvaluations")
     public String viewEvaluations(HttpSession session, Model model) {
-        //we need to pass all evaluations that have projects with that have this instructor
+        // we need to pass all evaluations that have projects with that have this
+        // instructor
 
-        //Instructor instructor = instructorService.findById(((Integer) session.getAttribute("instructorId"))).orElse(null);
-        List<Evaluation> evaluations = evaluationService.findEvaluationsByInstructorId(((Integer) session.getAttribute("instructorId")));
-        model.addAttribute("evaluations", evaluations);
-        
+
+        // Instructor instructor = instructorService.findById(((Integer)
+        // session.getAttribute("instructorId"))).orElse(null);
+        List<Evaluation> evaluations = evaluationService
+                .findEvaluationsByInstructorId(((Integer) session.getAttribute("instructorId")));
+        // model.addAttribute("evaluations", evaluations);
+
+
+        // pass the number of people that have responded and number of people that can
+        // respond
+        List<EvaluationDetailsDTO> evaluationsDetails = evaluations.stream()
+                .map(evaluation -> new EvaluationDetailsDTO(
+                        evaluation,
+                        evaluationService.countStudentsWhoSubmittedFeedback(evaluation.getEvaluationId()),
+                        evaluationService.countStudentsAssignedToEvaluation(evaluation.getEvaluationId())))
+                .toList();
+        model.addAttribute("evaluationsDetails", evaluationsDetails);
+
 
         return "instructor/viewEvaluations";
     }
+
 
     @GetMapping("/createEvaluation")
     public String createEvaluation(HttpSession session, Model model) {
@@ -115,39 +132,39 @@ public class InstructorController {
         return "instructor/createEvaluation";
     }
 
-    @PostMapping("/previewEvaluationForm")
-    public String previewEvaluationForm(Model model, @ModelAttribute EvaluationFormDTO evaluationForm) {
+    // @PostMapping("/previewEvaluationForm")
+    // public String previewEvaluationForm(Model model, @ModelAttribute EvaluationFormDTO evaluationForm) {
 
-        System.out.println(evaluationForm);
+    //     System.out.println(evaluationForm);
 
-        Evaluation sampleEvaluation = new Evaluation();
-        sampleEvaluation.setEvaluationId(1);
+    //     Evaluation sampleEvaluation = new Evaluation();
+    //     sampleEvaluation.setEvaluationId(1);
 
-        List<EvaluationQuestionDTO> questions = evaluationForm.getEvaluationQuestions();
-        List<EvaluationQuestion> eQuestions = new ArrayList<>();
+    //     List<EvaluationQuestionDTO> questions = evaluationForm.getEvaluationQuestions();
+    //     List<EvaluationQuestion> eQuestions = new ArrayList<>();
 
-        for(EvaluationQuestionDTO question : questions){
-            System.out.println(question.getQuestionText());
-            EvaluationQuestion q = new EvaluationQuestion();
-            q.setQuestionText(question.getQuestionText());
-            q.setEnforceAnswer(question.isRequired());
-            eQuestions.add(q);
-        }
+    //     for(EvaluationQuestionDTO question : questions){
+    //         System.out.println(question.getQuestionText());
+    //         EvaluationQuestion q = new EvaluationQuestion();
+    //         q.setQuestionText(question.getQuestionText());
+    //         q.setEnforceAnswer(question.isRequired());
+    //         eQuestions.add(q);
+    //     }
 
-        sampleEvaluation.setEvaluationQuestions(eQuestions);
+    //     sampleEvaluation.setEvaluationQuestions(eQuestions);
 
 
-        ProjectGroup sampleProjectGroup = new ProjectGroup();
-        sampleProjectGroup.setGroupId(1);
-        sampleProjectGroup.setGroupName("Sample Project Group");
+    //     ProjectGroup sampleProjectGroup = new ProjectGroup();
+    //     sampleProjectGroup.setGroupId(1);
+    //     sampleProjectGroup.setGroupName("Sample Project Group");
 
-        // Add sample data to the model
-        model.addAttribute("currentStudentId", 1);
-        model.addAttribute("evaluation", sampleEvaluation);
-        model.addAttribute("projectGroup", sampleProjectGroup);
+    //     // Add sample data to the model
+    //     model.addAttribute("currentStudentId", 1);
+    //     model.addAttribute("evaluation", sampleEvaluation);
+    //     model.addAttribute("projectGroup", sampleProjectGroup);
 
-        return "instructor/previewEvaluationForm";
-    }
+    //     return "instructor/previewEvaluationForm";
+    // }
 
     @GetMapping("/signUp")
     public String instructorSignUp() {

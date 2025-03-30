@@ -43,8 +43,11 @@ public class GroupCategory {
     @JoinColumn(name = "classId", nullable = false)
     private MyClass myClass;
 
-    @ManyToMany(mappedBy = "groupCategories")
-    private Set<Evaluation> evaluations = new HashSet<>();
+    // @ManyToMany(mappedBy = "groupCategories")
+    // private Set<Evaluation> evaluations = new HashSet<>();
+
+    @OneToMany(mappedBy = "groupCategory", cascade = CascadeType.ALL)
+    private List<Evaluation> evaluations = new ArrayList<>();
 
     @OneToMany(mappedBy = "groupCategory", cascade = CascadeType.ALL)
     private List<ProjectGroup> projectGroups;

@@ -7,6 +7,5 @@ public class SignUpDTO {
 
     private String email;
     private String puid;
-    private String name;
     
 }

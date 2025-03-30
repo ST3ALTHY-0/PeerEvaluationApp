@@ -26,8 +26,6 @@ public class Instructor{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer instructorId;
 
-    private String instructorName;
-
     private String instructorEmail;
 
     private String puid;

@@ -34,8 +34,8 @@ import lombok.ToString;
 @Data
 @Entity
 @Table(name = "evaluation")
-@EqualsAndHashCode(exclude = {"evaluationQuestions", "project", "groupCategories"})
-@ToString(exclude = {"project", "groupCategories", "feedbacks", "evaluationQuestions"})
+@EqualsAndHashCode(exclude = { "evaluationQuestions", "project", "groupCategories" })
+@ToString(exclude = { "project", "groupCategories", "feedbacks", "evaluationQuestions" })
 public class Evaluation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,31 +48,35 @@ public class Evaluation {
     private boolean isGraded;
 
     private LocalDateTime dueDate;
-    
+
     @OneToOne
     @JoinColumn(name = "projectId", referencedColumnName = "projectId")
     private Project project;
 
+    //make this manyToMany
     @OneToMany(mappedBy = "evaluation", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<EvaluationQuestion> evaluationQuestions;
 
     @OneToMany(mappedBy = "evaluation", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Feedback> feedbacks;
 
-    @ManyToMany
-    @JoinTable(
-        name = "group_category_evaluations",
-        joinColumns = @JoinColumn(name = "evaluation_id"),
-        inverseJoinColumns = @JoinColumn(name = "group_category_id")
-    )
-    private Set<GroupCategory> groupCategories = new HashSet<>();
+    // @ManyToMany
+    // @JoinTable(
+    // name = "group_category_evaluations",
+    // joinColumns = @JoinColumn(name = "evaluation_id"),
+    // inverseJoinColumns = @JoinColumn(name = "group_category_id")
+    // )
+    // private Set<GroupCategory> groupCategories = new HashSet<>();
+
+    @ManyToOne
+    @JoinColumn(name = "groupCategoryId", nullable = false)
+    private GroupCategory groupCategory;
 
     @OneToMany(mappedBy = "evaluation")
     private List<EvaluationOverride> evaluationOverrides;
 
-
     /*
-     * Select e from Evaluation e Join project p on 
+     * Select e from Evaluation e Join project p on
      * 
      */
 }

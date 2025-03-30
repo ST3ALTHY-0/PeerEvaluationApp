@@ -55,15 +55,15 @@ public class EvaluationService extends BaseEntityService<Evaluation, Integer> {
     }
 
     public List<Evaluation> findEvaluationsByStudentId(Integer studentId){
-        return evaluationRepository.findDistinctByGroupCategories_ProjectGroups_Students_StudentId(studentId);
+        return evaluationRepository.findDistinctByGroupCategory_ProjectGroups_Students_StudentId(studentId);
     }
 
     public List<Evaluation> findAllByStudentIdAndNoFeedback(Integer studentId){
-        return evaluationRepository.findDistinctByGroupCategories_ProjectGroups_Students_StudentIdAndFeedbacks_FeedbackIdIsNull(studentId);
+        return evaluationRepository.findDistinctByGroupCategory_ProjectGroups_Students_StudentIdAndFeedbacks_FeedbackIdIsNull(studentId);
     }
 
     public List<Evaluation> findAllByStudentIdWithFeedback(Integer studentId){
-        return evaluationRepository.findDistinctByGroupCategories_ProjectGroups_Students_StudentIdAndFeedbacks_FeedbackIdIsNotNull(studentId);
+        return evaluationRepository.findDistinctByGroupCategory_ProjectGroups_Students_StudentIdAndFeedbacks_FeedbackIdIsNotNull(studentId);
     }
 
 
@@ -78,8 +78,13 @@ public class EvaluationService extends BaseEntityService<Evaluation, Integer> {
         return evaluationRepository.findByProject_Instructor_InstructorId(instructorId);
     }
 
-    public Integer countStudentsAssignedToEvaluation(Integer evaluationId){
+    public Integer countStudentsAssignedToEvaluation(Integer evaluationId) {
         return evaluationRepository.countStudentsAssignedToEvaluation(evaluationId);
+    }
+
+
+    public Integer countStudentsWhoSubmittedFeedback(Integer evaluationId) {
+        return evaluationRepository.countStudentsWhoSubmittedFeedback(evaluationId);
     }
 
     public List<Student> findStudentsAssignedToEvaluation(Integer evaluationId){

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
+
 <head>
     <title>Choose Evaluation</title>
     <!-- Bootstrap CDN link -->
@@ -8,6 +9,7 @@
     <!-- Google Fonts for better typography -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link href="/css/Style.css" rel="stylesheet">
+
 
     <style>
         .container {
@@ -20,6 +22,7 @@
             gap: 1.5rem;
         }
 
+
         h1 {
             color: #2c3e50;
             font-weight: 700;
@@ -29,12 +32,14 @@
             transition: color 0.2s ease;
         }
 
+
         .formContainer {
             background: #ffffff;
             padding: 2.5rem;
             border-radius: 12px;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
         }
+
 
         .evaluationHeader,
         .evaluationContainer {
@@ -45,6 +50,7 @@
             text-align: center;
         }
 
+
         .evaluationHeader {
             background: #007bff;
             color: white;
@@ -53,11 +59,13 @@
             border-radius: 8px;
         }
 
+
         .evaluationHeader div,
         .evaluationContainerElement {
             flex: 1;
             min-width: 150px; /* Adjust this value as needed */
         }
+
 
         .evaluationContainer {
             background: #e9f2fa;
@@ -69,12 +77,14 @@
             position: relative;
         }
 
+
         .evaluationContainer:hover {
             transform: translateY(-2px);
             background: #d9ecf8;
             box-shadow: 0 5px 15px rgba(0, 123, 255, 0.1);
             cursor: pointer;
         }
+
 
         .evaluationContainerElement h4 {
             margin: 0;
@@ -83,27 +93,33 @@
             transition: color 0.2s ease;
         }
 
+
         .evaluationContainer a.stretched-link {
             position: absolute;
             inset: 0; /* Make sure it covers the whole div */
         }
 
+
         .evaluationContainerElement:nth-child(1) h4 {
             color: #007bff;
         }
+
 
         .evaluationContainerElement:nth-child(2) h4 {
             color: #28a745;
         }
 
+
         .evaluationContainerElement:nth-child(3) h4 {
             color: #6c757d;
         }
+
 
         .form-group label {
             font-weight: 500;
             color: #495057;
         }
+
 
         .custom-select {
             border-radius: 5px;
@@ -111,18 +127,22 @@
             transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
+
         .custom-select:hover {
             border-color: #007bff;
         }
+
 
         .custom-select:focus {
             border-color: #007bff;
             box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
         }
 
+
         .a {
             text-decoration: none;
         }
+
 
         .btn-primary {
             background-color: #007bff;
@@ -133,9 +153,11 @@
             transition: background-color 0.3s ease;
         }
 
+
         .btn-primary:hover {
             background-color: #0056b3;
         }
+
 
         .btn-secondary {
             background-color: #6c757d;
@@ -146,9 +168,11 @@
             transition: background-color 0.3s ease;
         }
 
+
         .btn-secondary:hover {
             background-color: #5a6268;
         }
+
 
         /* Responsive adjustments */
         @media (max-width: 576px) {
@@ -157,9 +181,11 @@
                 padding: 0 15px;
             }
 
+
             .formContainer {
                 padding: 20px;
             }
+
 
             .btn-primary,
             .btn-secondary {
@@ -167,9 +193,11 @@
                 margin-bottom: 10px;
             }
 
+
             .form-row {
                 flex-direction: column;
             }
+
 
             .form-group.col-md-6 {
                 width: 100%;
@@ -178,6 +206,7 @@
         }
     </style>
 </head>
+
 
 <body>
     <nav class="navbar navbar-expand-lg">
@@ -191,8 +220,9 @@
         </div>
     </nav>
 
+
     <div class="container">
-        <h1 class="text-center">Choose Evaluation to View Details</h1>
+        <h1 class="text-center">Choose Evaluation to Edit or View Details About</h1>
         <div class="formContainer">
             <!-- add column names -->
             <div class="evaluationHeader">
@@ -200,35 +230,35 @@
                 <div>Project</div>
                 <div>Responses</div>
                 <div>Due Date</div>
-                <div>Export Results To CSV</div>
             </div>
 
-            <div th:each="evaluation : ${evaluations}" class="evaluation-item">
+
+            <div th:each="evaluationDetails : ${evaluationsDetails}" class="evaluation-item">
                 <div class="evaluationContainer" role="button" aria-label="View evaluation details">
-                    <a th:href="@{/evaluation/details/{id}(id=${evaluation.evaluationId})}" class="stretched-link"></a>
-
+                    <a th:href="@{/evaluation/details/{id}(id=${evaluationDetails.evaluation.evaluationId})}" class="stretched-link"></a>
+           
                     <div class="evaluationContainerElement">
-                        <h4 th:text="${evaluation.project.myClass.classCode}"></h4>
+                        <h4 th:text="${evaluationDetails.evaluation.project.myClass.classCode}"></h4>
                     </div>
-
+           
                     <div class="evaluationContainerElement">
-                        <h4 th:text="${evaluation.project.projectName}"></h4>
+                        <h4 th:text="${evaluationDetails.evaluation.project.projectName}"></h4>
                     </div>
+           
                     <div class="evaluationContainerElement">
-                        <h4>29/31 (sample)</h4>
+                        <h4 th:text="${evaluationDetails.responsesReceived} + '/' + ${evaluationDetails.totalRespondents}"></h4>
                     </div>
-
+           
                     <div class="evaluationContainerElement">
-                        <h4 th:utext="${#temporals.format(evaluation.dueDate.toLocalDate(), 'MMM dd, yyyy')}"></h4>
+                        <h4 th:utext="${#temporals.format(evaluationDetails.evaluation.dueDate.toLocalDate(), 'MMM dd, yyyy')}"></h4>
                     </div>
                 </div>
-
+           
                 <div>
-                    <a th:href="@{/instructor/downloadCSV/{id}(id=${evaluation.evaluationId})}" class="btn btn-secondary">
+                    <a th:href="@{/instructor/downloadCSV/{id}(id=${evaluationDetails.evaluation.evaluationId})}" class="btn btn-secondary">
                         Export
                     </a>
                 </div>
-
             </div>
             <a href="/instructor/dashboard" class="btn btn-secondary">
                 ← Back to Dashboard
@@ -236,16 +266,19 @@
         </div>
     </div>
 
+
     <footer class="footer">
         <div class="container2">
             <span>© 2025 Peer Evaluation. All rights reserved.</span>
         </div>
     </footer>
 
+
     <!-- Bootstrap JS and dependencies -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
+
 
 </html>

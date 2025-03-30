@@ -94,7 +94,8 @@ public class StudentViewController {
         model.addAttribute("evaluation", evaluation);
         model.addAttribute("projectGroup", projectGroup);
 
-
+        System.out.println(evaluation);
+        System.out.println(evaluation.getEvaluationQuestions());
 
         //System.out.println(projectGroup);
         return "student/completeEvaluation";

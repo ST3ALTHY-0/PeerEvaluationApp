@@ -12,6 +12,7 @@ public class EvaluationFormDTO {
     private String projectName;
     private boolean enableGrading;
     private boolean useStandardForm;
+    private boolean allowStudentToViewFeedback;
     private String dueDate;
     private Integer instructorId;
     private List<EvaluationQuestionDTO> evaluationQuestions;

@@ -119,13 +119,14 @@ public String createEvaluation(@RequestParam("csvFile") MultipartFile file, @Mod
 
         Project project = saveBrightSpaceData.saveProjectToDB(thisProject, evaluationFormDTO.getInstructorId(), myClass);
 
+        
         //TODO: check that gc isnt already saved in db
-        GroupCategory thisGroupCategory = new GroupCategory();
-        thisGroupCategory.setMyClass(myClass);
-        GroupCategory groupCategory = groupCategoryService.addGroupCategory(thisGroupCategory);
+        // GroupCategory thisGroupCategory = new GroupCategory();
+        // thisGroupCategory.setMyClass(myClass);
+        // GroupCategory groupCategory = groupCategoryService.addGroupCategory(thisGroupCategory);
 
         //save the students and project groups they belong to in the DB
-        saveBrightSpaceData.saveCSVDataToDB(csvDataDTOList, myClass, groupCategory, project);
+        GroupCategory groupCategory = saveBrightSpaceData.saveCSVDataToDB(csvDataDTOList, myClass, project);
 
         //save the evaluation to the DB
         saveBrightSpaceData.saveEvaluationToDB(evaluationFormDTO, groupCategory, project);
@@ -144,8 +145,12 @@ public String evaluationsDetails(@RequestParam Integer evaluationId, Model model
         model.addAttribute("errorMessage", "No evaluation found");
         return "/instructor/error"; 
     }
-
+    //pass evaluation
     model.addAttribute("evaluation", evaluation);
+
+    //
+
+
     return "/instructor/evaluationDetails";
 }
 }
