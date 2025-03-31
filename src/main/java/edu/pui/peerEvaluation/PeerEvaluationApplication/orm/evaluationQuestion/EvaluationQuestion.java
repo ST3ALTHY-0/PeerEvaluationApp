@@ -9,6 +9,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
@@ -31,9 +33,13 @@ public class EvaluationQuestion {
 
     private boolean enforceAnswer; // not null
 
-    @ManyToOne
-    @JoinColumn(name = "evaluationId", referencedColumnName = "evaluationId")
-    private Evaluation evaluation;
+    @ManyToMany
+    @JoinTable(
+        name = "evaluation_question_mapping",
+        joinColumns = @JoinColumn(name = "questionId", referencedColumnName = "questionId"),
+        inverseJoinColumns = @JoinColumn(name = "evaluationId", referencedColumnName = "evaluationId")
+    )
+    private List<Evaluation> evaluations;
 
     @OneToMany(mappedBy = "question")
     private List<EvaluationResponse>  responses;

@@ -12,8 +12,8 @@ import java.util.List;
 public interface EvaluationQuestionRepository extends BaseEntityRepository<EvaluationQuestion, Integer> {
 
     //select questions where eval id
-    @Query("SELECT eq FROM EvaluationQuestion eq WHERE eq.evaluation.evaluationId = :evaluationId")
-        List<EvaluationQuestion> selectQuestionsByEvaluationId(Integer evaluationId);
+    // @Query("SELECT eq FROM EvaluationQuestion eq WHERE eq.evaluation.evaluationId = :evaluationId")
+    //     List<EvaluationQuestion> selectQuestionsByEvaluationId(Integer evaluationId);
 
 
     }

@@ -200,39 +200,47 @@ public class SaveBrightSpaceData {
         evaluation.setProject(project);
 
         if (evaluationFormDTO.isUseStandardForm()) {
-            // note we dont need to save the evaluationQuestions because of cascading in the
-            // evaluation entity
             evaluation.setGraded(standardEvaluation.getIsGraded());
-            evaluation.setEvaluationQuestions(standardEvaluation.getEvaluationQuestions());
-            logger.debug("Evaluation StandardForm: {}", standardEvaluation.getEvaluationQuestions());
-            //TODOL eval question does not get a evaluationId reference, also maybe make it a many to many relationship 
+            // Save the standard evaluation questions if they are not already saved
+            List<EvaluationQuestion> savedQuestions = new ArrayList<>();
+            for (EvaluationQuestion question : standardEvaluation.getEvaluationQuestions()) {
+                if (question.getQuestionId() == null) { // Check if the question is not saved
+                    evaluationQuestionService.save(question); // Save the question
+                }
+                savedQuestions.add(question); // Add the saved question to the list
+            }
+
+            evaluation.setEvaluationQuestions(savedQuestions); // Set the saved questions
+            logger.debug("Evaluation StandardForm: {}", savedQuestions);
 
         } else {
-            List<EvaluationQuestion> evaluationQuestions = new ArrayList<>();
-
-            // add the evaluation questions to the DB
+            // Add the evaluation questions to the DB
             for (EvaluationQuestionDTO evaluationQuestionDTO : evaluationFormDTO.getEvaluationQuestions()) {
                 EvaluationQuestion evaluationQuestion = new EvaluationQuestion();
                 evaluationQuestion.setEnforceAnswer(evaluationQuestionDTO.isRequired());
                 evaluationQuestion.setQuestionText(evaluationQuestionDTO.getQuestionText());
-                evaluationQuestion.setEvaluation(evaluation);
-                evaluationQuestions.add(evaluationQuestion);
+            
+                // Save the EvaluationQuestion first to ensure it is persistent
                 evaluationQuestionService.save(evaluationQuestion);
+            
+                // Ensure the evaluationQuestions list in Evaluation is initialized
+                if (evaluation.getEvaluationQuestions() == null) {
+                    evaluation.setEvaluationQuestions(new ArrayList<>());
+                }
+            
+                // Add the EvaluationQuestion to the Evaluation if not already present
+                if (!evaluation.getEvaluationQuestions().contains(evaluationQuestion)) {
+                    evaluation.getEvaluationQuestions().add(evaluationQuestion);
+                }
             }
-            evaluation.setEvaluationQuestions(evaluationQuestions);
             evaluation.setGraded(evaluationFormDTO.isEnableGrading());
-            logger.debug("Evaluation NonStandardForm: {}", evaluationQuestions);
         }
 
-        System.out.println("GROUP CATEGORY ID: " + groupCategory.getGroupCategoryId());
-        // map the new evaluation to the groupCategory
-        // Set<GroupCategory> groupCategories = (Set<GroupCategory>)
-        // getAndAddEntityToSet(evaluation.getGroupCategories(), groupCategory);
+        //add the groupCategory to the evaluation
         evaluation.setGroupCategory(groupCategory);
         logger.debug("Creating new Evaluation : {}", evaluation);
         evaluationService.save(evaluation);
-
-        // map the new groupCategory to the evaluation
+        //map the new groupCategory to the evaluation
         List<Evaluation> evaluations = (List<Evaluation>) getAndAddEntityToList(groupCategory.getEvaluations(),
                 evaluation);
         groupCategory.setEvaluations(evaluations);

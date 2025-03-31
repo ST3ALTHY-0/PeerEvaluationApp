@@ -88,11 +88,14 @@ public class StudentViewController {
         Student student = (Student) session.getAttribute("student");
         Evaluation evaluation = evaluationService.findById(evaluationId).orElse(null);
         ProjectGroup projectGroup = projectGroupService.findProjectGroupByEvaluationIdAndStudentId(evaluationId, student.getStudentId());
-
-
+        Integer numOfStudentsInGroup = projectGroupService.countStudentsInProjectGroup(projectGroup.getGroupId());
+        Integer maxScore =  (numOfStudentsInGroup - 1) * 100;
+                
         model.addAttribute("currentStudentId", student.getStudentId());
         model.addAttribute("evaluation", evaluation);
         model.addAttribute("projectGroup", projectGroup);
+
+        model.addAttribute("maxScore", maxScore);
 
         System.out.println(evaluation);
         System.out.println(evaluation.getEvaluationQuestions());

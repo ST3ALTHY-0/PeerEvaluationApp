@@ -53,9 +53,13 @@ public class Evaluation {
     @JoinColumn(name = "projectId", referencedColumnName = "projectId")
     private Project project;
 
-    //make this manyToMany
-    @OneToMany(mappedBy = "evaluation", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<EvaluationQuestion> evaluationQuestions;
+    @ManyToMany
+@JoinTable(
+    name = "evaluation_question_mapping", // Name of the join table
+    joinColumns = @JoinColumn(name = "evaluationId", referencedColumnName = "evaluationId"), // Column for Evaluation
+    inverseJoinColumns = @JoinColumn(name = "questionId", referencedColumnName = "questionId") // Column for EvaluationQuestion
+)
+private List<EvaluationQuestion> evaluationQuestions = new ArrayList<>();
 
     @OneToMany(mappedBy = "evaluation", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Feedback> feedbacks;

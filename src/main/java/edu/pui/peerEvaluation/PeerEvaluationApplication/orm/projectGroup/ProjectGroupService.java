@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.project.Project;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.student.Student;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.criteria.CriteriaBuilder.In;
 
 @Service
 public class ProjectGroupService {
@@ -51,10 +52,8 @@ public class ProjectGroupService {
         return projectGroupRepository.findByGroupNameAndProject(groupName, project); 
     }
 
-    // public List<ProjectGroup> findOrSaveAllProjectGroups(List <ProjectGroup> projectGroups){
-
-
-
-    // }
+    public Integer countStudentsInProjectGroup(Integer projectGroupId){
+        return projectGroupRepository.countStudentsInProjectGroup(projectGroupId);
+    }
 
 }

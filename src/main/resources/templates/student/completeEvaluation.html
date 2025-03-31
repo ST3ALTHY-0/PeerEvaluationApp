@@ -72,7 +72,8 @@
                 <div class="form-group">
                     <label th:for="'score' + ${student.studentId}" th:text="'Score for ' + ${student.studentName}"></label>
                     <input type="number" class="form-control score" th:id="'score' + ${student.studentId}"
-                        th:name="'evaluationFeedbackDTOList[' + ${iterStudents.index} + '].grade'" min="0" max="150" required>
+                        th:name="'evaluationFeedbackDTOList[' + ${iterStudents.index} + '].grade'" 
+                        th:min="0" th:max="${maxScore}" required>
                 </div>
         
                 <div th:each="question, iterStat : ${evaluation.evaluationQuestions}">
@@ -109,6 +110,8 @@
         </form>
     </div>
 
+    <span id="maxScore" th:text="${maxScore}" hidden></span>
+
     <footer class="footer">
         <div class="container2">
             <span>© 2025 Peer Evaluation. All rights reserved.</span>
@@ -119,6 +122,27 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const maxScore = parseFloat(document.getElementById('maxScore').textContent) || 0;
+    
+            document.querySelector('form')?.addEventListener('submit', function (event) {
+                let totalScore = 0;
+                document.querySelectorAll('.score').forEach(input => {
+                    const score = parseFloat(input.value.trim());
+                    if (!isNaN(score)) {
+                        totalScore += score;
+                    }
+                });
+    
+                if (totalScore > maxScore) {
+                    event.preventDefault();
+                    alert(`The total score cannot exceed ${maxScore}. Please adjust your scores.`);
+                }
+            });
+        });
+    </script>
+    
 </body>
 
 </html>

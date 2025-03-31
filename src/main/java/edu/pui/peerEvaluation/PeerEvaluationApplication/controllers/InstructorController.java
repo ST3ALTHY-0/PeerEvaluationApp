@@ -98,15 +98,9 @@ public class InstructorController {
 
     @GetMapping("/viewEvaluations")
     public String viewEvaluations(HttpSession session, Model model) {
-        // we need to pass all evaluations that have projects with that have this
-        // instructor
 
-
-        // Instructor instructor = instructorService.findById(((Integer)
-        // session.getAttribute("instructorId"))).orElse(null);
         List<Evaluation> evaluations = evaluationService
                 .findEvaluationsByInstructorId(((Integer) session.getAttribute("instructorId")));
-        // model.addAttribute("evaluations", evaluations);
 
 
         // pass the number of people that have responded and number of people that can
@@ -131,40 +125,6 @@ public class InstructorController {
         System.out.println("Passing instructorId: " + instructorId);
         return "instructor/createEvaluation";
     }
-
-    // @PostMapping("/previewEvaluationForm")
-    // public String previewEvaluationForm(Model model, @ModelAttribute EvaluationFormDTO evaluationForm) {
-
-    //     System.out.println(evaluationForm);
-
-    //     Evaluation sampleEvaluation = new Evaluation();
-    //     sampleEvaluation.setEvaluationId(1);
-
-    //     List<EvaluationQuestionDTO> questions = evaluationForm.getEvaluationQuestions();
-    //     List<EvaluationQuestion> eQuestions = new ArrayList<>();
-
-    //     for(EvaluationQuestionDTO question : questions){
-    //         System.out.println(question.getQuestionText());
-    //         EvaluationQuestion q = new EvaluationQuestion();
-    //         q.setQuestionText(question.getQuestionText());
-    //         q.setEnforceAnswer(question.isRequired());
-    //         eQuestions.add(q);
-    //     }
-
-    //     sampleEvaluation.setEvaluationQuestions(eQuestions);
-
-
-    //     ProjectGroup sampleProjectGroup = new ProjectGroup();
-    //     sampleProjectGroup.setGroupId(1);
-    //     sampleProjectGroup.setGroupName("Sample Project Group");
-
-    //     // Add sample data to the model
-    //     model.addAttribute("currentStudentId", 1);
-    //     model.addAttribute("evaluation", sampleEvaluation);
-    //     model.addAttribute("projectGroup", sampleProjectGroup);
-
-    //     return "instructor/previewEvaluationForm";
-    // }
 
     @GetMapping("/signUp")
     public String instructorSignUp() {
@@ -217,6 +177,19 @@ public class InstructorController {
 
         return new ResponseEntity<>(csvContent, headers, HttpStatus.OK);
     
+    }
+
+    @GetMapping("/viewEvaluation/details/{id}")
+    public String viewEvaluationDetails(@PathVariable ("id") Integer evaluationId, Model model){
+        Evaluation evaluation = evaluationService.findById(evaluationId).orElse(null);
+
+        if(evaluation == null){
+            model.addAttribute("errorMessage", "Evaluation does not exist");
+            return "instructor/error";
+        }
+        System.out.println("WERE HERE");
+        model.addAttribute("evaluation", evaluation);
+        return "instructor/evaluationDetails";
     }
 
 }
