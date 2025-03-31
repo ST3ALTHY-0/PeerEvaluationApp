@@ -3,8 +3,12 @@ package edu.pui.peerEvaluation.PeerEvaluationApplication.orm.studentGrade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.baseEntity.BaseEntityRepository;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.baseEntity.BaseEntityService;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.student.Student;
+
 @Service
-public class StudentGradeService {
+public class StudentGradeService extends BaseEntityService<StudentGrade, Integer>{
 
     private final StudentGradeRepository studentGradeRepository;
 
@@ -13,12 +17,10 @@ public class StudentGradeService {
         this.studentGradeRepository = studentGradeRepository;
     }
 
-    public StudentGrade saveStudentGrade(StudentGrade studentGrade){
-        return studentGradeRepository.save(studentGrade);
-    }
 
-    public StudentGrade addStudentGrade(StudentGrade studentGrade){
-        return studentGradeRepository.saveAndFlush(studentGrade);
+    @Override
+    protected BaseEntityRepository<StudentGrade, Integer> getRepository() {
+        return studentGradeRepository;
     }
     
 }

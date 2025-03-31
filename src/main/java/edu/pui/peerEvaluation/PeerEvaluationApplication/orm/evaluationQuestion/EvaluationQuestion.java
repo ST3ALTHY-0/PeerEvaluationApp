@@ -17,13 +17,15 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 //this is perhaps a bad way of making this class,
 //questions should be reusable, but im not sure they are rn
 @Data
 @Entity
 @Table(name = "evaluation_question")
-@EqualsAndHashCode(exclude = {"evaluation", "responses"})
+@EqualsAndHashCode(exclude = {"responses"})
+@ToString(exclude = { "evaluations", "responses" })
 public class EvaluationQuestion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

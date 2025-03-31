@@ -30,81 +30,81 @@ public class StudentViewController {
     private final ProjectGroupService projectGroupService;
     private final StudentService studentService;
 
-    public StudentViewController(StudentService studentService, EvaluationService evaluationService, ProjectGroupService projectGroupService) {
+    public StudentViewController(StudentService studentService, EvaluationService evaluationService,
+            ProjectGroupService projectGroupService) {
         this.evaluationService = evaluationService;
         this.projectGroupService = projectGroupService;
         this.studentService = studentService;
     }
 
-        @GetMapping("/login")
+    @GetMapping("/login")
     public String login() {
         return "student/login";
     }
 
     @PostMapping("/login/submit")
     public String loginSubmit(@ModelAttribute LoginDTO loginDTO, HttpSession session) {
-        //validate input
-        //return error if wrong input is entered
+        // Validate input
         Student thisStudent = studentService.findStudentByEmail(loginDTO.getEmail()).orElse(null);
-        session.setAttribute("student", thisStudent); // Store student in session
-
+        if (thisStudent == null) {
+            return "student/login"; // Redirect to login page if student not found
+        }
+        session.setAttribute("studentId", thisStudent.getStudentId()); // Store studentId in session
         return "student/dashboard";
     }
 
     @GetMapping("/dashboard")
-    public String studentDashboard(HttpSession session, Model model){
-        Student student = (Student) session.getAttribute("student");
-        model.addAttribute("student", student);
-
-        return "student/dashboard";
+public String studentDashboard(HttpSession session, Model model) {
+    Integer studentId = (Integer) session.getAttribute("studentId");
+    if (studentId == null) {
+        return "redirect:/student/login"; // Redirect to login if session is invalid
     }
+    Student student = studentService.findById(studentId).orElse(null);
+    model.addAttribute("student", student);
+    return "student/dashboard";
+}
 
-
-     @GetMapping("/viewEvaluations")
-    public String studentViewEvaluations(HttpSession session, Model model) {
-
-
-        Student student = (Student) session.getAttribute("student");
-        List<Evaluation> userEvalList = evaluationService.findEvaluationsWithoutStudentFeedback(student.getStudentId());
-        model.addAttribute("userEvalList", userEvalList);
-        
-        return "student/viewEvaluations";
+@GetMapping("/viewEvaluations")
+public String studentViewEvaluations(HttpSession session, Model model) {
+    Integer studentId = (Integer) session.getAttribute("studentId");
+    if (studentId == null) {
+        return "redirect:/student/login"; // Redirect to login if session is invalid
     }
+    List<Evaluation> userEvalList = evaluationService.findEvaluationsWithoutStudentFeedback(studentId);
+    model.addAttribute("userEvalList", userEvalList);
+    return "student/viewEvaluations";
+}
 
-    @GetMapping("/viewPastEvaluations")
-    public String studentViewPastEvaluations(HttpSession session, Model model) {
-
-        Student student = (Student) session.getAttribute("student");
-        List<Evaluation> userEvalList = evaluationService.findAllByStudentIdWithFeedback(student.getStudentId());
-        model.addAttribute("userEvalList", userEvalList);
-        
-        return "student/viewPastEvaluations";
+@GetMapping("/viewPastEvaluations")
+public String studentViewPastEvaluations(HttpSession session, Model model) {
+    Integer studentId = (Integer) session.getAttribute("studentId");
+    if (studentId == null) {
+        return "redirect:/student/login"; // Redirect to login if session is invalid
     }
+    List<Evaluation> userEvalList = evaluationService.findAllByStudentIdWithFeedback(studentId);
+    model.addAttribute("userEvalList", userEvalList);
+    return "student/viewPastEvaluations";
+}
 
-    @GetMapping("/completeEvaluation")
-    public String studentCompleteEvaluation(HttpSession session, Model model,
-            @RequestParam("evaluationId") int evaluationId) {
-
-        Student student = (Student) session.getAttribute("student");
-        Evaluation evaluation = evaluationService.findById(evaluationId).orElse(null);
-        ProjectGroup projectGroup = projectGroupService.findProjectGroupByEvaluationIdAndStudentId(evaluationId, student.getStudentId());
-        Integer numOfStudentsInGroup = projectGroupService.countStudentsInProjectGroup(projectGroup.getGroupId());
-        Integer maxScore =  (numOfStudentsInGroup - 1) * 100;
-                
-        model.addAttribute("currentStudentId", student.getStudentId());
-        model.addAttribute("evaluation", evaluation);
-        model.addAttribute("projectGroup", projectGroup);
-
-        model.addAttribute("maxScore", maxScore);
-
-        System.out.println(evaluation);
-        System.out.println(evaluation.getEvaluationQuestions());
-
-        //System.out.println(projectGroup);
-        return "student/completeEvaluation";
+@GetMapping("/completeEvaluation")
+public String studentCompleteEvaluation(HttpSession session, Model model,
+        @RequestParam("evaluationId") int evaluationId) {
+    Integer studentId = (Integer) session.getAttribute("studentId");
+    if (studentId == null) {
+        return "redirect:/student/login"; // Redirect to login if session is invalid
     }
+    Student student = studentService.findById(studentId).orElse(null);
+    Evaluation evaluation = evaluationService.findById(evaluationId).orElse(null);
+    ProjectGroup projectGroup = projectGroupService.findProjectGroupByEvaluationIdAndStudentId(evaluationId, studentId);
+    Integer numOfStudentsInGroup = projectGroupService.countStudentsInProjectGroup(projectGroup.getGroupId());
+    Integer maxScore = (numOfStudentsInGroup - 1) * 100;
 
+    model.addAttribute("currentStudentId", studentId);
+    model.addAttribute("evaluation", evaluation);
+    model.addAttribute("projectGroup", projectGroup);
+    model.addAttribute("maxScore", maxScore);
 
+    return "student/completeEvaluation";
+}
 
-    
 }

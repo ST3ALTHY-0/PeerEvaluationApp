@@ -62,7 +62,7 @@ public class Evaluation {
 private List<EvaluationQuestion> evaluationQuestions = new ArrayList<>();
 
     @OneToMany(mappedBy = "evaluation", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Feedback> feedbacks;
+    private List<Feedback> feedbacks = new ArrayList<>();;
 
     // @ManyToMany
     // @JoinTable(

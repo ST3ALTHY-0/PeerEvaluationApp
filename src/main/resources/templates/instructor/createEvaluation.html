@@ -78,22 +78,27 @@
           <input type="file" class="form-control-file" id="csvFi le" name="csvFile" accept=".csv" required>
         </div>
 
+        <br>
+        <br>
+        <br>
+
         <!-- Customize Evaluation Form -->
-        <h4 style="margin-top: 5vh;">Customize Evaluation Form</h4>
+        <h3 style="margin-top: 5vh;">Customize Evaluation Form</h3>
+                <br>
+
         <div class="form-group">
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="useStandardForm" name="useStandardForm">
-            <label class="form-check-label" for="useStandardForm" checked>Use Standard Evaluation Form</label>
-          </div>
-            
+            <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="useStandardForm" name="useStandardForm" checked>
+            <label class="form-check-label" for="useStandardForm">Use Standard Evaluation Form</label>
+            </div>
           <div class="form-check" style="margin-top: 1vh;">
             <input class="form-check-input" type="checkbox" id="enableGrading" name="enableGrading" >
-            <label class="form-check-label" for="enableGrading" checked >Enable Grading</label>
+            <label class="form-check-label" for="enableGrading" >Enable Grading</label>
           </div>
 
           <div class="form-check" style="margin-top: 1vh;">
             <input class="form-check-input" type="checkbox" id="allowStudentToViewFeedback" name="allowStudentToViewFeedback" >
-            <label class="form-check-label" for="allowStudentToViewFeedback" checked >Allow Students to view the Feedback they Receive from Group Members</label>
+            <label class="form-check-label" for="allowStudentToViewFeedback" >Allow Students to view the Feedback they Receive from Group Members</label>
           </div>
 
         </div>
@@ -169,6 +174,23 @@
           `;
           questionsContainer.append(questionHtml);
         }
+      });
+
+      function toggleFormOptions() {
+        var isChecked = $('#useStandardForm').is(':checked');
+        $('#NumberOfQuestions').prop('disabled', isChecked);
+        $('#allowStudentToViewFeedback').prop('disabled', isChecked);
+        $('#enableGrading').prop('disabled', isChecked);
+      }
+
+      // Initial toggle on page load
+      $(document).ready(function () {
+        toggleFormOptions();
+      });
+
+      // Toggle on checkbox change
+      $('#useStandardForm').on('change', function () {
+        toggleFormOptions();
       });
 
 

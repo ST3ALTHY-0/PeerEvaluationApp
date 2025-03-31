@@ -46,6 +46,7 @@ import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.projectGroup.Project
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.projectGroup.ProjectGroupService;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.student.Student;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.student.StudentService;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.studentGrade.StudentGrade;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.studentGrade.StudentGradeService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -109,6 +110,8 @@ public class SaveBrightSpaceData {
 
         List<Student> studentsToSave = new ArrayList<>();
         List<ProjectGroup> groupsToSave = new ArrayList<>();
+        List<StudentGrade> studentGradesToSave = new ArrayList<>();
+
         Map<String, ProjectGroup> projectGroupMap = new HashMap<>();
 
         // we are maybe creating and saving redundant groupCategories, but
@@ -130,11 +133,20 @@ public class SaveBrightSpaceData {
             student.setGroups((List<ProjectGroup>) getAndAddEntityToList(student.getGroups(), projectGroup));
             projectGroup.setStudents((List<Student>) getAndAddEntityToList(projectGroup.getStudents(), student));
 
+
+            //save student grade 
+            StudentGrade studentGrade = new StudentGrade();
+            studentGrade.setProject(project);
+            studentGrade.setStudent(student);
+            studentGrade.setGrade(csvDataDTO.getStudentGrade());
+
             studentsToSave.add(student);
             groupsToSave.add(projectGroup);
+            studentGradesToSave.add(studentGrade);
         }
 
         studentService.saveAll(studentsToSave);
+        studentGradeService.saveAll(studentGradesToSave);
 
         // Wanted to implement a way to check if a projectGroup already exists and to
         // use that group instead of making a new one if it does exist,
@@ -165,7 +177,7 @@ public class SaveBrightSpaceData {
     }
 
     private ProjectGroup createProjectGroup(CSVDataDTO csvDataDTO, GroupCategory groupCategory, Project project) {
-        String groupName = project.getProjectName() + " " + csvDataDTO.getGroup();
+        String groupName = csvDataDTO.getGroup();
 
         return projectGroupService.findByGroupNameAndProject(groupName, project)
                 .orElseGet(() -> {
@@ -188,9 +200,7 @@ public class SaveBrightSpaceData {
         logger.debug("EvalForm DTO: {}", evaluationFormDTO);
         Evaluation evaluation = new Evaluation();
 
-        // TODO: we are only asking for a date and not a specific time on webpage, we
-        // can change it
-        // later, but for now we will default to midnight on the chosen date
+        // TODO: we are only asking for a date and not a specific time on webpage
         LocalDate dueDate = LocalDate.parse(evaluationFormDTO.getDueDate());
         LocalDateTime dueDateTime = dueDate.atStartOfDay();
         evaluation.setDueDate(dueDateTime);
