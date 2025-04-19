@@ -1,36 +1,58 @@
-.container2 {
-    flex: 1;
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; 
+    margin: 0; 
+    background-color: #f5f5f5; 
 }
 
+/* Card for Dashboard */
+.dashboard-card {
+    background: rgba(255, 255, 255, 0.93);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    max-width: 1000px;
+    padding: 80px;
+    width: 100%;
+    backdrop-filter: blur(10px);
+    border: 2px solid #CEB888; 
+    min-height: 600px;
+    margin-top: -5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+/* Heading Style */
+h1 {
+    color: #1C1C1C; 
+    font-weight: 700;
+    margin-bottom: 50px;
+}
+
+/* Modern Purdue Buttons */
 .btn-custom {
-    margin-bottom: 20px; /* Space out the buttons */
-    padding: 20px 40px; /* Increase padding for a larger button */
-    background-color: #007bff; /* Matching the navbar color */
-    border: none;
-    border-radius: 5px; /* Rounded corners */
-    color: white;
+    display: block;
+    width: 100%;
+    margin-bottom: 15px;
+    margin-top: 15px;
+
+    padding: 15px;
     font-size: 1.2rem;
-    transition: background-color 0.3s ease; /* Smooth hover effect */
+    border-radius: 8px;
+    font-weight: 500;
+    border: none;
+    background: linear-gradient(135deg, #CEB888, #a48c5e); 
+    transition: transform 0.2s ease, background 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .btn-custom:hover {
-    background-color: #0056b3; /* Darker shade on hover */
-}
-
-.btn-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 50vh; /* Adjust as needed */
-}
-
-h1 {
-    color: #343a40; /* Darker text for better contrast */
-    margin-bottom: 30px;
-    font-weight: 700;
-}
-
-.container {
-    max-width: 800px; /* Limit container width for better readability */
+    background: linear-gradient(135deg, #a48c5e, #8c7348);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    color: #fff;
 }

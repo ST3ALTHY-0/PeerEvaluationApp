@@ -54,11 +54,9 @@ public class EvaluationControllerTest {
         
         formDTO.setEvaluationFeedbackDTOList(feedbackList);
 
-        logger.debug("Submitting feedback: {}", formDTO);
-
 
         // Perform a POST request
-        mockMvc.perform(post("/evaluation/submit/feedback") //this seems to be working
+        mockMvc.perform(post("/evaluation/submit/feedback")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("evaluationFeedbackDTOList[0].evaluationId", "1")
                 .param("evaluationFeedbackDTOList[0].ratedByStudentId", "1")

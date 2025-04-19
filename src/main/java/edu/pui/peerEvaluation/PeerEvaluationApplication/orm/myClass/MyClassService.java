@@ -26,4 +26,13 @@ public class MyClassService {
     public MyClass findByClassCode(String classCode){
         return myClassRepository.findByClassCode(classCode).orElseThrow(() -> new EntityNotFoundException("No MyClass found with " + "class code: " + classCode));
     }
+
+    public MyClass findByClassCodeOrCreate(String classCode) {
+        return myClassRepository.findByClassCode(classCode).orElseGet(() -> {
+            MyClass newClass = new MyClass();
+            newClass.setClassCode(classCode);
+            // Set other default properties for newClass here if needed
+            return myClassRepository.saveAndFlush(newClass);
+        });
+    }
 }

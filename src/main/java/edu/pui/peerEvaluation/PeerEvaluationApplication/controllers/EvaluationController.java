@@ -1,9 +1,12 @@
 package edu.pui.peerEvaluation.PeerEvaluationApplication.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,8 +42,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -114,8 +119,8 @@ public String createEvaluation(@RequestParam("csvFile") MultipartFile file, @Mod
 
         //get references to the saved Project and the Class that project belongs to
         Project thisProject = csvDataDTOList.get(0).getProject();
-        MyClass myClass = myClassService.findByClassCode(evaluationFormDTO.getClassCode());
-
+        //TODO: change to find, or create class code
+        MyClass myClass = myClassService.findByClassCodeOrCreate(evaluationFormDTO.getClassCode());
 
         Project project = saveBrightSpaceData.saveProjectToDB(thisProject, evaluationFormDTO.getInstructorId(), myClass);
 
@@ -148,9 +153,27 @@ public String evaluationsDetails(@RequestParam Integer evaluationId, Model model
     //pass evaluation
     model.addAttribute("evaluation", evaluation);
 
-    //
-
-
     return "/instructor/evaluationDetails";
 }
+
+
+@PostMapping("/updateDueDate")
+public ResponseEntity<String> updateDueDate(@RequestBody Map<String, String> requestData) {
+    try {
+        String dueDateString = requestData.get("dueDate");
+        LocalDateTime dueDate = LocalDateTime.parse(dueDateString + "T00:00:00");
+        Integer evaluationId = Integer.parseInt(requestData.get("evaluationId"));
+
+        // Log the received data
+        logger.info("Received dueDate: {}, evaluationId: {}", dueDate, evaluationId);
+
+        // Assuming you have a method to update the due date in the evaluation service
+        Evaluation evaluation = evaluationService.updateDueDate(evaluationId, dueDate);
+        return ResponseEntity.ok("Due date updated successfully.");
+    } catch (Exception e) {
+        logger.error("Error updating due date: {}", e.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update due date.");
+    }
+}
+
 }

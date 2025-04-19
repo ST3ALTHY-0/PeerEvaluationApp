@@ -99,6 +99,18 @@ public class EvaluationService extends BaseEntityService<Evaluation, Integer> {
         return evaluationRepository.findFeedbacksByStudentInEvaluation(evaluationId, studentId);
     }
 
+    @Transactional
+    public Evaluation updateDueDate(Integer evaluationId, LocalDateTime dueDate) {
+        Optional<Evaluation> optionalEvaluation = evaluationRepository.findById(evaluationId);
+        if (optionalEvaluation.isPresent()) {
+            Evaluation evaluation = optionalEvaluation.get();
+            evaluation.setDueDate(dueDate);
+            return evaluationRepository.saveAndFlush(evaluation);
+        } else {
+            throw new IllegalArgumentException("Evaluation with ID " + evaluationId + " not found.");
+        }
+    }
+
     @Override
     protected BaseEntityRepository<Evaluation, Integer> getRepository() {
         return evaluationRepository;

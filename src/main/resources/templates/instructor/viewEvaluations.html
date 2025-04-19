@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-
+<head></head>
 
 
 <head>
@@ -31,7 +31,7 @@
 
 
         h1 {
-            color: #2c3e50;
+            color: #000000;
             font-weight: 700;
             font-size: 2.5rem;
             letter-spacing: -0.025em;
@@ -66,8 +66,8 @@
 
 
         .evaluationHeader {
-            background: #007bff;
-            color: white;
+            background: #1E1E1E;
+    color: #CEB888;
             font-weight: 600;
             padding: 1rem;
             border-radius: 8px;
@@ -89,7 +89,7 @@
 
 
         .evaluationContainer {
-            background: #e9f2fa;
+            background: #f5f2ec;
             padding: 1rem;
             margin-bottom: 1.25rem;
             border-radius: 8px;
@@ -104,8 +104,8 @@
 
         .evaluationContainer:hover {
             transform: translateY(-2px);
-            background: #d9ecf8;
-            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.1);
+            background: #ece2d0;
+            box-shadow: 0 5px 15px rgba(206, 184, 136, 0.25);
             cursor: pointer;
         }
 
@@ -130,21 +130,7 @@
 
 
 
-        .evaluationContainerElement:nth-child(1) h4 {
-            color: #007bff;
-        }
-
-
-
-
-        .evaluationContainerElement:nth-child(2) h4 {
-            color: #28a745;
-        }
-
-
-
-
-        .evaluationContainerElement:nth-child(3) h4 {
+        h4 {
             color: #6c757d;
         }
 
@@ -169,15 +155,15 @@
 
 
         .custom-select:hover {
-            border-color: #007bff;
+            border-color: #CEB888;
         }
 
 
 
 
         .custom-select:focus {
-            border-color: #007bff;
-            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+            border-color: #CEB888;
+            box-shadow: 0 0 0 0.2rem rgba(206, 184, 136, 0.25);
         }
 
 
@@ -191,7 +177,8 @@
 
 
         .btn-primary {
-            background-color: #007bff;
+            background-color: #CEB888;
+    color: #000;
             border: none;
             border-radius: 5px;
             padding: 10px 20px;
@@ -203,14 +190,15 @@
 
 
         .btn-primary:hover {
-            background-color: #0056b3;
-        }
+            background-color: #bfa87a;
+                }
 
 
 
 
         .btn-secondary {
-            background-color: #6c757d;
+            background-color: #1E1E1E;
+    color: #CEB888;
             border: none;
             border-radius: 5px;
             padding: 10px 20px;
@@ -222,8 +210,8 @@
 
 
         .btn-secondary:hover {
-            background-color: #5a6268;
-        }
+            background-color: #000000;
+                }
 
 
 
@@ -288,7 +276,7 @@
 
 
     <div class="container">
-        <h1 class="text-center">Choose Evaluation to Edit or View Details About</h1>
+        <h1 class="text-center" style="padding-top: 100px;">Choose Evaluation to Edit or View Details About</h1>
         <div class="formContainer">
             <!-- add column names -->
             <div class="evaluationHeader">
@@ -346,11 +334,9 @@
 
 
 
-    <footer class="footer">
-        <div class="container2">
-            <span>© 2025 Peer Evaluation. All rights reserved.</span>
-        </div>
-    </footer>
+    <!-- <footer class="footer" style="margin-top: auto;">
+        <span>© 2025 Peer Evaluation. All rights reserved.</span>
+    </footer> -->
 
 
 

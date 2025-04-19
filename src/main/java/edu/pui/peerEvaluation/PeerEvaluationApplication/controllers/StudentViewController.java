@@ -2,6 +2,7 @@ package edu.pui.peerEvaluation.PeerEvaluationApplication.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -43,21 +44,24 @@ public class StudentViewController {
     }
 
     @PostMapping("/login/submit")
-    public String loginSubmit(@ModelAttribute LoginDTO loginDTO, HttpSession session) {
-        // Validate input
-        Student thisStudent = studentService.findStudentByEmail(loginDTO.getEmail()).orElse(null);
-        if (thisStudent == null) {
-            return "student/login"; // Redirect to login page if student not found
+    public String loginSubmit(@ModelAttribute LoginDTO loginDTO, HttpSession session, Model model) {
+        // Find the student by email and PUID
+        Optional<Student> student = studentService.findStudentByEmailAndPuid(loginDTO.getEmail(), loginDTO.getPuid());
+        
+        if (student.isPresent()) {
+            session.setAttribute("studentId", student.get().getStudentId());
+            return "student/dashboard";
+        } else {
+            model.addAttribute("errorMessage", "Invalid email or PUID. Please try again.");
+            return "student/login";
         }
-        session.setAttribute("studentId", thisStudent.getStudentId()); // Store studentId in session
-        return "student/dashboard";
     }
 
     @GetMapping("/dashboard")
 public String studentDashboard(HttpSession session, Model model) {
     Integer studentId = (Integer) session.getAttribute("studentId");
     if (studentId == null) {
-        return "redirect:/student/login"; // Redirect to login if session is invalid
+        return "student/login"; // Redirect to login if session is invalid
     }
     Student student = studentService.findById(studentId).orElse(null);
     model.addAttribute("student", student);
@@ -68,22 +72,23 @@ public String studentDashboard(HttpSession session, Model model) {
 public String studentViewEvaluations(HttpSession session, Model model) {
     Integer studentId = (Integer) session.getAttribute("studentId");
     if (studentId == null) {
-        return "redirect:/student/login"; // Redirect to login if session is invalid
+        return "student/login"; // Redirect to login if session is invalid
     }
     List<Evaluation> userEvalList = evaluationService.findEvaluationsWithoutStudentFeedback(studentId);
     model.addAttribute("userEvalList", userEvalList);
     return "student/viewEvaluations";
 }
 
+//TODO
 @GetMapping("/viewPastEvaluations")
 public String studentViewPastEvaluations(HttpSession session, Model model) {
     Integer studentId = (Integer) session.getAttribute("studentId");
     if (studentId == null) {
-        return "redirect:/student/login"; // Redirect to login if session is invalid
+        return "student/login"; // Redirect to login if session is invalid
     }
     List<Evaluation> userEvalList = evaluationService.findAllByStudentIdWithFeedback(studentId);
     model.addAttribute("userEvalList", userEvalList);
-    return "student/viewPastEvaluations";
+    return "viewPastEvaluations";
 }
 
 @GetMapping("/completeEvaluation")
@@ -91,9 +96,8 @@ public String studentCompleteEvaluation(HttpSession session, Model model,
         @RequestParam("evaluationId") int evaluationId) {
     Integer studentId = (Integer) session.getAttribute("studentId");
     if (studentId == null) {
-        return "redirect:/student/login"; // Redirect to login if session is invalid
+        return "student/login"; // Redirect to login if session is invalid
     }
-    Student student = studentService.findById(studentId).orElse(null);
     Evaluation evaluation = evaluationService.findById(evaluationId).orElse(null);
     ProjectGroup projectGroup = projectGroupService.findProjectGroupByEvaluationIdAndStudentId(evaluationId, studentId);
     Integer numOfStudentsInGroup = projectGroupService.countStudentsInProjectGroup(projectGroup.getGroupId());

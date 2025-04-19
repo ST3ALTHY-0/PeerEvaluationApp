@@ -45,6 +45,8 @@ public class Evaluation {
 
     private boolean isComplete;
 
+    private boolean allowStudentsToViewFeedback;
+
     private boolean isGraded;
 
     private LocalDateTime dueDate;

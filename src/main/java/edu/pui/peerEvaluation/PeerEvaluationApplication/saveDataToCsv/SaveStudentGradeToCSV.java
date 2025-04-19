@@ -19,15 +19,15 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Service
-public class SaveDataToCSV {
+public class SaveStudentGradeToCSV {
 
     private final EvaluationService evaluationService;
     private final StudentService studentService;
 
-        private static final Logger logger = LoggerFactory.getLogger(SaveDataToCSV.class);
+        private static final Logger logger = LoggerFactory.getLogger(SaveStudentGradeToCSV.class);
 
 
-    public SaveDataToCSV(EvaluationService evaluationService, StudentService studentService){
+    public SaveStudentGradeToCSV(EvaluationService evaluationService, StudentService studentService){
         this.evaluationService = evaluationService;
         this.studentService = studentService;
     }
@@ -65,7 +65,7 @@ public String calculateAverageGrade(Integer studentId, Integer evaluationId) {
         return "0";
     }
     
-    //get feedback from other students and filter out any 
+    //get feedback from other students and filter out any where another student didnt rate the student we are grading, thus not affecting this students grade
     List<Feedback> feedbacks = evaluationService.findFeedbacksForStudentInEvaluation(studentId, evaluationId)
                                                 .stream()
                                                 .filter(f -> f.getGradePercent() != null)
@@ -82,6 +82,11 @@ public String calculateAverageGrade(Integer studentId, Integer evaluationId) {
         .mapToDouble(Feedback::getGradePercent)
         .average()
         .orElse(10));
+}
+
+public String calculateFinalGrade(Integer studentId, Integer evaluationId, String averageGrade){
+
+    return "";
 }
 
 }

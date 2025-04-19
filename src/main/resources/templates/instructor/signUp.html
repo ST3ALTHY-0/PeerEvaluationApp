@@ -8,7 +8,8 @@
     <!-- Google Fonts for better typography -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link href="/css/Style.css" rel="stylesheet">
-    <link href="/css/Card.css" rel="stylesheet">
+    <link href="/css/tempPurdueCard.css" rel="stylesheet">
+
 
     <style>
 
@@ -44,45 +45,42 @@
 
 <body>
     <nav class="navbar navbar-expand-lg">
-        <a class="navbar-brand">Peer Evaluation</a>
+        <a class="navbar-brand" href="#">Purdue Peer Evaluation</a>
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
+                    <a class="nav-link" href="/logout">Logout</a>
                 </li>
             </ul>
         </div>
     </nav>
 
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header text-center">
-                        Instructor Sign Up
-                    </div>
-                    <div class="card-body"></div>
-                        <p class="card-text text-center">Please sign up using your purdue email address and PUID:</p>
-                        <form method="post" action="/instructor/signUp/submit">
-                            <div class="form-group">
-                                <label for="email">Email address</label>
-                                <input type="email" class="form-control" id="email" name="email" pattern="[a-zA-Z0-9._%+-]+@purdue\.edu" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="puid">PUID (9 digit number)</label>
-                                <input type="text" class="form-control" id="puid" name="puid" pattern="\d{9}" required>
-                            </div>
-                            <button type="submit" class="btn btn-custom btn-block">Sign up</button>
-                        </form>
-                    </div>
+    <div class="container min-vh-100 d-flex align-items-center justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card">
+                <div class="card-header text-center">
+                    Instructor Sign Up
+                </div>
+                <div class="card-body">
+                    <p class="card-text text-center">Please sign up using your Purdue email address and PUID:</p>
+                    <form method="post" action="/instructor/signUp/submit">
+                        <div class="form-group">
+                            <label for="email">Purdue Email address</label>
+                            <input type="email" class="form-control" id="email" name="email" pattern="[a-zA-Z0-9._%+-]+@purdue\.edu" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="puid">PUID (9-digit number)</label>
+                            <input type="text" class="form-control" id="puid" name="puid" pattern="\d{9}" required>
+                        </div>
+                        <button type="submit" class="btn btn-purdue btn-block">Sign Up</button>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 
-    <footer class="footer">
-        <div class="container2">
-            <span>© 2025 Peer Evaluation. All rights reserved.</span>
-        </div>
+    <footer class="footer text-center mt-4">
+        <span>© 2025 Peer Evaluation. All rights reserved.</span>
     </footer>
 
     <!-- Bootstrap JS and dependencies -->

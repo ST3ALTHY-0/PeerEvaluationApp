@@ -2,6 +2,7 @@ package edu.pui.peerEvaluation.PeerEvaluationApplication.controllers;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -48,7 +49,7 @@ import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.projectGroup.Project
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.projectGroup.ProjectGroupService;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.student.Student;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.student.StudentService;
-import edu.pui.peerEvaluation.PeerEvaluationApplication.saveDataToCsv.SaveDataToCSV;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.saveDataToCsv.SaveStudentGradeToCSV;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -58,13 +59,13 @@ public class InstructorController {
     private final EvaluationService evaluationService;
     private final InstructorService instructorService;
     private final SaveBrightSpaceData saveBrightSpaceData;
-    private final SaveDataToCSV saveDataToCSV;
-
+    private final SaveStudentGradeToCSV saveDataToCSV;
 
     // declare any/all endpoint urls we will use
 
     @Autowired
-    public InstructorController(EvaluationService evaluationService, InstructorService instructorService, SaveBrightSpaceData saveBrightSpaceData, SaveDataToCSV saveDataToCSV) {
+    public InstructorController(EvaluationService evaluationService, InstructorService instructorService,
+            SaveBrightSpaceData saveBrightSpaceData, SaveStudentGradeToCSV saveDataToCSV) {
         this.evaluationService = evaluationService;
         this.instructorService = instructorService;
         this.saveBrightSpaceData = saveBrightSpaceData;
@@ -72,22 +73,23 @@ public class InstructorController {
     }
 
     @GetMapping("/login")
-    public String login(){
+    public String login() {
 
         return "instructor/login";
     }
 
     @PostMapping("login/submit")
-    public String loginSubmit(HttpSession session, @ModelAttribute LoginDTO loginDTO){
+    public String loginSubmit(HttpSession session, @ModelAttribute LoginDTO loginDTO, Model model) {
         // Find the instructor by email
-    Instructor instructor = instructorService.findInstructorByEmail(loginDTO.getEmail()).orElse(null);
-    
-    // Check if the instructor is present
-    if (instructor == null) {
-        return "login/failed";
-    }
-        session.setAttribute("instructorId", instructor.getInstructorId());
-        return "instructor/dashboard";
+        Optional<Instructor> instructor = instructorService.findInstructorByEmailAndPuid(loginDTO.getEmail(), loginDTO.getPuid());
+        
+        if (instructor.isPresent()) {
+            session.setAttribute("instructorId", instructor.get().getInstructorId());
+            return "instructor/dashboard";
+        } else {
+            model.addAttribute("errorMessage", "Invalid email or PUID. Please try again.");
+            return "instructor/login";
+        }
     }
 
     @GetMapping("/dashboard")
@@ -95,16 +97,14 @@ public class InstructorController {
         return "instructor/dashboard";
     }
 
-
     @GetMapping("/viewEvaluations")
     public String viewEvaluations(HttpSession session, Model model) {
 
         List<Evaluation> evaluations = evaluationService
                 .findEvaluationsByInstructorId(((Integer) session.getAttribute("instructorId")));
 
-
         // pass the number of people that have responded and number of people that can
-        // respond
+        // respond for display
         List<EvaluationDetailsDTO> evaluationsDetails = evaluations.stream()
                 .map(evaluation -> new EvaluationDetailsDTO(
                         evaluation,
@@ -113,10 +113,8 @@ public class InstructorController {
                 .toList();
         model.addAttribute("evaluationsDetails", evaluationsDetails);
 
-
         return "instructor/viewEvaluations";
     }
-
 
     @GetMapping("/createEvaluation")
     public String createEvaluation(HttpSession session, Model model) {
@@ -141,53 +139,63 @@ public class InstructorController {
             model.addAttribute("errorMessage", "An error occurred during sign up: " + e.getMessage());
             return "instructor/error";
         }
-        
+
         return "instructor/dashboard";
     }
-
+//TODO: we do store the students grade,
+//so we can get that students grade (based on projectId found in evaluation)
+//and multiply it by the saved grade from the evaluation and then update the brightSpace grade 
+//on that info
     @GetMapping("/downloadCSV/{id}")
-    public ResponseEntity<byte[]> downloadCSV(@PathVariable("id") Integer evaluationId) throws IOException{
+    public ResponseEntity<byte[]> downloadCSV(@PathVariable("id") Integer evaluationId) throws IOException {
         Evaluation evaluation = evaluationService.findById(evaluationId).orElse(null);
 
         if (evaluation == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        
+
         List<String[]> data = new ArrayList<>();
 
-        //Add Headers
-        //rename points grade to something else so its a weighted grade instead of numeric
-        data.add(new String[]{"OrgDefinedId", evaluation.getProject().getProjectName() + " evaluation" + " Points Grade", "End-of-Line Indicator"});
-       
+        // Add Headers
+        // rename points grade to something else so its a weighted grade instead of
+        // numeric
+        data.add(new String[] { "OrgDefinedId",
+                evaluation.getProject().getProjectName() + " evaluation" + " Points Grade", "End-of-Line Indicator" });
+
         List<Student> students = evaluationService.findStudentsAssignedToEvaluation(evaluationId);
-        
+
         data.addAll(students.stream()
-            .map(student -> new String[]{ 
-                student.getPuid(), 
-                saveDataToCSV.calculateAverageGrade(student.getStudentId(), evaluationId), 
-                "#" 
-            })
-            .toList());
+                .map(student -> new String[] {
+                        student.getPuid(),
+                        saveDataToCSV.calculateAverageGrade(student.getStudentId(), evaluationId),
+                        "#"
+                })
+                .toList());
 
         byte[] csvContent = saveDataToCSV.generateCSV(data);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        headers.setContentDispositionFormData("attachment", evaluation.getProject().getProjectName() + " evaluation" + ".csv");
+        headers.setContentDispositionFormData("attachment",
+                evaluation.getProject().getProjectName() + " evaluation" + ".csv");
 
         return new ResponseEntity<>(csvContent, headers, HttpStatus.OK);
-    
+
     }
 
     @GetMapping("/viewEvaluation/details/{id}")
-    public String viewEvaluationDetails(@PathVariable ("id") Integer evaluationId, Model model){
-        Evaluation evaluation = evaluationService.findById(evaluationId).orElse(null);
+    public String viewEvaluationDetails(@PathVariable("id") Integer evaluationId, Model model) {
+        Optional<Evaluation> evaluationOptional = evaluationService.findById(evaluationId);
 
-        if(evaluation == null){
+        if (evaluationOptional.isEmpty()) {
             model.addAttribute("errorMessage", "Evaluation does not exist");
             return "instructor/error";
         }
-        System.out.println("WERE HERE");
+        Evaluation evaluation = evaluationOptional.get();
+
+        String formattedDueDate = evaluation.getDueDate().toLocalDate().format(DateTimeFormatter.ofPattern("MMM dd, yyyy"));
+
+        model.addAttribute("formattedDueDate", formattedDueDate);
         model.addAttribute("evaluation", evaluation);
         return "instructor/evaluationDetails";
     }

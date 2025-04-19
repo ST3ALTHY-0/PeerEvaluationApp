@@ -11,8 +11,6 @@
   <link href="/css/Form.css" rel="stylesheet">
 
   <style>
-
-
     @media (max-width: 576px) {
       .container {
         margin-top: 20px;
@@ -43,22 +41,28 @@
 
 <body>
   <nav class="navbar navbar-expand-lg">
-    <a class="navbar-brand">Peer Evaluation</a>
+    <a class="navbar-brand" href="#">Purdue Peer Evaluation</a>
     <div class="collapse navbar-collapse">
-      <ul class="navbar-nav ml-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="/logout">Logout</a>
-        </li>
-      </ul>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/logout">Logout</a>
+            </li>
+        </ul>
     </div>
-  </nav>
-
+</nav>
   <div class="container">
     <h1>Create Evaluation Form</h1>
     <div class="formContainer">
       <form th:action="@{/evaluation/submit/form}" method="post" enctype="multipart/form-data">
         <input type="hidden" name="instructorId" th:value="${instructorId}">
 
+
+
+        <!-- CSV File Upload -->
+        <div class="form-group">
+          <label for="csvFile">Upload Bright Space Grades CSV File</label>
+          <input type="file" class="form-control-file" id="csvFi le" name="csvFile" accept=".csv" required>
+        </div>
 
         <!-- Class Code -->
         <div class="form-group">
@@ -72,29 +76,28 @@
           <input type="text" class="form-control" id="projectName" name="projectName" required>
         </div> -->
 
-        <!-- CSV File Upload -->
-        <div class="form-group">
-          <label for="csvFile">Upload Bright Space Grades CSV File</label>
-          <input type="file" class="form-control-file" id="csvFi le" name="csvFile" accept=".csv" required>
-        </div>
+        
 
+        <!-- <br>
         <br>
-        <br>
-        <br>
+        <br> -->
 
         <!-- Customize Evaluation Form -->
-        <h3 style="margin-top: 5vh;">Customize Evaluation Form</h3>
-                <br>
+        <!-- <h3 style="margin-top: 5vh;">Customize Evaluation Form</h3>
+                <br> -->
 
         <div class="form-group">
             <div class="form-check">
             <input class="form-check-input" type="checkbox" id="useStandardForm" name="useStandardForm" checked>
             <label class="form-check-label" for="useStandardForm">Use Standard Evaluation Form</label>
             </div>
-          <div class="form-check" style="margin-top: 1vh;">
+
+            <!-- always pass a true value to 'enableGrading', later we can get rid of this function if its decided that all evaluations will always be graded  -->
+            <input type="hidden" id="enableGrading" name="enableGrading" value="true">
+          <!-- <div class="form-check" style="margin-top: 1vh;">
             <input class="form-check-input" type="checkbox" id="enableGrading" name="enableGrading" >
             <label class="form-check-label" for="enableGrading" >Enable Grading</label>
-          </div>
+          </div> -->
 
           <div class="form-check" style="margin-top: 1vh;">
             <input class="form-check-input" type="checkbox" id="allowStudentToViewFeedback" name="allowStudentToViewFeedback" >
@@ -142,11 +145,9 @@
     </div>
   </div>
 
-  <footer class="footer">
-    <div class="container2">
-      <span>© 2025 Peer Evaluation. All rights reserved.</span>
-    </div>
-  </footer>
+  <!-- <footer class="footer">
+    <span>© 2025 Peer Evaluation. All rights reserved.</span>
+  </footer> -->
 
   <!-- Bootstrap JS and dependencies -->
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
@@ -165,10 +166,7 @@
                 <input type="text" class="form-control" id="question${i}" name="evaluationQuestions[${i - 1}].questionText" required>
               </div>
               <div class="form-group col-md-3 d-flex align-items-center">
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" id="isRequired${i}" name="evaluationQuestions[${i - 1}].isRequired">
-                  <label class="form-check-label" for="isRequired${i}">Require an answer</label>
-                </div>
+                <input type="hidden" id="isRequired${i}" name="evaluationQuestions[${i - 1}].isRequired" value="true">
               </div>
             </div>
           `;
