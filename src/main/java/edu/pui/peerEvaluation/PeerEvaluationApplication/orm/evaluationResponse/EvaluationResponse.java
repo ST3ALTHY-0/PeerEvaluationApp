@@ -1,5 +1,7 @@
 package edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluationResponse;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluationQuestion.EvaluationQuestion;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.feedback.Feedback;
 import jakarta.persistence.Entity;
@@ -17,8 +19,9 @@ import lombok.ToString;
 @Data
 @Entity
 @Table(name = "evaluation_response")
-@EqualsAndHashCode(exclude = {"question"})
-@ToString(exclude = { "question", "feedback" })
+//unless this breaks something, keep these commented out so we can view the question and the feedback when we pass a evaluationResponse
+// @EqualsAndHashCode(exclude = {"question", "feedback"})
+// @ToString(exclude = { "question", "feedback" })
 public class EvaluationResponse {
 
     @Id
@@ -27,10 +30,12 @@ public class EvaluationResponse {
 
     private String responseText;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "questionId", referencedColumnName = "questionId")
     private EvaluationQuestion question;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "feedbackId", referencedColumnName = "feedbackId")
     private Feedback feedback;

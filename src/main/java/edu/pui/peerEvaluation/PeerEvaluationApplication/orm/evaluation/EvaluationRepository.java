@@ -64,5 +64,10 @@ public interface EvaluationRepository extends BaseEntityRepository<Evaluation, I
     @Query("SELECT f FROM Feedback f WHERE f.evaluation.evaluationId = :evaluationId AND f.ratedByStudent.studentId = :studentId")
     List<Feedback> findFeedbacksByStudentInEvaluation(@Param("evaluationId") Integer evaluationId, @Param("studentId") Integer studentId);
 
+    // @Query("SELECT COUNT(f) > 0 FROM Feedback f WHERE f.evaluation.evaluationId = :evaluationId AND f.ratedByStudent.studentId = :studentId")
+    // boolean hasStudentRespondedToEvaluation(@Param("studentId") Integer studentId, @Param("evaluationId") Integer evaluationId);
+
+    @Query("SELECT COUNT(f) > 0 FROM Feedback f WHERE f.evaluation.evaluationId = :evaluationId AND f.ratedByStudent.studentId = :studentId")
+    boolean isEvaluationCompletedByStudent(@Param("studentId") Integer studentId, @Param("evaluationId") Integer evaluationId);
 }
 

@@ -22,6 +22,7 @@ import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.baseEntity.BaseEntit
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluationQuestion.EvaluationQuestion;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluationQuestion.EvaluationQuestionRepository;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluationQuestion.EvaluationQuestionService;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluationResponse.EvaluationResponse;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.feedback.Feedback;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.instructor.Instructor;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.myClass.MyClassRepository;
@@ -116,4 +117,19 @@ public class EvaluationService extends BaseEntityService<Evaluation, Integer> {
         return evaluationRepository;
     }
 
+    public List<EvaluationResponse> getEvaluationResponses(Integer evaluationId) {
+        Optional<Evaluation> optionalEvaluation = evaluationRepository.findById(evaluationId);
+        if (optionalEvaluation.isPresent()) {
+            Evaluation evaluation = optionalEvaluation.get();
+            return evaluation.getFeedbacks().stream()
+                .flatMap(feedback -> feedback.getResponses().stream())
+                .collect(Collectors.toList());
+        } else {
+            throw new IllegalArgumentException("Evaluation with ID " + evaluationId + " not found.");
+        }
+    }
+
+    public boolean hasStudentRespondedToEvaluation(Integer studentId, Integer evaluationId) {
+        return evaluationRepository.isEvaluationCompletedByStudent(studentId, evaluationId);
+    }
 }

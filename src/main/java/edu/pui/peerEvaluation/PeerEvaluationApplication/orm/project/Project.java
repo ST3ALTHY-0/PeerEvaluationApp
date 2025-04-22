@@ -37,6 +37,9 @@ public class Project {
 
     private String projectName;
 
+    private String fullProjectName;
+
+
     private Integer pointsWorth;
 
 

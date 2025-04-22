@@ -82,8 +82,8 @@
         }
 
         .table th {
-            background-color: #000;
-            color: #CEB888;
+            background-color: #CEB888;
+            color: #000;
             font-weight: 600;
 
         }
@@ -93,8 +93,8 @@
         }
 
         .btn-warning {
-            background-color: #CEB888;
-            color: #000;
+            background-color: #1E1E1E;
+            color: #CEB888;
             font-weight: 600;
             border: none;
         }
@@ -105,11 +105,11 @@
 
         .btn-secondary {
             background-color: #1E1E1E;
-    color: #CEB888;
+            color: #CEB888;
             border: none;
-            border-radius: 5px;
-            padding: 10px 20px;
-            font-size: 1rem;
+            border-radius: 4px;
+            padding: 8px 16px;
+            font-size: 0.9rem;
             transition: background-color 0.3s ease;
         }
 
@@ -172,19 +172,27 @@
 
                 <ul class="list-group list-group-flush">
                     <li th:each="student : ${group.students}" class="list-group-item">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h5 class="mb-2 mb-md-0" th:text="${student.studentName}">Student Name</h5>
-                            <button type="button" class="btn btn-warning btn-sm"
-                                th:attr="data-student-id=${student.studentId}" onclick="extendDeadline(this)">
-                                Extend Deadline
-                            </button>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h5 class="mb-0" th:text="${student.studentName}">Student Name</h5>
+                            <div>
+                                <button type="button" class="btn btn-warning btn-sm me-2"
+                                    th:attr="data-student-id=${student.studentId}, data-evaluation-id=${evaluation.evaluationId}"
+                                    onclick="extendDeadline(this)">
+                                    Extend Deadline
+                                </button>
+                                <button type="button" class="btn btn-secondary btn-sm"
+                                    th:attr="data-student-id=${student.studentId}, data-evaluation-id=${evaluation.evaluationId}"
+                                    onclick="showResponses(this)">
+                                    View Responses
+                                </button>
+                            </div>
                         </div>
+                    
                         <table class="table table-sm feedback-table">
                             <thead class="table-light">
                                 <tr>
                                     <th>Reviewer</th>
                                     <th class="text-center">Score (%)</th>
-                                    <th class="text-end">View Responses</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -192,20 +200,12 @@
                                     th:if="${feedback.ratedStudent != null and feedback.ratedStudent.studentId == student.studentId}">
                                     <td th:text="${feedback.ratedByStudent.studentName}">Reviewer Name</td>
                                     <td class="text-center" th:text="${feedback.gradePercent}">Score</td>
-                                    <td class="text-end">
-                                        <button type="button" class="btn btn-secondary btn-sm"
-                                            th:attr="data-student-id=${student.studentId}"
-                                            onclick="showResponses(this)">
-                                            View Responses
-                                        </button>
-                                    </td>
                                 </tr>
-
                             </tbody>
                         </table>
-            </div>
-            </li>
+                    </li>
             </ul>
+        </div>
         </div>
         <div class="text-center mt-4" style="padding-bottom: 40px;">
             <a href="/instructor/viewEvaluations" class="btn btn-secondary" style="width: 100%;">Back to Evaluations</a>
@@ -218,7 +218,7 @@
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
         function updateDueDate() {
@@ -265,30 +265,172 @@
         }
 
         function showResponses(button) {
-            const studentId = button.getAttribute("data-student-id");
-            const modalBody = document.getElementById("responseModalBody");
+    const studentId = button.getAttribute("data-student-id");
+    const evaluationId = button.getAttribute("data-evaluation-id");
+
+    // Create a modal if it doesn't already exist
+    const modalHtml = `
+        <div class="modal fade" id="responseModal" tabindex="-1" aria-labelledby="responseModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="responseModalLabel">Responses</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="responseModalBody">
+                        <!-- Responses will be dynamically inserted here -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Append the modal to the body if it doesn't already exist
+    if (!document.getElementById("responseModal")) {
+        document.body.insertAdjacentHTML("beforeend", modalHtml);
+    }
+
+    // Get the modal body element
+    const modalBody = document.getElementById("responseModalBody");
+    if (!modalBody) {
+        console.error("Modal body element with ID 'responseModalBody' not found.");
+        return;
+    }
+
+    // Clear any existing content in the modal body
+    modalBody.innerHTML = "<p>Loading responses...</p>";
+
+    // Show the modal
+    const responseModal = new bootstrap.Modal(document.getElementById("responseModal"));
+    responseModal.show();
+
+    // Fetch evaluation responses from the server
+    fetch('/evaluation/getResponses', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ studentId: parseInt(studentId), evaluationId: parseInt(evaluationId) })
+    })
+        .then(response => {
+            if (response.ok) {
+                return response.json(); // Parse as JSON
+            } else {
+                throw new Error("Failed to fetch evaluation responses.");
+            }
+        })
+        .then(data => {
+            console.log("Parsed JSON:", data); // Debugging log
             modalBody.innerHTML = "";
 
-            // Filter and display questions + responses
-            evaluationData.evaluationQuestions.forEach(q => {
-                const response = q.evaluationResponse;
-                if (response && response.ratedStudent.studentId == studentId) {
-                    const questionText = q.questionText || "Question";
+            if (data && data.evaluationResponses) {
+                data.evaluationResponses.forEach(response => {
+                    const questionText = response.questionText || "Question";
                     const responseText = response.responseText || "No response";
+                    const studentWhoGave = response.studentWhoGaveFeedback?.studentName || "Unknown";
+                    const studentWhoReceived = response.studentWhoReceivedFeedback?.studentName || "Unknown";
 
-                    const questionDiv = document.createElement("div");
-                    questionDiv.innerHTML = `
-                <div class="mb-3">
-                    <h6><strong>Q:</strong> ${questionText}</h6>
-                    <p><strong>A:</strong> ${responseText}</p>
+                    const responseDiv = document.createElement("div");
+                    responseDiv.classList.add("mb-3");
+                    responseDiv.innerHTML = `
+                        <h6><strong>Feedback From:</strong> ${studentWhoGave}</h6>
+                        <h6><strong>Feedback To:</strong> ${studentWhoReceived}</h6>
+                        <h6><strong>Q:</strong> ${questionText}</h6>
+                        <p><strong>A:</strong> ${responseText}</p>
+                    `;
+                    modalBody.appendChild(responseDiv);
+                });
+            } else {
+                modalBody.innerHTML = "<p>No responses available.</p>";
+            }
+        })
+        .catch(error => {
+            console.error(error);
+            modalBody.innerHTML = "<p>Error fetching responses.</p>";
+        });
+}
+
+        function extendDeadline(button) {
+    // Retrieve the studentId and evaluationId from the button's data attributes
+    const studentId = button.getAttribute("data-student-id");
+    const evaluationId = button.getAttribute("data-evaluation-id");
+
+    // Create a modal with a date picker for the new deadline
+    const modalHtml = `
+        <div class="modal fade" id="deadlineModal" tabindex="-1" aria-labelledby="deadlineModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deadlineModalLabel">Extend Deadline</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <label for="newDeadlineInput" class="form-label">Select New Deadline:</label>
+                        <input type="date" id="newDeadlineInput" class="form-control">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="closeModal('deadlineModal')">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="saveDeadlineButton">Save</button>
+                    </div>
                 </div>
-            `;
-                    modalBody.appendChild(questionDiv);
-                }
-            });
+            </div>
+        </div>
+    `;
 
-            const modal = new bootstrap.Modal(document.getElementById('responseModal'));
-            modal.show();
+    // Append the modal to the body if it doesn't already exist
+    if (!document.getElementById("deadlineModal")) {
+        document.body.insertAdjacentHTML("beforeend", modalHtml);
+    }
+
+    // Show the modal
+    const deadlineModal = new bootstrap.Modal(document.getElementById("deadlineModal"));
+    deadlineModal.show();
+
+    // Add event listener to the save button
+    document.getElementById("saveDeadlineButton").onclick = function () {
+        const newDeadline = document.getElementById("newDeadlineInput").value;
+
+        if (!newDeadline) {
+            alert("No date selected. Deadline extension canceled.");
+            return;
+        }
+
+        // Validate the date format
+        const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+        if (!dateRegex.test(newDeadline)) {
+            alert("Invalid date format. Please use YYYY-MM-DD.");
+            return;
+        }
+
+        // Send the data to the server
+        fetch('/evaluation/extendDeadline', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ studentId: studentId, evaluationId: evaluationId, newDeadline: newDeadline })
+        })
+            .then(response => {
+                if (response.ok) {
+                    alert("Deadline extended successfully!");
+                    deadlineModal.hide();
+                    return response.json();
+                } else {
+                    alert("Failed to extend deadline.");
+                    throw new Error("Failed to extend deadline.");
+                }
+            })
+            .catch(error => console.error(error));
+    };
+}
+
+        function closeModal(modalId) {
+            const modalElement = document.getElementById(modalId);
+            if (modalElement) {
+                const modalInstance = bootstrap.Modal.getInstance(modalElement);
+                if (modalInstance) {
+                    modalInstance.hide();
+                }
+            }
         }
     </script>
 </body>

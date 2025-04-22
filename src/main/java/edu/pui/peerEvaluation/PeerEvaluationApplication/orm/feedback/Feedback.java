@@ -18,12 +18,14 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 @Data
 @Entity
 @Table(name = "feedback")
-@ToString(exclude = {"project", "ratedByStudent", "ratedStudent", "evaluation", "group", "responses"})
+@ToString(exclude = {"project", "ratedByStudent", "ratedStudent", "evaluation", "group", "responses", "ratedByStudent", "evaluation"})
+@EqualsAndHashCode(exclude = { "ratedByStudent", "evaluation" }) // Exclude relationships
 public class Feedback {
 
     @Id

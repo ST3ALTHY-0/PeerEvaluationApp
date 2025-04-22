@@ -48,6 +48,11 @@ public class MainController {
         return "student/error";
     }
 
+    @GetMapping("/login")
+    public String login(){
+        return "student/login";
+    }
+
     // @GetMapping("/error")
     // public String error() {
     //     return "error";

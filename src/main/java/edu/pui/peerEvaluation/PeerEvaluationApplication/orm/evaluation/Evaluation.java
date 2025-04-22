@@ -34,8 +34,8 @@ import lombok.ToString;
 @Data
 @Entity
 @Table(name = "evaluation")
-@EqualsAndHashCode(exclude = { "evaluationQuestions", "project", "groupCategories" })
-@ToString(exclude = { "project", "groupCategories", "feedbacks", "evaluationQuestions" })
+@EqualsAndHashCode(exclude = { "evaluationQuestions", "project", "groupCategories, evaluationOverrides" })
+@ToString(exclude = { "project", "groupCategories", "feedbacks", "evaluationQuestions, evaluationOverrides" })
 public class Evaluation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

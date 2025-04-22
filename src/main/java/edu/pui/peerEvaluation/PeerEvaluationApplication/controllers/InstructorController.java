@@ -94,11 +94,19 @@ public class InstructorController {
 
     @GetMapping("/dashboard")
     public String instructorDashboard(HttpSession session) {
+        Integer instructorId = (Integer) session.getAttribute("instructorId");
+        if (instructorId == null) {
+            return "student/login"; // Redirect to login if session is invalid
+        }
         return "instructor/dashboard";
     }
 
     @GetMapping("/viewEvaluations")
     public String viewEvaluations(HttpSession session, Model model) {
+        Integer instructorId = (Integer) session.getAttribute("instructorId");
+        if (instructorId == null) {
+            return "instructor/login"; // Redirect to login if session is invalid
+        }
 
         List<Evaluation> evaluations = evaluationService
                 .findEvaluationsByInstructorId(((Integer) session.getAttribute("instructorId")));
@@ -118,7 +126,11 @@ public class InstructorController {
 
     @GetMapping("/createEvaluation")
     public String createEvaluation(HttpSession session, Model model) {
+        
         Integer instructorId = (Integer) session.getAttribute("instructorId");
+        if (instructorId == null) {
+            return "instructor/login"; // Redirect to login if session is invalid
+        }
         model.addAttribute("instructorId", instructorId);
         System.out.println("Passing instructorId: " + instructorId);
         return "instructor/createEvaluation";
@@ -160,14 +172,14 @@ public class InstructorController {
         // rename points grade to something else so its a weighted grade instead of
         // numeric
         data.add(new String[] { "OrgDefinedId",
-                evaluation.getProject().getProjectName() + " evaluation" + " Points Grade", "End-of-Line Indicator" });
+                evaluation.getProject().getFullProjectName(), "End-of-Line Indicator" });
 
         List<Student> students = evaluationService.findStudentsAssignedToEvaluation(evaluationId);
 
         data.addAll(students.stream()
                 .map(student -> new String[] {
                         student.getPuid(),
-                        saveDataToCSV.calculateAverageGrade(student.getStudentId(), evaluationId),
+                        Integer.toString(saveDataToCSV.calculateFinalGrade(evaluationId, evaluationId, saveDataToCSV.calculateAverageGrade(student.getStudentId(), evaluationId))),
                         "#"
                 })
                 .toList());
@@ -184,7 +196,12 @@ public class InstructorController {
     }
 
     @GetMapping("/viewEvaluation/details/{id}")
-    public String viewEvaluationDetails(@PathVariable("id") Integer evaluationId, Model model) {
+    public String viewEvaluationDetails(@PathVariable("id") Integer evaluationId, Model model, HttpSession session) {
+        Integer instructorId = (Integer) session.getAttribute("instructorId");
+        if (instructorId == null) {
+            return "instructor/login"; // Redirect to login if session is invalid
+        }
+
         Optional<Evaluation> evaluationOptional = evaluationService.findById(evaluationId);
 
         if (evaluationOptional.isEmpty()) {

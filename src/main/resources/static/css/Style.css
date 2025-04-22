@@ -56,3 +56,17 @@ body {
     position: absolute; /* Ensure it doesn't overlap content */
     width: 100%;
 }
+
+.tooltip-icon {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    border-radius: 50%;
+    background-color: #CEB888;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    margin-left: 5px;
+}

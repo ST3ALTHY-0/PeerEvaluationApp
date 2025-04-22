@@ -2,94 +2,46 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <title>Login</title>
+    <title>Feedback Submitted</title>
     <!-- Bootstrap CDN link -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <!-- Google Fonts for better typography -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link href="/css/Style.css" rel="stylesheet">
-
+    <link href="/css/tempPurdueCard.css" rel="stylesheet">
     <style>
+        .btn-primary {
+    background-color: #000;
+    color: #CEB888;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 25px;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: background 0.3s ease;
+  }
+  
+  .btn-primary:hover {
+    background-color: #5a6268;
+    /* background: linear-gradient(45deg, #5a32aa, #0069d9); */
+  }
 
         .container {
-            margin-top: 100px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .card {
-            border: none;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effect */
-        }
-
-        .card:hover {
-            transform: translateY(-5px); /* Lift the card on hover */
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-        }
-
-        .card-header {
-            background-color: #007bff; /* Matching the navbar color */
-            color: white;
-            border-top-left-radius: 10px;
-            border-top-right-radius: 10px;
-            font-weight: 500;
-            font-size: 1.25rem;
-        }
-
-        .card-body {
-            padding: 30px;
-        }
-
-        .card-text {
-            font-size: 1.1rem;
-            color: #495057; /* Darker text for better contrast */
-            margin-bottom: 20px;
-        }
-
-        .btn-custom {
-            background-color: #007bff; /* Matching the navbar color */
-            color: white;
-            border: none;
-            border-radius: 5px;
-            padding: 10px 20px;
-            font-size: 1rem;
-            transition: background-color 0.3s ease; /* Smooth hover effect */
-        }
-
-        .btn-custom:hover {
-            background-color: #0056b3; /* Darker shade on hover */
-        }
-
-
-        /* Responsive adjustments */
-        @media (max-width: 576px) {
-            .container {
-                margin-top: 50px;
-                padding: 0 15px;
-            }
-
-            .card {
-                margin: 0 10px;
-            }
-
-            .card-header {
-                font-size: 1.1rem;
-            }
-
-            .card-text {
-                font-size: 1rem;
-            }
-
-            .btn-custom {
-                width: 100%; /* Full-width button on small screens */
-            }
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
 
 <body>
     <nav class="navbar navbar-expand-lg">
-        <a class="navbar-brand">Peer Evaluation</a>
+        <a class="navbar-brand" href="#">Purdue Peer Evaluation</a>
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
@@ -100,25 +52,21 @@
     </nav>
 
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header text-center">
-                        Submitted!
-                    </div>
-                    <div class="card-body text-center">
-                        <p class="card-text">Thank you for completing the evaluation.</p>
-                        <a class="btn btn-custom" href="/student/dashboard">Home</a>
-                    </div>
+        <div class="col-md-6 col-lg-5">
+            <div class="card">
+                <div class="card-header text-center">
+                    Feedback Submitted
+                </div>
+                <div class="card-body text-center">
+                    <p class="card-text">Thank you for completing the evaluation.</p>
+                    <a class="btn btn-primary btn-block" href="/student/dashboard">Back to Dashboard</a>
                 </div>
             </div>
         </div>
     </div>
 
     <footer class="footer">
-        <div class="container2">
-            <span>© 2025 Peer Evaluation. All rights reserved.</span>
-        </div>
+        <span>© 2025 Purdue Peer Evaluation. All rights reserved.</span>
     </footer>
 
     <!-- Bootstrap JS and dependencies -->

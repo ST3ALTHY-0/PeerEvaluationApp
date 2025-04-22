@@ -89,7 +89,7 @@
         <div class="form-group">
             <div class="form-check">
             <input class="form-check-input" type="checkbox" id="useStandardForm" name="useStandardForm" checked>
-            <label class="form-check-label" for="useStandardForm">Use Standard Evaluation Form</label>
+            <label class="form-check-label" for="useStandardForm">Use Standard Evaluation Form Questions</label>
             </div>
 
             <!-- always pass a true value to 'enableGrading', later we can get rid of this function if its decided that all evaluations will always be graded  -->
@@ -177,7 +177,7 @@
       function toggleFormOptions() {
         var isChecked = $('#useStandardForm').is(':checked');
         $('#NumberOfQuestions').prop('disabled', isChecked);
-        $('#allowStudentToViewFeedback').prop('disabled', isChecked);
+        // $('#allowStudentToViewFeedback').prop('disabled', isChecked);
         $('#enableGrading').prop('disabled', isChecked);
       }
 

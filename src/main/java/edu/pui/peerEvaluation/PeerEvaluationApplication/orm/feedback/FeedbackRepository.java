@@ -8,5 +8,6 @@ public interface FeedbackRepository extends BaseEntityRepository<Feedback, Integ
 
 
     //find the avg grade received
+    boolean existsByEvaluationEvaluationIdAndRatedByStudentStudentIdAndRatedStudentStudentId(int evaluationId, int ratedByStudentId, int ratedStudentId);
 
 }

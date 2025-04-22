@@ -15,6 +15,8 @@ import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.student.Student;
 @Service
 public class BrightSpaceCSVParser {
 
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(BrightSpaceCSVParser.class);
+
     public List<CSVData> parseDataFromCSV(MultipartFile csvFile) throws Exception {
         final List<CSVData> csvDataList = new ArrayList<>();
         final CSVReader reader = new CSVReader(new InputStreamReader(csvFile.getInputStream()));
@@ -38,9 +40,14 @@ public class BrightSpaceCSVParser {
             }
         }
         if (subtotalNumeratorIndex == -1 || subtotalDenominatorIndex == -1) {
+            projectName = headers[5].substring(0, headers[5].indexOf("Points Grade")).trim();
+
             reader.close();
-            throw new Exception("Required columns not found in CSV");
+            // throw new Exception("Required columns not found in CSV");
         }
+
+        // Get the 6th header and set it as the full project name
+        String fullProjectName = headers[5];
 
         // set the CSVData with the indexs of the headers (csv must be a certain way)
         String[] nextLine;
@@ -51,6 +58,8 @@ public class BrightSpaceCSVParser {
             data.setLastName(nextLine[2]);
             data.setStudentEmail(nextLine[3]);
             data.setLabGroup(nextLine[4]);
+            data.setFullProjectName(fullProjectName);
+            logger.info("FULL PROJECT NAME: " + nextLine[5]);
             data.setProjectNumerator(Integer.parseInt(nextLine[subtotalNumeratorIndex]));
             data.setProjectDenominator(Integer.parseInt(nextLine[subtotalDenominatorIndex]));
 
@@ -72,6 +81,7 @@ public class BrightSpaceCSVParser {
 
             project.setProjectName(csvData.getProjectName());
             project.setPointsWorth(csvData.getProjectDenominator());
+            project.setFullProjectName(csvData.getFullProjectName());
             student.setPuid(csvData.getPuid().replace("#", ""));
             student.setStudentName(csvData.getFirstName() + " " + csvData.getLastName());
             student.setStudentEmail(csvData.getStudentEmail());

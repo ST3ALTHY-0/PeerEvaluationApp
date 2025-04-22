@@ -75,6 +75,21 @@ public String studentViewEvaluations(HttpSession session, Model model) {
         return "student/login"; // Redirect to login if session is invalid
     }
     List<Evaluation> userEvalList = evaluationService.findEvaluationsWithoutStudentFeedback(studentId);
+    //TODO: only select evaluations not past dueDate, and if there is an evaluationOverride for this student, not past that deadline
+    userEvalList.removeIf(evaluation -> {
+        boolean isPastDueDate = evaluation.getDueDate().isBefore(java.time.LocalDate.now().atStartOfDay());
+        boolean hasOverride = evaluation.getEvaluationOverrides().stream()
+            .anyMatch(override -> override.getStudent().getStudentId().equals(studentId));
+        boolean isPastOverrideDate = hasOverride && evaluation.getEvaluationOverrides().stream()
+            .filter(override -> override.getStudent().getStudentId().equals(studentId))
+            .findFirst()
+            .map(override -> override.getExtendedDeadline().isBefore(java.time.LocalDate.now().atStartOfDay()))
+            .orElse(false);
+
+        boolean hasResponded = evaluationService.hasStudentRespondedToEvaluation(studentId, evaluation.getEvaluationId());
+        // boolean isCompleted = evaluationService.isEvaluationCompletedByStudent(studentId, evaluation.getEvaluationId());
+        return isPastDueDate || isPastOverrideDate || hasResponded;
+    });
     model.addAttribute("userEvalList", userEvalList);
     return "student/viewEvaluations";
 }

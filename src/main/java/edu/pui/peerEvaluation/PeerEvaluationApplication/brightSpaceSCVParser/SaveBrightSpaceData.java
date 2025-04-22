@@ -66,6 +66,7 @@ public class SaveBrightSpaceData {
     private final StandardEvaluation standardEvaluation;
     private final FeedbackService feedbackService;
     private final EvaluationResponseService evaluationResponseService;
+
     private static final Logger logger = LoggerFactory.getLogger(SaveBrightSpaceData.class);
 
     @PersistenceContext
@@ -209,8 +210,11 @@ public class SaveBrightSpaceData {
 
         evaluation.setProject(project);
 
+        evaluation.setGraded(true);
+
+        evaluation.setAllowStudentsToViewFeedback(evaluationFormDTO.isAllowStudentToViewFeedback());
+
         if (evaluationFormDTO.isUseStandardForm()) {
-            evaluation.setGraded(standardEvaluation.getIsGraded());
             // Save the standard evaluation questions if they are not already saved
             List<EvaluationQuestion> savedQuestions = new ArrayList<>();
             for (EvaluationQuestion question : standardEvaluation.getEvaluationQuestions()) {
@@ -243,7 +247,6 @@ public class SaveBrightSpaceData {
                     evaluation.getEvaluationQuestions().add(evaluationQuestion);
                 }
             }
-            evaluation.setGraded(evaluationFormDTO.isEnableGrading());
         }
 
         //add the groupCategory to the evaluation
@@ -342,4 +345,6 @@ public class SaveBrightSpaceData {
 
         return instructorService.save(instructor);
     }
+
+    
 }

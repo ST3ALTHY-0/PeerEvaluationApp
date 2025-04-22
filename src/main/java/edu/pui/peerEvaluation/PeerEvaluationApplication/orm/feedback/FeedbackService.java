@@ -40,6 +40,10 @@ public class FeedbackService extends BaseEntityService<Feedback, Integer>{
         this.projectService = projectService;
     }
 
+    public boolean existsByEvaluationIdAndRatedByStudentIdAndRatedStudentId(int evaluationId, int ratedByStudentId, int ratedStudentId) {
+        return feedbackRepository.existsByEvaluationEvaluationIdAndRatedByStudentStudentIdAndRatedStudentStudentId(evaluationId, ratedByStudentId, ratedStudentId);
+    }
+
     @Override
     protected BaseEntityRepository<Feedback, Integer> getRepository() {
         return feedbackRepository;

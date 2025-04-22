@@ -8,4 +8,6 @@ import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.student.Student;
 
 @Repository
 public interface StudentGradeRepository extends BaseEntityRepository<StudentGrade, Integer> {
+
+    StudentGrade findByStudentStudentIdAndProjectProjectId(Integer studentId, Integer projectId);
 }

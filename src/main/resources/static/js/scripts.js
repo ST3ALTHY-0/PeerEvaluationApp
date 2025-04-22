@@ -5,3 +5,7 @@ function navigateToCreateEvaluation() {
 function navigateToViewEvaluations() {
     location.href = '/viewEvaluations';
 }
+
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip();
+});

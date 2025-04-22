@@ -31,6 +31,9 @@ public class CSVData {
 
     private String projectName;
 
+    private String fullProjectName;
+
+
     
 }
 

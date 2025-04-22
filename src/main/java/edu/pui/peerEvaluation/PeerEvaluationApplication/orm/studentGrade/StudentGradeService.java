@@ -17,6 +17,10 @@ public class StudentGradeService extends BaseEntityService<StudentGrade, Integer
         this.studentGradeRepository = studentGradeRepository;
     }
 
+    public StudentGrade findByStudentIdAndProjectId(Integer studentId, Integer projectId) {
+        return studentGradeRepository.findByStudentStudentIdAndProjectProjectId(studentId, projectId);
+    }
+
 
     @Override
     protected BaseEntityRepository<StudentGrade, Integer> getRepository() {
