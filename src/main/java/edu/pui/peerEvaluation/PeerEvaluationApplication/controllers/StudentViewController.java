@@ -94,16 +94,22 @@ public String studentViewEvaluations(HttpSession session, Model model) {
     return "student/viewEvaluations";
 }
 
-//TODO
 @GetMapping("/viewPastEvaluations")
 public String studentViewPastEvaluations(HttpSession session, Model model) {
     Integer studentId = (Integer) session.getAttribute("studentId");
     if (studentId == null) {
         return "student/login"; // Redirect to login if session is invalid
     }
+    //find evaluations that this student has completed
     List<Evaluation> userEvalList = evaluationService.findAllByStudentIdWithFeedback(studentId);
-    model.addAttribute("userEvalList", userEvalList);
-    return "viewPastEvaluations";
+
+    //filter out evaluations that allowStudentsToViewFeedback == false;
+    List<Evaluation> filteredEvalList = userEvalList.stream()
+        .filter(eval -> eval.isAllowStudentsToViewFeedback())
+        .toList();
+
+    model.addAttribute("userEvalList", filteredEvalList);
+    return "student/viewPastEvaluations";
 }
 
 @GetMapping("/completeEvaluation")
@@ -124,6 +130,22 @@ public String studentCompleteEvaluation(HttpSession session, Model model,
     model.addAttribute("maxScore", maxScore);
 
     return "student/completeEvaluation";
+}
+
+@GetMapping("/viewEvaluationDetails")
+public String viewEvaluationDetails(HttpSession session, Model model,
+        @RequestParam("evaluationId") int evaluationId) {
+    Integer studentId = (Integer) session.getAttribute("studentId");
+    if (studentId == null) {
+        return "student/login"; // Redirect to login if session is invalid
+    }
+    Evaluation evaluation = evaluationService.findById(evaluationId).get();
+
+    model.addAttribute("currentStudentId", studentId);
+    model.addAttribute("evaluation", evaluation);
+
+
+    return "student/viewEvaluationDetails";
 }
 
 }
