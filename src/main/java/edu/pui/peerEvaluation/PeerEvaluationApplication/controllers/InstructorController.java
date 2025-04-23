@@ -96,7 +96,7 @@ public class InstructorController {
     public String instructorDashboard(HttpSession session) {
         Integer instructorId = (Integer) session.getAttribute("instructorId");
         if (instructorId == null) {
-            return "student/login"; // Redirect to login if session is invalid
+            return "student/login"; 
         }
         return "instructor/dashboard";
     }
@@ -105,7 +105,7 @@ public class InstructorController {
     public String viewEvaluations(HttpSession session, Model model) {
         Integer instructorId = (Integer) session.getAttribute("instructorId");
         if (instructorId == null) {
-            return "instructor/login"; // Redirect to login if session is invalid
+            return "instructor/login";
         }
 
         List<Evaluation> evaluations = evaluationService
@@ -129,10 +129,10 @@ public class InstructorController {
         
         Integer instructorId = (Integer) session.getAttribute("instructorId");
         if (instructorId == null) {
-            return "instructor/login"; // Redirect to login if session is invalid
+            return "instructor/login"; 
         }
+
         model.addAttribute("instructorId", instructorId);
-        System.out.println("Passing instructorId: " + instructorId);
         return "instructor/createEvaluation";
     }
 
