@@ -24,7 +24,7 @@
             display: flex;
             flex-direction: column;
             gap: 1.5rem;
-            padding-bottom: 60px; /* Add padding to the bottom to prevent buttons from being hidden */
+            padding-bottom: 60px; 
         }
 
 
@@ -59,7 +59,7 @@
             gap: 0;
             align-items: center;
             text-align: center;
-            width: 100%; /* Ensures both header and containers span the full width */
+            width: 100%; 
         }
 
 
@@ -80,9 +80,7 @@
         .evaluationHeader div,
         .evaluationContainerElement {
             flex: 1;
-            min-width: 150px; /* Adjust this value as needed */
-            /* padding: 0.5rem; Add consistent padding */
-            /* box-sizing: border-box; Include padding in width calculation */
+            min-width: 150px; 
         }
 
 
@@ -124,7 +122,7 @@
 
         .evaluationContainer a.stretched-link {
             position: absolute;
-            inset: 0; /* Make sure it covers the whole div */
+            inset: 0; 
         }
 
 
@@ -216,7 +214,6 @@
 
 
 
-        /* Responsive adjustments */
         @media (max-width: 576px) {
             .container {
                 margin-top: 5vh;
@@ -278,7 +275,8 @@
     <div class="container">
         <h1 class="text-center" style="padding-top: 100px;">Choose Evaluation to Edit or View Details About</h1>
         <div class="formContainer">
-            <!-- add column names -->
+
+            <!-- Column names -->
             <div class="evaluationHeader">
                 <div>Class</div>
                 <div>Project</div>
@@ -333,14 +331,6 @@
 
 
 
-
-    <!-- <footer class="footer" style="margin-top: auto;">
-        <span>© 2025 Peer Evaluation. All rights reserved.</span>
-    </footer> -->
-
-
-
-
     <!-- Bootstrap JS and dependencies -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
@@ -348,10 +338,10 @@
 
 
     <script>
+        //Because the export button is in a element that is clickable we have to stop event propagation
         function handleExport(event, button) {
             event.stopPropagation();  // Prevent bubbling so as to not go to evaluation/details
-            event.preventDefault();   // Stop the default anchor action
-   
+            event.preventDefault();
             // Redirect manually to the CSV download URL
             window.location.href = button.getAttribute("data-href");
         }

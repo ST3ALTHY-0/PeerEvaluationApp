@@ -64,9 +64,4 @@ public class Project {
     @OneToMany(mappedBy = "project")
     private List<ProjectGroup> projectGroups;
     
-    //TODO:
-    /* 
-    @OneToMany(mappedBy = "project")
-    private List<GroupCategory> groupCategories;
-     */
 }

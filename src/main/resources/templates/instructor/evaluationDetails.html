@@ -156,13 +156,6 @@
                 <button class="btn btn-primary" onclick="updateDueDate()">Update</button>
             </div>
         </div>
-        
-
-        <!-- <div class="mb-3">
-            <label class="form-label"><strong>Due Date:</strong></label>
-            <input type="date" class="form-control" th:value="${evaluation.dueDate}" id="dueDate">
-            <button class="btn btn-primary mt-2" onclick="updateDueDate()">Update Due Date</button>
-        </div> -->
 
         <!-- Groups & Students Section -->
         <h3>Groups</h3>
@@ -212,9 +205,6 @@
         </div>
     </div>
 
-    <!-- <footer class="footer">
-        <span>© 2025 Peer Evaluation. All rights reserved.</span>
-</footer> -->
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
@@ -266,7 +256,7 @@
 
         function showResponses(button) {
     const studentId = button.getAttribute("data-student-id");
-    const evaluationId = button.getAttribute("data-evaluation-id");
+    const evaluationId = button.getAttribute("data-evaluation-id"); //could just use thymeleaf notation
 
     // Create a modal if it doesn't already exist
     const modalHtml = `

@@ -34,8 +34,8 @@ import lombok.ToString;
 @Data
 @Entity
 @Table(name = "evaluation")
-@EqualsAndHashCode(exclude = { "evaluationQuestions", "project", "groupCategories, evaluationOverrides" })
-@ToString(exclude = { "project", "groupCategories", "feedbacks", "evaluationQuestions, evaluationOverrides" })
+@EqualsAndHashCode(exclude = { "evaluationQuestions", "project"})
+@ToString(exclude = { "project", "feedbacks"})
 public class Evaluation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -66,13 +66,6 @@ private List<EvaluationQuestion> evaluationQuestions = new ArrayList<>();
     @OneToMany(mappedBy = "evaluation", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Feedback> feedbacks = new ArrayList<>();;
 
-    // @ManyToMany
-    // @JoinTable(
-    // name = "group_category_evaluations",
-    // joinColumns = @JoinColumn(name = "evaluation_id"),
-    // inverseJoinColumns = @JoinColumn(name = "group_category_id")
-    // )
-    // private Set<GroupCategory> groupCategories = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "groupCategoryId", nullable = false)
@@ -81,8 +74,4 @@ private List<EvaluationQuestion> evaluationQuestions = new ArrayList<>();
     @OneToMany(mappedBy = "evaluation")
     private List<EvaluationOverride> evaluationOverrides;
 
-    /*
-     * Select e from Evaluation e Join project p on
-     * 
-     */
 }

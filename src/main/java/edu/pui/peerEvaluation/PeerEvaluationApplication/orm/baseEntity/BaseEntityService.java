@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 
-
+//Base entity service class that all my other entities service classes will extend
 public abstract class BaseEntityService<T, ID> {
 
     protected abstract BaseEntityRepository<T, ID> getRepository();

@@ -22,22 +22,12 @@ import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.student.StudentServi
 public class FeedbackService extends BaseEntityService<Feedback, Integer>{
 
     private final FeedbackRepository feedbackRepository;
-    private final ProjectGroupService projectGroupService;
-    private final StudentService studentService;
-    private final EvaluationService evaluationService;
-    private final EvaluationQuestionService evaluationQuestionService;
-    private final ProjectService projectService;
+
 
     @Autowired
-    public FeedbackService(FeedbackRepository feedbackRepository, ProjectGroupService projectGroupService,
-            StudentService studentService, EvaluationService evaluationService,
-            EvaluationQuestionService evaluationQuestionService, ProjectService projectService) {
+    public FeedbackService(FeedbackRepository feedbackRepository) {
         this.feedbackRepository = feedbackRepository;
-        this.projectGroupService = projectGroupService;
-        this.studentService = studentService;
-        this.evaluationService = evaluationService;
-        this.evaluationQuestionService = evaluationQuestionService;
-        this.projectService = projectService;
+
     }
 
     public boolean existsByEvaluationIdAndRatedByStudentIdAndRatedStudentId(int evaluationId, int ratedByStudentId, int ratedStudentId) {

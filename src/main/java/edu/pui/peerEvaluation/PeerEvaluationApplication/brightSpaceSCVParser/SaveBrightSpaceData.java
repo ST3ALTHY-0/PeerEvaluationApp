@@ -51,13 +51,15 @@ import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.studentGrade.Student
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
+/*
+ * Despite this class being named SaveBrightSpaceData, we actually use this class to save almost all the data to the DB
+ */
 @Service
 public class SaveBrightSpaceData {
 
     private final StudentService studentService;
     private final ProjectGroupService projectGroupService;
     private final InstructorService instructorService;
-    private final MyClassService myClassService;
     private final GroupCategoryService groupCategoryService;
     private final ProjectService projectService;
     private final StudentGradeService studentGradeService;
@@ -65,7 +67,6 @@ public class SaveBrightSpaceData {
     private final EvaluationService evaluationService;
     private final StandardEvaluation standardEvaluation;
     private final FeedbackService feedbackService;
-    private final EvaluationResponseService evaluationResponseService;
 
     private static final Logger logger = LoggerFactory.getLogger(SaveBrightSpaceData.class);
 
@@ -74,17 +75,15 @@ public class SaveBrightSpaceData {
 
     @Autowired
     public SaveBrightSpaceData(StudentService studentService, ProjectGroupService projectGroupService,
-            InstructorService instructorService, MyClassService myClassService,
+            InstructorService instructorService,
             GroupCategoryService groupCategoryService, ProjectService projectService,
             StudentGradeService studentGradeService, EvaluationQuestionService evaluationQuestionService,
             EvaluationService evaluationService,
             StandardEvaluation standardEvaluation,
-            FeedbackService feedbackService,
-            EvaluationResponseService evaluationResponseService) {
+            FeedbackService feedbackService) {
         this.studentService = studentService;
         this.projectGroupService = projectGroupService;
         this.instructorService = instructorService;
-        this.myClassService = myClassService;
         this.groupCategoryService = groupCategoryService;
         this.projectService = projectService;
         this.studentGradeService = studentGradeService;
@@ -92,7 +91,6 @@ public class SaveBrightSpaceData {
         this.evaluationService = evaluationService;
         this.standardEvaluation = standardEvaluation;
         this.feedbackService = feedbackService;
-        this.evaluationResponseService = evaluationResponseService;
     }
 
     Map<String, ProjectGroup> projectGroupMap = new HashMap<>();
@@ -205,14 +203,11 @@ public class SaveBrightSpaceData {
         LocalDate dueDate = LocalDate.parse(evaluationFormDTO.getDueDate());
         LocalDateTime dueDateTime = dueDate.atStartOfDay();
         evaluation.setDueDate(dueDateTime);
-
         evaluation.setCreatedAt(LocalDateTime.now());
-
         evaluation.setProject(project);
-
         evaluation.setGraded(true);
-
         evaluation.setAllowStudentsToViewFeedback(evaluationFormDTO.isAllowStudentToViewFeedback());
+
 
         if (evaluationFormDTO.isUseStandardForm()) {
             // Save the standard evaluation questions if they are not already saved
@@ -279,15 +274,6 @@ public class SaveBrightSpaceData {
         }
         newEntityList.add(entity);
         return newEntityList;
-    }
-
-    private static <T> Set<T> getAndAddEntityToSet(Iterable<T> entities, T entity) {
-        Set<T> newEntitySet = new HashSet<>();
-        if (entities != null) {
-            entities.forEach(newEntitySet::add);
-        }
-        newEntitySet.add(entity);
-        return newEntitySet;
     }
 
     @Transactional

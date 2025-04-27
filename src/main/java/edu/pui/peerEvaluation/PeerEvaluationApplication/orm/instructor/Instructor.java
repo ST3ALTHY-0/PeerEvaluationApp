@@ -30,9 +30,6 @@ public class Instructor{
 
     private String puid;
 
-    // @OneToMany(mappedBy = "instructor")
-    // private List<MyClass> classes;
-
     @OneToMany(mappedBy = "instructor", cascade = CascadeType.ALL)
     private List<Project> projects;
 

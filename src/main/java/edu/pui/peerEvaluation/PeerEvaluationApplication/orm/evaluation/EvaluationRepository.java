@@ -42,10 +42,6 @@ public interface EvaluationRepository extends BaseEntityRepository<Evaluation, I
         List<Evaluation> findByProject_Instructor_InstructorId(
                 Integer instructorId);
 
-        //get number of students who have responded
-
-        //get number of students assigned to evaluation
-
         
         @Query("SELECT COUNT(s) FROM Evaluation e JOIN e.groupCategory gc JOIN gc.projectGroups pg JOIN pg.students s WHERE e.evaluationId = :evaluationId")
         Integer countStudentsAssignedToEvaluation(@Param("evaluationId") Integer evaluationId);
@@ -63,9 +59,6 @@ public interface EvaluationRepository extends BaseEntityRepository<Evaluation, I
 
     @Query("SELECT f FROM Feedback f WHERE f.evaluation.evaluationId = :evaluationId AND f.ratedByStudent.studentId = :studentId")
     List<Feedback> findFeedbacksByStudentInEvaluation(@Param("evaluationId") Integer evaluationId, @Param("studentId") Integer studentId);
-
-    // @Query("SELECT COUNT(f) > 0 FROM Feedback f WHERE f.evaluation.evaluationId = :evaluationId AND f.ratedByStudent.studentId = :studentId")
-    // boolean hasStudentRespondedToEvaluation(@Param("studentId") Integer studentId, @Param("evaluationId") Integer evaluationId);
 
     @Query("SELECT COUNT(f) > 0 FROM Feedback f WHERE f.evaluation.evaluationId = :evaluationId AND f.ratedByStudent.studentId = :studentId")
     boolean isEvaluationCompletedByStudent(@Param("studentId") Integer studentId, @Param("evaluationId") Integer evaluationId);

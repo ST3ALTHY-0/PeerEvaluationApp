@@ -9,8 +9,4 @@ import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.baseEntity.BaseEntit
 import java.util.List;
 
 public interface EvaluationResponseRepository extends BaseEntityRepository<EvaluationResponse, Integer> {
-
-    // @Query("SELECT er FROM evaluation_response er WHERE evaluationQuestion.evaluation_question_id = :evaluationQuestionId")
-    // EvaluationResponse selectByEvaluationQuestionId(Integer evaluationQuestionId);
-
 }

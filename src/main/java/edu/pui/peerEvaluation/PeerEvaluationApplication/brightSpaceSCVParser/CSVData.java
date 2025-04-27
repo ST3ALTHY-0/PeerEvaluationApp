@@ -22,8 +22,7 @@ public class CSVData {
     @CsvBindByName(column = "Lab Group")
     private String labGroup;
 
-    //is unimportant?? isnt used??
-    private Integer projectPointsGrade; //idk this seems to be null in my test csv
+    private Integer projectPointsGrade;
 
     private Integer projectNumerator;
 

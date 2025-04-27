@@ -108,7 +108,7 @@ Is there anything else you’d like to share about your experience working with 
               </span></label>
           </div>
 
-          <!-- always pass a true value to 'enableGrading', later we can get rid of this function if its decided that all evaluations will always be graded  -->
+          <!-- always pass a true value to 'enableGrading', later we can get rid of this function if its decided that all evaluations will always be graded | note: We always set true to isGraded for an evaluation even without this value  -->
           <input type="hidden" id="enableGrading" name="enableGrading" value="true">
           <!-- <div class="form-check" style="margin-top: 1vh;">
             <input class="form-check-input" type="checkbox" id="enableGrading" name="enableGrading" >
@@ -143,13 +143,6 @@ Is there anything else you’d like to share about your experience working with 
           </div>
         </div>
 
-        <!-- Buttons -->
-        <!-- <div class="form-row">
-          <div class="form-group col-auto">
-            <button type="button" id="previewButton" class="btn btn-primary">Preview Evaluation Form</button>
-          </div>
-        </div> -->
-
 
         <div class="form-row" style="margin-top: 4vh;">
           <div class="form-group col-md-6 text-left">
@@ -163,9 +156,6 @@ Is there anything else you’d like to share about your experience working with 
     </div>
   </div>
 
-  <!-- <footer class="footer">
-    <span>© 2025 Peer Evaluation. All rights reserved.</span>
-  </footer> -->
 
   <!-- Bootstrap JS and dependencies -->
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>

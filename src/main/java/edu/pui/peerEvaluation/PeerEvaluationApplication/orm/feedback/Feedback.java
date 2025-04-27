@@ -24,7 +24,7 @@ import lombok.ToString;
 @Data
 @Entity
 @Table(name = "feedback")
-@ToString(exclude = {"project", "ratedByStudent", "ratedStudent", "evaluation", "group", "responses", "ratedByStudent", "evaluation"})
+@ToString(exclude = {"project", "ratedByStudent", "ratedStudent", "evaluation", "group", "responses"})
 @EqualsAndHashCode(exclude = { "ratedByStudent", "evaluation" }) // Exclude relationships
 public class Feedback {
 

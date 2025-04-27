@@ -20,8 +20,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import edu.pui.peerEvaluation.PeerEvaluationApplication.DTO.LoginDTO;
-import edu.pui.peerEvaluation.PeerEvaluationApplication.brightSpaceApi.BrightSpaceAPIService;
-import edu.pui.peerEvaluation.PeerEvaluationApplication.brightSpaceApi.brightSpaceUser.*;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluation.Evaluation;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluation.EvaluationService;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.instructor.Instructor;

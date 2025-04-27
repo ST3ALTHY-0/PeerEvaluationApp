@@ -28,7 +28,8 @@ public class SaveStudentGradeToCSV {
     private final StudentService studentService;
     private final StudentGradeService studentGradeService;
 
-        private static final Logger logger = LoggerFactory.getLogger(SaveStudentGradeToCSV.class);
+    private static final String gradeIfStudentDoesNotSubmitFeedback = "0";
+    private static final Logger logger = LoggerFactory.getLogger(SaveStudentGradeToCSV.class);
 
 
     public SaveStudentGradeToCSV(EvaluationService evaluationService, StudentService studentService, StudentGradeService studentGradeService){
@@ -66,8 +67,9 @@ public String calculateAverageGrade(Integer studentId, Integer evaluationId) {
                                                  .stream()
                                                  .filter(f -> f.getGradePercent() != null)
                                                  .toList();
+    //if the student did not submit any feedback
     if(studentGivenFeedbacks.size() == 0){
-        return "0";
+        return gradeIfStudentDoesNotSubmitFeedback;
     }
     
     //get feedback from other students and filter out any where another student didnt rate the student we are grading, thus not affecting this students grade

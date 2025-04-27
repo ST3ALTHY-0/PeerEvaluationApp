@@ -34,17 +34,10 @@ public class GroupCategory {
         @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer groupCategoryId;
- 
-    // @ManyToOne
-    // @JoinColumn(name = "projectId", nullable = false)
-    // private Project project;
 
     @ManyToOne
     @JoinColumn(name = "classId", nullable = false)
     private MyClass myClass;
-
-    // @ManyToMany(mappedBy = "groupCategories")
-    // private Set<Evaluation> evaluations = new HashSet<>();
 
     @OneToMany(mappedBy = "groupCategory", cascade = CascadeType.ALL)
     private List<Evaluation> evaluations = new ArrayList<>();

@@ -23,7 +23,7 @@ import lombok.ToString;
 @Entity
 @Table(name = "class")
 @EqualsAndHashCode(exclude = {"projects", "groupCategories"})
-@ToString(exclude = {"instructor", "projects", "groupCategories"})
+@ToString(exclude = {"projects", "groupCategories"})
 public class MyClass {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,13 +32,6 @@ public class MyClass {
     private String className;
 
     private String classCode;
-
-    // manyToOne means that many classes can have the same instructor
-    //@ManyToOne
-    // JoinColumn means that the instructor will be related to classes via
-    // instructor_id (primary key)
-    // @JoinColumn(name = "instructorId")
-    // private Instructor instructor;
 
     @OneToMany(mappedBy = "myClass", cascade = CascadeType.ALL)
     private List<Project> projects;

@@ -31,8 +31,6 @@ import edu.pui.peerEvaluation.PeerEvaluationApplication.DTO.EvaluationFormDTO;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.DTO.EvaluationQuestionDTO;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.DTO.LoginDTO;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.DTO.SignUpDTO;
-import edu.pui.peerEvaluation.PeerEvaluationApplication.brightSpaceApi.BrightSpaceAPIService;
-import edu.pui.peerEvaluation.PeerEvaluationApplication.brightSpaceApi.brightSpaceGroup.BrightSpaceGroupCategory;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.brightSpaceSCVParser.SaveBrightSpaceData;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.exceptions.InstructorAlreadyExistsException;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluation.Evaluation;
