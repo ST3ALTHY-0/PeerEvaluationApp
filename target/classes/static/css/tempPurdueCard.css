@@ -1,0 +1,71 @@
+
+
+.container {
+    margin-top: auto;
+    margin-bottom: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Ensure the container takes up the full viewport height */
+    overflow: hidden; /* Prevent scrolling */
+}
+
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+    background-color: #CEB888;
+    color: #000;
+    font-weight: 600;
+    font-size: 1.4rem;
+    text-align: center;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    padding: 1rem 1.5rem;
+}
+
+.card-body {
+    padding: 2rem;
+}
+
+.card-text {
+    font-size: 1.1rem;
+    color: #333;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.form-control {
+    border-radius: 6px;
+}
+
+.form-control:focus {
+    border-color: #CEB888;
+    box-shadow: 0 0 0 0.2rem rgba(206, 184, 136, 0.25);
+}
+
+.btn-purdue {
+    background-color: #000;
+    color: #CEB888;
+    font-weight: 500;
+    border-radius: 6px;
+    padding: 0.6rem 1.2rem;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-purdue:hover {
+    background-color: #333;
+    transform: scale(1.02);
+}
+
+
+
+@media (max-width: 576px) {
+    .card {
+        margin: 0 10px;
+    }
+}

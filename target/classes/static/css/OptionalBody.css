@@ -1,0 +1,27 @@
+Purdue-Themed Background
+/* body {
+    height: 100vh;
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #1C1C1C, #000000); 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    color: #FFFFFF;
+} */
+
+/* Soft Gold Abstract Shapes */
+.background-shape {
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(206, 184, 136, 0.2) 0%, rgba(206, 184, 136, 0) 80%);
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.5;
+}
+
+.shape1 { top: 10%; left: -100px; }
+.shape2 { bottom: 15%; right: -120px; }

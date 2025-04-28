@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>View Feedback</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="/css/Style.css" rel="stylesheet">
+    <link href="/css/Form.css" rel="stylesheet">
+
+    <style>
+        .container {
+            margin-top: 2.5vh;
+            margin-bottom: 5vh;
+            overflow-y: auto;
+            max-height: 90vh;
+        }
+
+        .purdue-theme {
+            background-color: #000000;
+            color: #CEB888;
+        }
+
+        .btn-purdue {
+            background-color: #CEB888;
+            color: #000;
+            border: none;
+        }
+
+        .btn-purdue:hover {
+            background-color: #CEB888;
+        }
+
+        .card-header.purdue-theme {
+            border-bottom: 2px solid #CEB888;
+        }
+
+        .btn-secondary {
+            background-color: #1E1E1E;
+            color: #CEB888;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 16px;
+            font-size: 0.9rem;
+            transition: background-color 0.3s ease;
+            width: 60%;
+        }
+
+        .btn-secondary:hover {
+            background-color: #222;
+        }
+
+
+    /* Responsive adjustments */
+    @media (max-width: 576px) {
+    .container {
+    margin-top: 20px;
+    padding: 0 15px;
+    }
+
+    h1 {
+    font-size: 1.75rem;
+    }
+
+    h3 {
+    font-size: 1.5rem;
+    }
+
+    .btn-secondary {
+    width: 100%;
+    margin-bottom: 10px;
+    }
+    }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg" style="position: relative;">
+        <a class="navbar-brand">Purdue Peer Evaluation</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1 class="text-center purdue-theme p-3 rounded">Feedback Details</h1>
+
+        <div class="card mt-4">
+            <div class="card-header purdue-theme">
+                <h3>Evaluation Feedback</h3>
+            </div>
+            <div class="card-body">
+
+                <div th:if="${evaluation.feedbacks != null and !evaluation.feedbacks.isEmpty()}">
+                    <div th:each="feedback : ${evaluation.feedbacks}">
+                        <div th:if="${feedback.ratedStudent.studentId == currentStudentId}">
+                            <div class="mb-4">
+                                <h6 class="mt-3"><strong>Response:</strong></h6>
+                                <div th:if="${feedback.responses != null and !feedback.responses.isEmpty()}">
+                                    <div th:each="response : ${feedback.responses}">
+                                        <p>
+                                            <strong th:text="${response.question.questionText}">Question Text</strong>:
+                                            <span th:text="${response.responseText}">Response Text</span>
+                                        </p>
+                                    </div>
+                                </div>
+                                <!-- Not working because there is always at least this students feedback, would have to filter this students feedback out with the server -->
+                                <div th:if="${feedback.responses == null or feedback.responses.isEmpty()}">
+                                    <p class="text-muted">No responses available.</p>
+                                </div>
+                                <hr>
+                            </div>
+                        </div>
+                        <br>
+                    </div>
+                </div>
+
+   
+
+            </div>
+        </div>
+        <div class="text-center mt-4" style="padding-bottom: 40px;">
+            <a href="/student/viewPastEvaluations" class="btn btn-secondary">Back</a>
+        </div>
+    </div>
+
+    <footer class="footer text-center mt-4">
+        <span>© 2025 Peer Evaluation. All rights reserved.</span>
+    </footer>
+
+    <!-- Optional Scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
