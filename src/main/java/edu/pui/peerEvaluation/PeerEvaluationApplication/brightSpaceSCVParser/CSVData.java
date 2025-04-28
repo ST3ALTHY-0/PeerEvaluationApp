@@ -2,9 +2,13 @@ package edu.pui.peerEvaluation.PeerEvaluationApplication.brightSpaceSCVParser;
 
 import com.opencsv.bean.CsvBindByName;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class CSVData {
 
     @CsvBindByName(column = "OrgDefinedId")
@@ -22,21 +26,8 @@ public class CSVData {
     @CsvBindByName(column = "Lab Group")
     private String labGroup;
 
-    private Integer projectPointsGrade;
+    private CSVProjectData csvProjectData;
 
-    private Integer projectNumerator;
-
-    private Integer projectDenominator;
-
-    private String projectName;
-
-    private String fullProjectName;
-
-
-    
+    //We dont use this I think
+    private  Integer projectPointsGrade;
 }
-
-
-
-
-    

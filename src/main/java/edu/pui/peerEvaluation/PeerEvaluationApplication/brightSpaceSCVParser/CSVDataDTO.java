@@ -10,7 +10,7 @@ import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.student.Student;
 import lombok.Data;
 
 /*
- * Class that represents all the data that we will pull out of the CSV export from brightSpace
+ * Class that represents all the condensed data that we will pull out of the CSV export from brightSpace
  */
 @Data
 public class CSVDataDTO {

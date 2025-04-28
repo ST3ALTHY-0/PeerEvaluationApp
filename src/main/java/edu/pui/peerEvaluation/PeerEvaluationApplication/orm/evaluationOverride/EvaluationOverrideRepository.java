@@ -1,5 +1,6 @@
 package edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluationOverride;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,4 +11,6 @@ import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.baseEntity.BaseEntit
 @Repository
 public interface EvaluationOverrideRepository extends BaseEntityRepository<EvaluationOverride, Integer> {
     Optional<EvaluationOverride> findByStudentStudentIdAndEvaluationEvaluationId(Integer studentId, Integer evaluationId);
+    List<EvaluationOverride> findByEvaluationEvaluationId(Integer evaluationId);
+
 }

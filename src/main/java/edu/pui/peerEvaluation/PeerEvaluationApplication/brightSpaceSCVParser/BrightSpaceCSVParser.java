@@ -20,37 +20,55 @@ public class BrightSpaceCSVParser {
     public List<CSVData> parseDataFromCSV(MultipartFile csvFile) throws Exception {
         final List<CSVData> csvDataList = new ArrayList<>();
         final CSVReader reader = new CSVReader(new InputStreamReader(csvFile.getInputStream()));
+        CSVProjectData csvProjectData = new CSVProjectData();
         String projectName = "";
-
+    
         String[] headers = reader.readNext();
-
+        if (headers == null) {
+            reader.close();
+            throw new Exception("CSV file is empty");
+        }
+    
         int subtotalNumeratorIndex = -1;
         int subtotalDenominatorIndex = -1;
-
-        // find the indexs of subtotal grades, becuase the header title changes based on
-        // the project name
+    
+        // Find indices and project name
         for (int i = 0; i < headers.length; i++) {
             if (headers[i].endsWith("Subtotal Numerator")) {
                 subtotalNumeratorIndex = i;
-                // find the project name
                 projectName = headers[i].substring(0, headers[i].indexOf("Subtotal Numerator")).trim();
-
             } else if (headers[i].endsWith("Subtotal Denominator")) {
                 subtotalDenominatorIndex = i;
             }
         }
         if (subtotalNumeratorIndex == -1 || subtotalDenominatorIndex == -1) {
             projectName = headers[5].substring(0, headers[5].indexOf("Points Grade")).trim();
-
-            reader.close();
-            // throw new Exception("Required columns not found in CSV");
+            // Note: maybe also handle the case where headers[5] isn't valid
         }
-
-        // Get the 6th header and set it as the full project name
+    
+        // Get full project name
         String fullProjectName = headers[5];
-
-        // set the CSVData with the indexs of the headers (csv must be a certain way)
-        String[] nextLine;
+        csvProjectData.setFullProjectName(fullProjectName);
+        csvProjectData.setProjectName(projectName);
+    
+        // Read first data row separately for numerator and denominator
+        String[] nextLine = reader.readNext();
+        if (nextLine != null) {
+            csvProjectData.setProjectNumerator(Integer.parseInt(nextLine[subtotalNumeratorIndex]));
+            csvProjectData.setProjectDenominator(Integer.parseInt(nextLine[subtotalDenominatorIndex]));
+    
+            // Also add the first student record
+            CSVData firstData = new CSVData();
+            firstData.setPuid(nextLine[0]);
+            firstData.setFirstName(nextLine[1]);
+            firstData.setLastName(nextLine[2]);
+            firstData.setStudentEmail(nextLine[3]);
+            firstData.setLabGroup(nextLine[4]);
+            firstData.setCsvProjectData(csvProjectData);
+            csvDataList.add(firstData);
+        }
+    
+        // Now continue reading the rest
         while ((nextLine = reader.readNext()) != null) {
             CSVData data = new CSVData();
             data.setPuid(nextLine[0]);
@@ -58,19 +76,14 @@ public class BrightSpaceCSVParser {
             data.setLastName(nextLine[2]);
             data.setStudentEmail(nextLine[3]);
             data.setLabGroup(nextLine[4]);
-            data.setFullProjectName(fullProjectName);
-            logger.info("FULL PROJECT NAME: " + nextLine[5]);
-            data.setProjectNumerator(Integer.parseInt(nextLine[subtotalNumeratorIndex]));
-            data.setProjectDenominator(Integer.parseInt(nextLine[subtotalDenominatorIndex]));
-
-            data.setProjectName(projectName);
+            data.setCsvProjectData(csvProjectData);
             csvDataList.add(data);
         }
-
+    
         reader.close();
         return csvDataList;
     }
-
+    
     public List<CSVDataDTO> transformData(List<CSVData> csvDataList) {
         return csvDataList.stream().map(csvData -> {
 
@@ -79,9 +92,9 @@ public class BrightSpaceCSVParser {
             Student student = new Student();
             Project project = new Project();
 
-            project.setProjectName(csvData.getProjectName());
-            project.setPointsWorth(csvData.getProjectDenominator());
-            project.setFullProjectName(csvData.getFullProjectName());
+            project.setProjectName(csvData.getCsvProjectData().getProjectName());
+            project.setPointsWorth(csvData.getCsvProjectData().getProjectDenominator());
+            project.setFullProjectName(csvData.getCsvProjectData().getFullProjectName());
             student.setPuid(csvData.getPuid().replace("#", ""));
             student.setStudentName(csvData.getFirstName() + " " + csvData.getLastName());
             student.setStudentEmail(csvData.getStudentEmail());
@@ -89,7 +102,7 @@ public class BrightSpaceCSVParser {
             dto.setGroup(csvData.getLabGroup());
             dto.setProject(project);
             dto.setStudent(student);
-            dto.setStudentGrade(csvData.getProjectNumerator());
+            dto.setStudentGrade(csvData.getCsvProjectData().getProjectNumerator());
             return dto;
         }).collect(Collectors.toList());
     }

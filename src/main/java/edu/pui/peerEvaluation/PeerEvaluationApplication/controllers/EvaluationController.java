@@ -21,7 +21,6 @@ import edu.pui.peerEvaluation.PeerEvaluationApplication.DTO.sendResponseDataToCl
 import edu.pui.peerEvaluation.PeerEvaluationApplication.brightSpaceSCVParser.BrightSpaceCSVParser;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.brightSpaceSCVParser.CSVData;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.brightSpaceSCVParser.CSVDataDTO;
-import edu.pui.peerEvaluation.PeerEvaluationApplication.brightSpaceSCVParser.SaveBrightSpaceData;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluation.Evaluation;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluation.EvaluationService;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluationOverride.EvaluationOverride;
@@ -41,6 +40,7 @@ import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.project.Project;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.projectGroup.ProjectGroup;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.student.Student;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.student.StudentService;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.saveDataToDB.SaveData;
 
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -75,7 +75,7 @@ public class EvaluationController {
     private final StudentService studentService;
     private final InstructorService instructorService;
     private final BrightSpaceCSVParser brightSpaceCSVParser;
-    private final SaveBrightSpaceData saveBrightSpaceData;
+    private final SaveData saveData;
     private final GroupCategoryService groupCategoryService;
     private final MyClassService myClassService;
     private final EvaluationOverrideService evaluationOverrideService;
@@ -89,7 +89,7 @@ public class EvaluationController {
             BrightSpaceCSVParser brightSpaceCSVParser,
             GroupCategoryService groupCategoryService,
             MyClassService myClassService,
-            SaveBrightSpaceData saveBrightSpaceData,
+            SaveData saveData,
             EvaluationOverrideService evaluationOverrideService) {
             
         this.feedbackService = feedbackService;
@@ -97,7 +97,7 @@ public class EvaluationController {
         this.studentService = studentService;
         this.instructorService = instructorService;
         this.brightSpaceCSVParser = brightSpaceCSVParser;
-        this.saveBrightSpaceData = saveBrightSpaceData;
+        this.saveData = saveData;
         this.myClassService = myClassService;
         this.groupCategoryService = groupCategoryService;
         this.evaluationOverrideService = evaluationOverrideService; 
@@ -125,7 +125,7 @@ public class EvaluationController {
             }
         }
 
-        saveBrightSpaceData.saveFeedbackToDB(evaluationFeedbackFormDTO);
+        saveData.saveFeedbackToDB(evaluationFeedbackFormDTO);
         model.addAttribute("message", "Feedback submitted successfully");
 
         return "/student/feedback/finished";
@@ -133,11 +133,8 @@ public class EvaluationController {
 
 @PostMapping("/submit/form")
 public String createEvaluation(@RequestParam("csvFile") MultipartFile file, @ModelAttribute EvaluationFormDTO evaluationFormDTO) {
-     //TODO: maybe make DTO for myClass, groupCategory, and project
     //save csv data including students, projectGroups, groupCategory, and project
     try {
-        System.out.println("InstructorId: " + evaluationFormDTO.getInstructorId());
-        //parse the data from the csv
         List<CSVData> csvDataList = brightSpaceCSVParser.parseDataFromCSV(file);
 
         //transform the parsed data into a more usable form 
@@ -145,16 +142,13 @@ public String createEvaluation(@RequestParam("csvFile") MultipartFile file, @Mod
 
         //get references to the saved Project and the Class that project belongs to
         Project thisProject = csvDataDTOList.get(0).getProject();
-
         MyClass myClass = myClassService.findByClassCodeOrCreate(evaluationFormDTO.getClassCode());
-
-        Project project = saveBrightSpaceData.saveProjectToDB(thisProject, evaluationFormDTO.getInstructorId(), myClass);
+        Project project = saveData.saveProjectToDB(thisProject, evaluationFormDTO.getInstructorId(), myClass);
 
         //save the students and project groups they belong to in the DB
-        GroupCategory groupCategory = saveBrightSpaceData.saveCSVDataToDB(csvDataDTOList, myClass, project);
+        GroupCategory groupCategory = saveData.saveCSVDataToDB(csvDataDTOList, myClass, project);
 
-        //save the evaluation to the DB
-        saveBrightSpaceData.saveEvaluationToDB(evaluationFormDTO, groupCategory, project);
+        saveData.saveEvaluationToDB(evaluationFormDTO, groupCategory, project);
         
     } catch (Exception e) {
         System.out.println("Error: " + e.getMessage());
@@ -162,19 +156,6 @@ public String createEvaluation(@RequestParam("csvFile") MultipartFile file, @Mod
     return "/instructor/dashboard";
 }
 
-@GetMapping("/details")
-public String evaluationsDetails(@RequestParam Integer evaluationId, Model model){
-    Evaluation evaluation = evaluationService.findById(evaluationId).orElse(null);
-    
-    if(evaluation == null){
-        model.addAttribute("errorMessage", "No evaluation found");
-        return "/instructor/error"; 
-    }
-    //pass evaluation
-    model.addAttribute("evaluation", evaluation);
-
-    return "/instructor/evaluationDetails";
-}
 
 
 @PostMapping("/updateDueDate")

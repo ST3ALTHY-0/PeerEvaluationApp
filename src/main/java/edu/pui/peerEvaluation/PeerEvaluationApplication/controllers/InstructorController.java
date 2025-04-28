@@ -31,7 +31,6 @@ import edu.pui.peerEvaluation.PeerEvaluationApplication.DTO.EvaluationFormDTO;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.DTO.EvaluationQuestionDTO;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.DTO.LoginDTO;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.DTO.SignUpDTO;
-import edu.pui.peerEvaluation.PeerEvaluationApplication.brightSpaceSCVParser.SaveBrightSpaceData;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.exceptions.InstructorAlreadyExistsException;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluation.Evaluation;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluation.EvaluationService;
@@ -48,6 +47,7 @@ import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.projectGroup.Project
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.student.Student;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.student.StudentService;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.saveDataToCsv.SaveStudentGradeToCSV;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.saveDataToDB.SaveData;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -56,17 +56,17 @@ public class InstructorController {
 
     private final EvaluationService evaluationService;
     private final InstructorService instructorService;
-    private final SaveBrightSpaceData saveBrightSpaceData;
+    private final SaveData saveData;
     private final SaveStudentGradeToCSV saveDataToCSV;
 
     // declare any/all endpoint urls we will use
 
     @Autowired
     public InstructorController(EvaluationService evaluationService, InstructorService instructorService,
-            SaveBrightSpaceData saveBrightSpaceData, SaveStudentGradeToCSV saveDataToCSV) {
+            SaveData saveData, SaveStudentGradeToCSV saveDataToCSV) {
         this.evaluationService = evaluationService;
         this.instructorService = instructorService;
-        this.saveBrightSpaceData = saveBrightSpaceData;
+        this.saveData = saveData;
         this.saveDataToCSV = saveDataToCSV;
     }
 
@@ -143,7 +143,7 @@ public class InstructorController {
     public String signUpSubmit(@ModelAttribute SignUpDTO signUpDTO, HttpSession session, Model model) throws Exception {
 
         try {
-            Instructor instructor = saveBrightSpaceData.saveInstructorSignUp(signUpDTO);
+            Instructor instructor = saveData.saveInstructorSignUp(signUpDTO);
             session.setAttribute("instructorId", instructor.getInstructorId());
         } catch (Exception e) {
             model.addAttribute("errorMessage", "An error occurred during sign up: " + e.getMessage());
@@ -197,7 +197,7 @@ public class InstructorController {
     public String viewEvaluationDetails(@PathVariable("id") Integer evaluationId, Model model, HttpSession session) {
         Integer instructorId = (Integer) session.getAttribute("instructorId");
         if (instructorId == null) {
-            return "instructor/login"; // Redirect to login if session is invalid
+            return "instructor/login";
         }
 
         Optional<Evaluation> evaluationOptional = evaluationService.findById(evaluationId);

@@ -1,6 +1,7 @@
 package edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluationOverride;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +65,10 @@ public class EvaluationOverrideService extends BaseEntityService<EvaluationOverr
 
         return evaluationOverrideRepository.save(evaluationOverride);
 
+    }
+
+    public List<EvaluationOverride> getOverridesForEvaluation(Integer evaluationId) {
+        return evaluationOverrideRepository.findByEvaluationEvaluationId(evaluationId);
     }
     
 }

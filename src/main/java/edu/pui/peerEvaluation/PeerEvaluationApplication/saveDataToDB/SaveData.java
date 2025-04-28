@@ -1,4 +1,4 @@
-package edu.pui.peerEvaluation.PeerEvaluationApplication.brightSpaceSCVParser;
+package edu.pui.peerEvaluation.PeerEvaluationApplication.saveDataToDB;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -25,6 +25,7 @@ import edu.pui.peerEvaluation.PeerEvaluationApplication.DTO.EvaluationQuestionDT
 import edu.pui.peerEvaluation.PeerEvaluationApplication.DTO.LoginDTO;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.DTO.SignUpDTO;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.DTO.StandardEvaluation;
+import edu.pui.peerEvaluation.PeerEvaluationApplication.brightSpaceSCVParser.CSVDataDTO;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.exceptions.InstructorAlreadyExistsException;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluation.Evaluation;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluation.EvaluationService;
@@ -51,11 +52,9 @@ import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.studentGrade.Student
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
-/*
- * Despite this class being named SaveBrightSpaceData, we actually use this class to save almost all the data to the DB
- */
+
 @Service
-public class SaveBrightSpaceData {
+public class SaveData {
 
     private final StudentService studentService;
     private final ProjectGroupService projectGroupService;
@@ -68,13 +67,13 @@ public class SaveBrightSpaceData {
     private final StandardEvaluation standardEvaluation;
     private final FeedbackService feedbackService;
 
-    private static final Logger logger = LoggerFactory.getLogger(SaveBrightSpaceData.class);
+    private static final Logger logger = LoggerFactory.getLogger(SaveData.class);
 
     @PersistenceContext
     private EntityManager entityManager;
 
     @Autowired
-    public SaveBrightSpaceData(StudentService studentService, ProjectGroupService projectGroupService,
+    public SaveData(StudentService studentService, ProjectGroupService projectGroupService,
             InstructorService instructorService,
             GroupCategoryService groupCategoryService, ProjectService projectService,
             StudentGradeService studentGradeService, EvaluationQuestionService evaluationQuestionService,

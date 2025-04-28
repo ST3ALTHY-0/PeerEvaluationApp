@@ -2,7 +2,6 @@ package edu.pui.peerEvaluation.PeerEvaluationApplication.saveDataToCsv;
 
 import com.opencsv.CSVWriter;
 
-import edu.pui.peerEvaluation.PeerEvaluationApplication.brightSpaceSCVParser.SaveBrightSpaceData;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluation.Evaluation;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluation.EvaluationService;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.feedback.Feedback;
