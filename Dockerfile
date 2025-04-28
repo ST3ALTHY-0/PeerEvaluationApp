@@ -1,5 +1,5 @@
 # Use an official Java 21 runtime as a base image for building the JAR
-FROM eclipse-temurin:21-jdk-jammy AS build
+FROM eclipse-temurin:21-jdk AS build
 
 # Set the working directory inside the container
 WORKDIR /app
