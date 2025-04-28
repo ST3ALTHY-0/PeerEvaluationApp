@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: edu.pui.peerEvaluation.Peerevualuationapplication.PeerevualuationapplicationApplicationTests
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 53.97 s -- in edu.pui.peerEvaluation.Peerevualuationapplication.PeerevualuationapplicationApplicationTests
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 9.828 s -- in edu.pui.peerEvaluation.Peerevualuationapplication.PeerevualuationapplicationApplicationTests
