@@ -10,6 +10,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link href="/css/Style.css" rel="stylesheet">
     <link href="/css/Form.css" rel="stylesheet">
+    <script src="/js/scripts.js"></script>
+
 
     <style>
 
@@ -57,11 +59,11 @@
     <div class="container" style="margin-top: -20vh;">
         <h1>Select Your Evaluation</h1>
         <div class="formContainer">
-            <form th:action="@{completeEvaluation}" method="get">
+            <form th:action="@{completeEvaluation}" method="get" onsubmit="return validateSelection()">
                 <div class="form-group">
                     <label for="inlineFormCustomSelect">Evaluation</label>
                     <select class="custom-select" id="inlineFormCustomSelect" name="evaluationId" aria-describedby="evalHelp">
-                        <option selected>Choose...</option>
+                        <option selected value="">Choose...</option>
                         <option disabled
                         th:text="'Class' + ' &#x2003;&#x2003;&#x2003;&#x2003;&#x2003;&#x2003;&#x2003;&#x2003;&#x2003;&#x2003;&#x2003; ' + 'Project' + ' &#x2003;&#x2003;&#x2003;&#x2003;&#x2003;&#x2003;&#x2003;&#x2003;&#x2003;&#x2003;&#x2003;&#x2003; ' + 'Due Date'"
                         ></option>

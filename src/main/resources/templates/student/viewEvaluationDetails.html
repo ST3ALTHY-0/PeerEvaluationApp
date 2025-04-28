@@ -95,6 +95,7 @@
                 <h3>Evaluation Feedback</h3>
             </div>
             <div class="card-body">
+
                 <div th:if="${evaluation.feedbacks != null and !evaluation.feedbacks.isEmpty()}">
                     <div th:each="feedback : ${evaluation.feedbacks}">
                         <div th:if="${feedback.ratedStudent.studentId == currentStudentId}">
@@ -108,6 +109,7 @@
                                         </p>
                                     </div>
                                 </div>
+                                <!-- Not working because there is always at least this students feedback, would have to filter this students feedback out with the server -->
                                 <div th:if="${feedback.responses == null or feedback.responses.isEmpty()}">
                                     <p class="text-muted">No responses available.</p>
                                 </div>
@@ -118,9 +120,7 @@
                     </div>
                 </div>
 
-                <div th:if="${evaluation.feedbacks == null or evaluation.feedbacks.isEmpty()}">
-                    <p class="text-muted">No feedback available.</p>
-                </div>
+   
 
             </div>
         </div>

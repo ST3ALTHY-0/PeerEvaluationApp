@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.test.context.ActiveProfiles;
 
+import edu.pui.peerEvaluation.PeerEvaluationApplication.PeerevualuationapplicationApplication;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluation.Evaluation;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.evaluation.EvaluationRepository;
 import edu.pui.peerEvaluation.PeerEvaluationApplication.orm.feedback.Feedback;
@@ -25,8 +26,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
-
+@SpringBootTest(classes = PeerevualuationapplicationApplication.class)
 class PeerevualuationapplicationApplicationTests {
 
 	@Test

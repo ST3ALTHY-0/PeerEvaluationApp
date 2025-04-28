@@ -72,11 +72,8 @@ public class EvaluationController {
 
     private final FeedbackService feedbackService;
     private final EvaluationService evaluationService;
-    private final StudentService studentService;
-    private final InstructorService instructorService;
     private final BrightSpaceCSVParser brightSpaceCSVParser;
     private final SaveData saveData;
-    private final GroupCategoryService groupCategoryService;
     private final MyClassService myClassService;
     private final EvaluationOverrideService evaluationOverrideService;
 
@@ -84,22 +81,16 @@ public class EvaluationController {
     public EvaluationController(
             FeedbackService feedbackService,
             EvaluationService evaluationService,
-            StudentService studentService,
-            InstructorService instructorService,
             BrightSpaceCSVParser brightSpaceCSVParser,
-            GroupCategoryService groupCategoryService,
             MyClassService myClassService,
             SaveData saveData,
             EvaluationOverrideService evaluationOverrideService) {
             
         this.feedbackService = feedbackService;
         this.evaluationService = evaluationService;
-        this.studentService = studentService;
-        this.instructorService = instructorService;
         this.brightSpaceCSVParser = brightSpaceCSVParser;
         this.saveData = saveData;
         this.myClassService = myClassService;
-        this.groupCategoryService = groupCategoryService;
         this.evaluationOverrideService = evaluationOverrideService; 
         }
 
@@ -128,7 +119,7 @@ public class EvaluationController {
         saveData.saveFeedbackToDB(evaluationFeedbackFormDTO);
         model.addAttribute("message", "Feedback submitted successfully");
 
-        return "/student/feedback/finished";
+        return "student/feedback/finished";
     }
 
 @PostMapping("/submit/form")
@@ -153,7 +144,7 @@ public String createEvaluation(@RequestParam("csvFile") MultipartFile file, @Mod
     } catch (Exception e) {
         System.out.println("Error: " + e.getMessage());
     }
-    return "/instructor/dashboard";
+    return "instructor/dashboard";
 }
 
 

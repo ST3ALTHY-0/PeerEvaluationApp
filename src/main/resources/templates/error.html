@@ -32,8 +32,13 @@
                     Error
                 </div>
                 <div class="card-body text-center" th:if="${errorMessage}">
-                    <p class="card-text" th:text="${errorMessage}">An unexpected error occurred. Please try again later.</p>
+                    <p class="card-text" th:text="${errorMessage}"></p>
                 </div>
+                <div class="card-body text-center" th:if="${errorMessage == null}">
+                    <p class="card-text">Sorry, you ran into an error</p>
+                </div>
+                <div class="card-footer text-center">
+                    <button class="btn btn-primary" onclick="history.back()">Go Back</button>
                 </div>
             </div>
         </div>
@@ -41,7 +46,7 @@
 
     <footer class="footer">
         <span>© 2025 Peer Evaluation. All rights reserved.</span>
-</footer>
+    </footer>
 
     <!-- Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
