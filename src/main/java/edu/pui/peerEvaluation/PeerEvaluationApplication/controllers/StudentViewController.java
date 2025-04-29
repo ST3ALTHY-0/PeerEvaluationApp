@@ -105,7 +105,7 @@ public String studentViewPastEvaluations(HttpSession session, Model model) {
 
     //filter out evaluations that allowStudentsToViewFeedback == false;
     List<Evaluation> filteredEvalList = userEvalList.stream()
-        .filter(eval -> eval.isAllowStudentsToViewFeedback())
+        .filter(eval -> eval.getAllowStudentsToViewFeedback())
         .toList();
 
     model.addAttribute("userEvalList", filteredEvalList);

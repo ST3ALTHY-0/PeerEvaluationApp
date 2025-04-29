@@ -122,31 +122,46 @@ public class EvaluationController {
         return "student/feedback/finished";
     }
 
-@PostMapping("/submit/form")
-public String createEvaluation(@RequestParam("csvFile") MultipartFile file, @ModelAttribute EvaluationFormDTO evaluationFormDTO) {
-    //save csv data including students, projectGroups, groupCategory, and project
-    try {
-        List<CSVData> csvDataList = brightSpaceCSVParser.parseDataFromCSV(file);
-
-        //transform the parsed data into a more usable form 
-        List<CSVDataDTO> csvDataDTOList = brightSpaceCSVParser.transformData(csvDataList);
-
-        //get references to the saved Project and the Class that project belongs to
-        Project thisProject = csvDataDTOList.get(0).getProject();
-        MyClass myClass = myClassService.findByClassCodeOrCreate(evaluationFormDTO.getClassCode());
-        Project project = saveData.saveProjectToDB(thisProject, evaluationFormDTO.getInstructorId(), myClass);
-
-        //save the students and project groups they belong to in the DB
-        GroupCategory groupCategory = saveData.saveCSVDataToDB(csvDataDTOList, myClass, project);
-
-        saveData.saveEvaluationToDB(evaluationFormDTO, groupCategory, project);
-        
-    } catch (Exception e) {
-        System.out.println("Error: " + e.getMessage());
+    @PostMapping("/submit/form")
+    public String createEvaluation(@RequestParam("csvFile") MultipartFile file, @ModelAttribute EvaluationFormDTO evaluationFormDTO) {
+        try {
+            long startTime = System.currentTimeMillis();
+    
+            // Step 1: Parse CSV
+            List<CSVData> csvDataList = brightSpaceCSVParser.parseDataFromCSV(file);
+            long parseEndTime = System.currentTimeMillis();
+            logger.info("CSV parsing took: {} ms", (parseEndTime - startTime));
+    
+            // Step 2: Transform Data
+            List<CSVDataDTO> csvDataDTOList = brightSpaceCSVParser.transformData(csvDataList);
+            long transformEndTime = System.currentTimeMillis();
+            logger.info("Data transformation took: {} ms", (transformEndTime - parseEndTime));
+    
+            // Step 3: Save Project
+            Project thisProject = csvDataDTOList.get(0).getProject();
+            MyClass myClass = myClassService.findByClassCodeOrCreate(evaluationFormDTO.getClassCode());
+            Project project = saveData.saveProjectToDB(thisProject, evaluationFormDTO.getInstructorId(), myClass);
+            long projectSaveEndTime = System.currentTimeMillis();
+            logger.info("Project saving took: {} ms", (projectSaveEndTime - transformEndTime));
+    
+            // Step 4: Save CSV data (students and groups)
+            GroupCategory groupCategory = saveData.saveCSVDataToDB(csvDataDTOList, myClass, project);
+            long csvSaveEndTime = System.currentTimeMillis();
+            logger.info("CSV data saving took: {} ms", (csvSaveEndTime - projectSaveEndTime));
+    
+            // Step 5: Save Evaluation
+            saveData.saveEvaluationToDB(evaluationFormDTO, groupCategory, project);
+            long evaluationSaveEndTime = System.currentTimeMillis();
+            logger.info("Evaluation saving took: {} ms", (evaluationSaveEndTime - csvSaveEndTime));
+    
+            logger.info("Total time for createEvaluation: {} ms", (evaluationSaveEndTime - startTime));
+    
+        } catch (Exception e) {
+            logger.error("Error during evaluation creation: {}", e.getMessage(), e);
+        }
+        return "instructor/dashboard";
     }
-    return "instructor/dashboard";
-}
-
+    
 
 
 @PostMapping("/updateDueDate")

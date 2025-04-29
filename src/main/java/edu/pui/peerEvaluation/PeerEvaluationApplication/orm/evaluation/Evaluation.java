@@ -43,11 +43,11 @@ public class Evaluation {
 
     private LocalDateTime createdAt;
 
-    private boolean isComplete;
+    private Boolean isComplete;
 
-    private boolean allowStudentsToViewFeedback;
+    private Boolean allowStudentsToViewFeedback;
 
-    private boolean isGraded;
+    private Boolean isGraded;
 
     private LocalDateTime dueDate;
 

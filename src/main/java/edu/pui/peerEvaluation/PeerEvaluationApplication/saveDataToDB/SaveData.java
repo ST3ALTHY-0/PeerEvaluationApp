@@ -145,16 +145,6 @@ public class SaveData {
 
         studentService.saveAll(studentsToSave);
         studentGradeService.saveAll(studentGradesToSave);
-
-        // Wanted to implement a way to check if a projectGroup already exists and to
-        // use that group instead of making a new one if it does exist,
-        // but because project groups are tied to a particular project there really
-        // should'nt be many (if any) cases where we can reuse a project group,
-        // seeing as each time a instructor makes a new evaluation, it makes a new
-        // project
-        // TODO: potentially remove the relationship between projectGroups and project
-        // TODO: and instead have a linking table, or ManyToMany relationship, between
-        // TODO: the two, so we can improve reusability and reduce redundancy
         projectGroupService.saveAllProjectGroups(groupsToSave);
 
         // TODO: find if groupCategory exists
@@ -192,71 +182,53 @@ public class SaveData {
     }
 
     @Transactional
-    public Evaluation saveEvaluationToDB(EvaluationFormDTO evaluationFormDTO, GroupCategory groupCategory,
-            Project project) {
-
+    public Evaluation saveEvaluationToDB(EvaluationFormDTO evaluationFormDTO, GroupCategory groupCategory, Project project) {
         logger.debug("EvalForm DTO: {}", evaluationFormDTO);
+    
         Evaluation evaluation = new Evaluation();
-
-        // TODO: we are only asking for a date and not a specific time on webpage
-        LocalDate dueDate = LocalDate.parse(evaluationFormDTO.getDueDate());
-        LocalDateTime dueDateTime = dueDate.atStartOfDay();
-        evaluation.setDueDate(dueDateTime);
+        evaluation.setDueDate(LocalDate.parse(evaluationFormDTO.getDueDate()).atStartOfDay());
         evaluation.setCreatedAt(LocalDateTime.now());
         evaluation.setProject(project);
-        evaluation.setGraded(true);
+        evaluation.setIsGraded(true);
         evaluation.setAllowStudentsToViewFeedback(evaluationFormDTO.isAllowStudentToViewFeedback());
-
-
+        evaluation.setGroupCategory(groupCategory);
+        evaluation.setEvaluationQuestions(new ArrayList<>());
+    
+        //set standard questions if instructor selected yes
         if (evaluationFormDTO.isUseStandardForm()) {
-            // Save the standard evaluation questions if they are not already saved
             List<EvaluationQuestion> savedQuestions = new ArrayList<>();
             for (EvaluationQuestion question : standardEvaluation.getEvaluationQuestions()) {
-                if (question.getQuestionId() == null) { // Check if the question is not saved
-                    evaluationQuestionService.save(question); // Save the question
+                if (question.getQuestionId() == null) {
+                    evaluationQuestionService.save(question);
                 }
-                savedQuestions.add(question); // Add the saved question to the list
+                savedQuestions.add(question);
             }
-
-            evaluation.setEvaluationQuestions(savedQuestions); // Set the saved questions
+            evaluation.setEvaluationQuestions(savedQuestions);
             logger.debug("Evaluation StandardForm: {}", savedQuestions);
-
+            
+            //set the questions to whatever the instructor set
         } else {
-            // Add the evaluation questions to the DB
+            List<EvaluationQuestion> evaluationQuestions = new ArrayList<>();
             for (EvaluationQuestionDTO evaluationQuestionDTO : evaluationFormDTO.getEvaluationQuestions()) {
                 EvaluationQuestion evaluationQuestion = new EvaluationQuestion();
                 evaluationQuestion.setEnforceAnswer(evaluationQuestionDTO.isRequired());
                 evaluationQuestion.setQuestionText(evaluationQuestionDTO.getQuestionText());
-            
-                // Save the EvaluationQuestion first to ensure it is persistent
-                evaluationQuestionService.save(evaluationQuestion);
-            
-                // Ensure the evaluationQuestions list in Evaluation is initialized
-                if (evaluation.getEvaluationQuestions() == null) {
-                    evaluation.setEvaluationQuestions(new ArrayList<>());
-                }
-            
-                // Add the EvaluationQuestion to the Evaluation if not already present
-                if (!evaluation.getEvaluationQuestions().contains(evaluationQuestion)) {
-                    evaluation.getEvaluationQuestions().add(evaluationQuestion);
-                }
+                evaluationQuestions.add(evaluationQuestion);
             }
+            evaluationQuestionService.saveAll(evaluationQuestions);
+            evaluation.setEvaluationQuestions(evaluationQuestions);
         }
-
-        //add the groupCategory to the evaluation
-        evaluation.setGroupCategory(groupCategory);
-        logger.debug("Creating new Evaluation : {}", evaluation);
+    
+        logger.debug("Creating new Evaluation: {}", evaluation);
         evaluationService.save(evaluation);
-        //map the new groupCategory to the evaluation
-        List<Evaluation> evaluations = (List<Evaluation>) getAndAddEntityToList(groupCategory.getEvaluations(),
-                evaluation);
-        groupCategory.setEvaluations(evaluations);
-        logger.debug("Updating groupCategory : {}", groupCategory);
+    
+        groupCategory.getEvaluations().add(evaluation);
         groupCategoryService.save(groupCategory);
-
+    
         entityManager.flush();
         return evaluation;
     }
+    
 
     // Takes in a list of entities and adds another entity to it and returns the new
     // list

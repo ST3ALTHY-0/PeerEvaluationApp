@@ -33,7 +33,7 @@ public class EvaluationQuestion {
 
     private String questionText;
 
-    private boolean enforceAnswer;
+    private Boolean enforceAnswer;
 
     @ManyToMany
     @JoinTable(
